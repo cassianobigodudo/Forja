@@ -1,2 +1,11 @@
 # SA-Quarta-Fase
-Repositório criado para a quarta fase do Técnico em Desenvolvimento de Sistemas do SENAI
+### INTRODUÇÃO
+O projeto desenvolvido pelo nosso grupo, cujo membros são Cassiano Calazans Coelho Machado ([cassianobigodudo](https://github.com/cassianobigodudo)), Jaime António Cá ([jaime-ac](https://github.com/jaime-ac)) e José Vitor de Mattos Pinheiro ([Jouusey](https://github.com/Jouusey)) é uma loja de venda e fabricação de miniaturas para campanhas de RPG de mesa, utilizando a bancada industrial para a industria 4.0 disponibilizada pelo SENAI, queremos fornecer para nosso público-alvo uma loja que produza miniaturas personalizáveis para cada tipo de campanha para nossos jogadores.
+
+## Requisitos Funcionais
+1. **Cadastro, Login, Edição e Exclusão de Usuários (RF-01):** O sistema deve permitir que usuários possam criar suas contas, logar em nosso sistema, editar seus dados e excluir sua conta se desejado.
+2. **Customização de Miniaturas (RF-02):** O sistema deve permitir que usuários cadastrados possam customizar suas miniaturas de vários tipos diferentes, desde Props (Barril, Árvore, Animal, etc.) até Personagens com customização (Cabelo, Roupa, Cor de Pele, Acessório, Base)
+3. **Visualização de Miniaturas Pré-Forjadas (RF-03):** O sistema deve permitir que os usuários possam navegar pela loja de miniaturas pré-forjadas (miniaturas que não são customizadas e veem sempre do mesmo jeito)
+4. **Estoque de Peças (RF-04):** O sistema vai incluir um sistema de estoques que vai estar conectado com a Bancada Industrial 
+5. **Carrinho de Miniaturas (RF-05):** O sistema deve permitir que o usuário só consiga colocar miniaturas (tanto pré-forjada quanto customizável) no carrinho, desde que ele tenha uma conta já criada
+6. **Compra e Histórico de Compras (RF-06):** O sistema deve permitir a compra dos itens no carrinho
