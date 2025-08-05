@@ -1,6 +1,6 @@
 # SA-Quarta-Fase
 ### INTRODUÇÃO
-O projeto desenvolvido pelo nosso grupo, cujo membros são Cassiano Calazans Coelho Machado ([cassianobigodudo](https://github.com/cassianobigodudo)), Jaime António Cá ([jaime-ac](https://github.com/jaime-ac)) e José Vitor de Mattos Pinheiro ([Jouusey](https://github.com/Jouusey)) é uma loja de venda e fabricação de miniaturas para campanhas de RPG de mesa, utilizando a bancada industrial para a industria 4.0 disponibilizada pelo SENAI, queremos fornecer para nosso público-alvo uma loja que produza miniaturas personalizáveis para cada tipo de campanha para nossos jogadores.
+O projeto desenvolvido pelo nosso grupo, cujo membros são Cassiano Calazans Coelho Machado ([cassianobigodudo](https://github.com/cassianobigodudo)), Jaime António Cá ([jaime-ac](https://github.com/jaime-ac)), José Vitor de Mattos Pinheiro ([Jouusey](https://github.com/Jouusey)) e Pedro Guedes Almeida Ribeiro ([PedroG4R](https://github.com/pedroG4R)) é uma loja de venda e fabricação de miniaturas para campanhas de RPG de mesa, utilizando a bancada industrial para a industria 4.0 disponibilizada pelo SENAI, queremos fornecer para nosso público-alvo uma loja que produza miniaturas personalizáveis para cada tipo de campanha para nossos jogadores.
 
 ## Requisitos Funcionais
 1. **Cadastro, Login, Edição e Exclusão de Usuários (RF-01):** O sistema deve permitir que usuários possam criar suas contas, logar em nosso sistema, editar seus dados e excluir sua conta se desejado.
