@@ -9,3 +9,8 @@ O projeto desenvolvido pelo nosso grupo, cujo membros são Cassiano Calazans Coe
 4. **Gestão de Estoque (RF-04):** O sistema vai incluir um gestão de estoques que vai estar conectado com a Bancada Industrial que monitora se tem disponibilidades de matéria-prima e vaga na expedição.
 5. **Carrinho de Miniaturas (RF-05):** O sistema deve permitir que o usuário só consiga colocar miniaturas (tanto pré-forjada quanto customizável) no carrinho, desde que ele tenha uma conta já criada.
 6. **Compra e Histórico de Compras (RF-06):** O sistema deve permitir o usuário cadastrado comprar dos itens no carrinho colocando seu cartão de crédito/débito ou com pix para começar a produção das miniaturas após a confirmação. Além disso, o usuário cadastrado pode ver seu histórico de compras caso ele já tenha comprado alguma miniatura.
+
+## Requisitos Não-Funcionais
+1. **Suporte Aos Principais Navegadores (RNF-01):** O sistema tem compatibilidade com todos os principais navegadores (Chrome, Firefox, Opera, Etc.).
+2. **Tempo de Resposta do Sistema para a Máquina 4.0 (RNF-02):** As requisições no sistema para a máquina tem um tempo de resposta de até 3 segundos.
+3. **Interface Intuitiva e Navegação Dinâmica (RNF-03):** O sistema terá uma interface fácil de entender, aonde o usuário conseguirá navegar pelas páginas com respostas de até 1 segundo
