@@ -1,17 +1,65 @@
-# A Forja
-### INTRODUÇÃO
-O projeto desenvolvido pelo nosso grupo, cujo membros são Cassiano Calazans Coelho Machado ([cassianobigodudo](https://github.com/cassianobigodudo)), Jaime António Cá ([jaime-ac](https://github.com/jaime-ac)), José Vitor de Mattos Pinheiro ([Jouusey](https://github.com/Jouusey)) e Pedro Guedes Almeida Ribeiro ([PedroG4R](https://github.com/pedroG4R)) é uma loja de venda e fabricação de miniaturas para campanhas de RPG de mesa, utilizando a bancada industrial para a industria 4.0 disponibilizada pelo SENAI, queremos fornecer para nosso público-alvo uma loja que produza miniaturas personalizáveis para cada tipo de campanha para nossos jogadores.
+# ⚒️ A Forja
 
-## A produção da bancada industrial
-Nosso **produto** consiste em miniaturas focadas em personagens de campanhas de RPG customizáveis em que o usuário poderá escolher o que ele quiser em seu personagem, e a bancada industrial vai fazer o correspondente desse boneco em blocos de 3 andares. As miniaturas tem uma variedade enorme de customização, sendo possível customizar o gênero, cor de pele, marcas, vários tipos de cabelo com cores diferentes, armas, roupas de cima, roupas de baixo, sapatos e a base da miniatura.
+> Sua loja de miniaturas de RPG personalizáveis, forjadas para suas aventuras.
+
+![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow)
+![License](https://img.shields.io/badge/license-MIT-blue)
+
+<p align="center">
+  <img src="URL_PARA_UM_LOGO_OU_BANNER_AQUI" width="400" alt="Logo do Projeto A Forja">
+</p>
+
+## 📜 Índice
+
+* [Sobre o Projeto](#-sobre-o-projeto)
+* [✨ Funcionalidades](#-funcionalidades)
+* [🏭 A Produção Industrial](#-a-produção-industrial)
+    * [Relação Miniatura vs. Blocos](#tabela-de-relação-miniatura-vs-blocos)
+* [🚀 Tecnologias Utilizadas](#-tecnologias-utilizadas)
+* [🧑‍💻 Autores](#-autores)
+
+## 📖 Sobre o Projeto
+
+**A Forja** é uma plataforma de e-commerce focada na venda e fabricação de miniaturas customizáveis para campanhas de RPG de mesa.
+
+Utilizando a bancada industrial para Indústria 4.0 disponibilizada pelo SENAI, nosso objetivo é oferecer aos jogadores um espaço onde eles possam dar vida aos seus personagens, criando e comprando miniaturas com um nível profundo de personalização.
+
+## ✨ Funcionalidades
+
+### Requisitos Funcionais
+-   ✅ **Gestão de Usuários (RF-01):** Cadastro, login, edição de perfil e exclusão de conta.
+-   ✅ **Customizador de Miniaturas (RF-02):** Ferramenta para personalizar gênero, cor de pele, cabelo, roupas, armas, acessórios e a base da miniatura.
+-   ✅ **Loja de Miniaturas (RF-03):** Galeria para visualizar e comprar miniaturas pré-fabricadas.
+-   ✅ **Gestão de Estoque (RF-04):** Integração com a bancada industrial para monitorar matéria-prima e capacidade de expedição.
+-   ✅ **Carrinho de Compras (RF-05):** Adição de miniaturas (customizadas ou pré-fabricadas) ao carrinho para usuários logados.
+-   ✅ **Checkout e Histórico (RF-06):** Finalização da compra (Pix, Cartão) e acesso ao histórico de pedidos.
+
+### Requisitos Não-Funcionais
+-   ⚙️ **Compatibilidade (RNF-01):** Suporte aos principais navegadores do mercado (Chrome, Firefox, Opera, etc.).
+-   ⚙️ **Performance (RNF-02):** Tempo de resposta de até 3 segundos para requisições entre o sistema e a bancada industrial.
+-   ⚙️ **Usabilidade (RNF-03):** Interface intuitiva com navegação fluida e respostas de página em até 1 segundo.
+
+## 🏭 A Produção Industrial
+
+Nosso produto principal são as miniaturas personalizáveis. O usuário define as características do seu personagem em nossa plataforma, e a bancada industrial produz uma representação física em **blocos empilhados de 3 andares**.
+
+A variedade de customização é o nosso forte. É possível alterar:
+* Gênero e cor de pele
+* Marcas e sardas
+* Estilos e cores de cabelo
+* Roupas (superiores e inferiores)
+* Sapatos, armas e acessórios
+* O tipo de base da miniatura
 
 ### O que a bancada produz?
-A bancada produz blocos de até três andares, onde cada bloco tem 3 cores (Azul, Vermelho e Preto), e cada bloco possuí 3 facetas com 7 opções de paletas de cores (Branco, Preto, Verde, Amarelo, Azul e Vermelho ou sem faceta) com 4 opções de ilustração nas facetas (Casa, Barco e Estrela ou sem ilustração)
-
-### Relação entre miniatura e blocos
-Cada variação de cada andar dos blocos quer dizer alguma coisa sobre a miniatura, visualize a tabela para saber mais sobre cada especificação
+A bancada materializa a miniatura em um conjunto de blocos. Cada um dos 3 andares do conjunto possui:
+* **3 opções de cor para o bloco:** Azul, Vermelho ou Preto.
+* **3 facetas (frontal, direita, esquerda)** que podem ter:
+    * **7 opções de cor de faceta:** Branco, Preto, Verde, Amarelo, Azul, Vermelho ou Sem Faceta.
+    * **4 opções de ilustração:** Casa, Barco, Estrela ou Sem Ilustração.
 
 ### Tabela de Relação: Miniatura vs. Blocos
+Cada variação nos blocos produzidos corresponde a uma característica específica da miniatura, como detalhado abaixo.
 
 | Andar | Elemento do Bloco | Característica da Miniatura | Mapeamento / Opções |
 | :--- | :--- | :--- | :--- |
@@ -31,15 +79,13 @@ Cada variação de cada andar dos blocos quer dizer alguma coisa sobre a miniatu
 | **1º Andar** | Cor da Faceta Esquerda | Sapatos (Estilo) | **7 Opções** (6 cores de faceta + 1 opção Sem Faceta) |
 | **1º Andar** | Símbolo da Faceta Esquerda | Sapatos (Variação/Cor) | **4 Opções** (4 variações de símbolo). *Não há símbolo se não houver faceta.* |
 
-## Requisitos Funcionais
-1. **Cadastro, Login, Edição e Exclusão de Usuários (RF-01):** O sistema deve permitir que usuários possam criar suas contas, logar em nosso sistema, editar seus dados e excluir sua conta se desejado.
-2. **Customização de Miniaturas (RF-02):** O sistema deve permitir que usuários cadastrados possam customizar suas miniaturas de personagens com várias opções de customização (Cabelo, Roupa, Cor de Pele, Acessório, Base, Gênero).
-3. **Visualização de Miniaturas Pré-Forjadas (RF-03):** O sistema deve permitir que os usuários possam navegar pela loja de miniaturas pré-forjadas (miniaturas que não são customizadas e veem sempre do mesmo jeito).
-4. **Gestão de Estoque (RF-04):** O sistema vai incluir um gestão de estoques que vai estar conectado com a Bancada Industrial que monitora se tem disponibilidades de matéria-prima e vaga na expedição.
-5. **Carrinho de Miniaturas (RF-05):** O sistema deve permitir que o usuário só consiga colocar miniaturas (tanto pré-forjada quanto customizável) no carrinho, desde que ele tenha uma conta já criada.
-6. **Compra e Histórico de Compras (RF-06):** O sistema deve permitir o usuário cadastrado comprar dos itens no carrinho colocando seu cartão de crédito/débito ou com pix para começar a produção das miniaturas após a confirmação. Além disso, o usuário cadastrado pode ver seu histórico de compras caso ele já tenha comprado alguma miniatura.
+## 🚀 Tecnologias Utilizadas
+* **Frontend:** React
+* **Backend:** Node.js, Express
+* **Banco de Dados:** PostgreSQL
 
-## Requisitos Não-Funcionais
-1. **Suporte Aos Principais Navegadores (RNF-01):** O sistema tem compatibilidade com todos os principais navegadores (Chrome, Firefox, Opera, Etc.).
-2. **Tempo de Resposta do Sistema para a Máquina 4.0 (RNF-02):** As requisições no sistema para a máquina tem um tempo de resposta de até 3 segundos.
-3. **Interface Intuitiva e Navegação Dinâmica (RNF-03):** O sistema terá uma interface fácil de entender, aonde o usuário conseguirá navegar pelas páginas com respostas de até 1 segundo
+## 🧑‍💻 Autores
+Um projeto desenvolvido por:
+
+| [<img src="https://avatars.githubusercontent.com/cassianobigodudo" width=115><br><sub>Cassiano Machado</sub>](https://github.com/cassianobigodudo) | [<img src="https://avatars.githubusercontent.com/jaime-ac" width=115><br><sub>Jaime António Cá</sub>](https://github.com/jaime-ac) | [<img src="https://avatars.githubusercontent.com/Jouusey" width=115><br><sub>José Vitor Pinheiro</sub>](https://github.com/Jouusey) | [<img src="https://avatars.githubusercontent.com/PedroG4R" width=115><br><sub>Pedro Guedes</sub>](https://github.com/pedroG4R) |
+| :---: | :---: | :---: | :---: |
