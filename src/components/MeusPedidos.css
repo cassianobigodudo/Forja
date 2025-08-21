@@ -1,0 +1,13 @@
+.container-meus-pedidos{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+}
+    .label-pedidos{
+        font-size: 100px;
+        font-weight: bolder;
+        color: #fff;
+    }

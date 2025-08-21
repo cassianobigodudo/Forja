@@ -1,0 +1,121 @@
+.container-meus-dados{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 30px;
+    background-color: transparent;
+}
+    .label-dados{
+        font-size: 100px;
+        font-weight: bolder;
+        color: #fff;
+    }
+
+    .parte-inputs{
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        flex-direction: column;
+        gap: 5px;
+        padding-left: 10px;
+        padding-top: 10px;
+        height: 80%;
+        width: 98%;
+        background-color: transparent;  
+    }
+        .inputs{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 19%;
+            width: 95%;
+            background-color: transparent;
+        }
+            .inputs-parte-dados{
+                display: flex;
+                justify-content: center;
+                align-items: start;
+                flex-direction: column;
+                padding-left: 5px;
+                gap: 10px;
+                height: 100%;
+                width: 70%;
+                background-color: transparent;
+            }
+                .inputs-dados{
+                    height: 50px;
+                    width: 750px;
+                    background-color: darkgreen;
+                }
+
+            .inputs-parte-botao-editar{
+                display: flex;
+                justify-content: start;
+                align-items: end;
+                padding-left: 5px;
+                padding-bottom: 15px;
+                height: 100%;
+                width: 30%;
+                background-color: transparent;
+            }
+                .botao-editar-dados{
+                    height: 50px;
+                    width: 50px;
+                    border: solid 1px #fff;
+                    background-color: darkgreen;
+                    cursor: pointer;
+                }
+
+    .parte-salvar-dados{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 10%;
+        width: 95%;
+        background-color: transparent;
+    }
+        .parte-deletar-conta{
+            display: flex;
+            justify-content: start;
+            align-items: end;
+            height: 100%;
+            width: 50%;
+            background-color: transparent;
+        }
+            .botao-deletar-conta{
+                height: 50px;
+                width: 250px;
+                border: none;
+                background-color: transparent;
+                color: #fff;
+                text-decoration: underline;
+                cursor: pointer;
+                font-size: 25px;
+                display: flex;
+                justify-content: start;
+                align-items: end;
+                padding-left: 5px;
+            }
+
+        .parte-salvar-edicao{
+            display: flex;
+            justify-content: end;
+            align-items: center;
+            height: 100%;
+            width: 50%;
+            background-color: transparent;
+            padding-right: 10px;
+        }
+            .botao-salvar-edicao{
+                height: 50px;
+                width: 200px;
+                border: solid 1px #fff;
+                border-radius: 10px;
+                font-size: 30px;
+                font-weight: bolder;
+                cursor: pointer;
+                background-color: darkgreen;
+            }
