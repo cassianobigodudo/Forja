@@ -1,0 +1,107 @@
+
+.container-pagina{ 
+
+     height: 100vh;
+     width: 100vw;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     flex-direction: column;
+
+     background-image: url(./public/fundo/tim-mcburnie-illustrationtutorial-theentrance.png);
+     background-size: cover; 
+}
+
+.container{
+    
+    height: 98vh;
+    width: 99vw;
+    background-color: rgba(0, 0, 0, 0.1);
+    border: 40px solid transparent;
+}
+
+.nav{
+    height: 72px;
+    display: flex; 
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    color: var(--Texto);
+}
+
+
+.logo-texto{
+
+    font-family: "fonte-logo";
+    font-size: 32px;
+    letter-spacing: 3px;
+    color: var(--Texto);
+}
+
+.navbar-links{ display: flex; gap: 72px;}
+
+.navbar-links a{
+    text-decoration: none;
+    color: var(--Texto); 
+    font-family: 'fonte-subtitulos'; 
+    font-size: 22px;
+    letter-spacing: 2px;
+}
+
+.ico1{
+    border: 1px solid rgba(233,225,209,.26);
+    background: transparent; color: var(--Texto);
+    padding: 8px 10px; 
+    border-radius: 999px; 
+    cursor: pointer;
+    }
+
+.ico2{
+    border: 1px solid rgba(233,225,209,.26);
+    background: transparent; color: var(--Texto);
+    padding: 8px 10px; 
+    border-radius: 999px; 
+    cursor: pointer;
+}
+
+.conteudo{
+    display: grid;
+    grid-template-columns: 260px 1fr 360px;
+    gap: 32px;
+    padding: 12px 32px 32px;
+    color: var(--Texto);
+}
+
+.left{  display: flex; flex-direction: column; align-items: flex-start; }
+.continue { font-family: 'fonte-subtitulos'; font-size: 22px; margin: 8px 0 4px;}
+
+.risco{
+    width: 100%;
+    border: none; 
+    border-top: 2px solid rgba(233,225,209,.35);
+    margin: 8px 0 16px;
+}
+
+.btn-voltar{
+    width: 210px; min-height: 160px;
+    font-family: 'fonte-logo'; font-size: 22px; color: var(--Texto);
+    border: none; cursor: pointer; text-transform: uppercase; line-height: 1.6;
+    background: var(--Fundo) url("/fundo/fundo-botao.png") center/100% no-repeat;
+}
+
+.Checkout .titulo{
+    font-family: 'fonte-subtitulos'; font-size: 28px; margin: 8px 0 12px;
+}
+
+.lista{
+    border-top: 2px solid rgba(233, 225, 209, 0.35);
+    border-bottom: 2px solid rgba(233, 225, 209, 0.35);
+    max-height: 430px; overflow: auto; padding-right: 8px;
+}
+
+.item{ display: flex; gap: 20px; padding: 16px 0;}
+
+
+
+
+
