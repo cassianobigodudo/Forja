@@ -7,56 +7,256 @@
      align-items: center;
      flex-direction: column;
 
-     background-image: url(./public/fundo/tim-mcburnie-illustrationtutorial-theentrance.png);
-     background-size: cover; 
+     background-image: url(./public/fundo/tim-mcburnie-illustrationtutorial-theentrance.jpg);
+     background-size: 180%; 
+     background-position: -880px center ;
 }
 
-.container{
+.pagina-custom{
     
+    display: flex;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+
+    height: 98vh;
+    width: 98.9vw;
+    
+     margin-left: 0.2%;
+    background-color: rgba(0, 0, 0, 0.1);
+
+    border-radius: 1%;
+    background-image: url(./public/fundo/arestas-do-fundo.svg);
+    background-size: 100%;
+    background-repeat: no-repeat;
+    
+
+}
+
+.navbar-container{
+      display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+
+    height: 10%;
+    width: 99.4%;
+
+    margin-top: 0.4%;
+
+    background-color: var(--Fundo);
+
+}
+
+    .logo-texto{
+
+        font-family: "fonte-logo";
+        font-size: 170px;
+        color: var(--Texto);
+    }
+    .logo-embaixo-texto{
+
+        font-family: "fonte-subtitulos";
+        font-size: 27px;
+        color: var(--Texto);
+        margin-bottom: 15%;
+    }
+
+    .btn-entrar{
+
+        height: 12%;
+        width: 18.9%;
+
+        font-family: "fonte-logo";
+        font-size: 27px;
+        color: var(--Texto);
+        
+        border: none;
+        background-color: var(--Fundo);
+        background-image: url(./public/fundo/fundo-botao.png);
+        background-size: 100%; 
+
+        cursor: pointer;
+
+    }
+
+.area-customizacao{
+    display: flex;
+    align-items: center;
+    text-align: center;
+    flex-direction: row;
+
+    height: 90%;
+    width: 99.4%;
+
+    margin-top: 0.4%;
+
+}
+
+.paperdoll-area{
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
     flex-direction: column;
 
-    height: 98vh;
-    width: 99vw;
-    background-color: rgba(0, 0, 0, 0.1);
+    height: 100%;
+    width: 25%;
 
-    border-radius: 1%;
-    border: 50px solid;
-    border-image: url(./public/fundo/arestas-do-fundo.svg) 30 round;
 
 }
 
-.logo-texto{
-
-    font-family: "fonte-logo";
-    font-size: 170px;
-    color: var(--Texto);
-}
-.logo-embaixo-texto{
-
-    font-family: "fonte-subtitulos";
-    font-size: 27px;
-    color: var(--Texto);
-    margin-bottom: 15%;
+.paperdoll-area img {
+    margin-top: -22%;
+    height: 96%;
 }
 
-.btn-entrar{
+.menu-primario-custom-container{
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    text-align: center;
+    flex-direction: column;
 
-    height: 12%;
-    width: 18.9%;
+    height: 100%;
+    width: 21%;
 
-    font-family: "fonte-logo";
-    font-size: 27px;
-    color: var(--Texto);
-    
+
+}
+
+.menu-primario-custom-top{
+     display: flex;
+    justify-content: start;
+    align-items: start;
+    text-align: center;
+    flex-direction: column;
+
+    height: 75%;
+    width: 100%;
+
+
+
+}
+    .btn-corpo{
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: row;
+
+    height: 9.4%;
+    width: 80%;
+    margin-top: 15%;
+
+    font-family: "fonte-titulos";
     border: none;
-    background-color: var(--Fundo);
-    background-image: url(./public/fundo/fundo-botao.png);
-    background-size: 100%; 
 
+    
+    background-image: url(./icones/fundo-btn.svg);
+    background-size: cover;
+    color: var(--Texto);
+    letter-spacing: 4px;
+    font-size: 21px;
+
+    text-indent: 10px;
     cursor: pointer;
+    }
+
+    .btn-corpo img{
+
+        height: 30px;
+        width: 40px;
+        margin-left: 12.5%;
+        position: absolute;
+
+    }
+
+    
+    .btn-corpo-follow{
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: row;
+
+    height: 9.4%;
+    width: 80%;
+
+    margin-top: 6%;
+
+    font-family: "fonte-titulos";
+    border: none;
+
+    
+    background-image: url(./icones/fundo-btn.svg);
+    background-size: cover;
+    color: var(--Texto);
+    letter-spacing: 4px;
+    font-size: 21px;
+
+    text-indent: 10px;
+    cursor: pointer;
+    }
+
+    .btn-corpo-follow img{
+
+        height: 30px;
+        width: 40px;
+        margin-left: 12.5%;
+        position: absolute;
+
+    }
+
+.menu-primario-custom-bottom{
+     display: flex;
+    justify-content: start;
+    align-items: start;
+    text-align: center;
+    flex-direction: row;
+
+    height: 10%;
+    width: 100%;
+
+
+}
+
+.btn-zoom{
+
+    height: 100%;
+    width: 20%;
+
+    margin-top: 2%;
+    background-image: url(./icones/Zoom.svg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    border: none;
+    cursor: pointer;
+
+}
+.btn-tirar-zoom{
+
+    height: 100%;
+    width: 20%;
+
+    margin-top: 2%;
+    background-image: url(./icones/Tirar-Zoom.svg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    border: none;
+    cursor: pointer;
+    margin-left: 7%;
+
+}
+
+
+
+.menu-secundario-custom{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+
+    height: 100%;
+    width: 54%;
 
 }
