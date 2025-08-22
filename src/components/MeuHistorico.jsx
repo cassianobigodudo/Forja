@@ -5,7 +5,13 @@ function MeuHistorico() {
   return (
     <div className='container-meu-historico'>
 
-        <label className='label-dados'>Meu Historico</label>
+        <div className="historico">
+          <div className="historico-titulo">
+            <label htmlFor="" className="label-historico-titulo">PEDIDOS FINALIZADOS✅</label>
+          </div>
+
+          <div className="historico-boxs"></div>
+        </div>
       
     </div>
   )

@@ -11,3 +11,33 @@
         font-weight: bolder;
         color: #fff;
     }
+
+    .historico{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        height: 90%;
+        width: 90%;
+        border: double 5px #fff;
+        background-color: transparent;
+    }
+        .historico-titulo{
+            display: flex;
+            justify-content: start;
+            align-items: center;
+            padding-left: 20px;
+            height: 20%;
+            width: 100%;
+            background-color: transparent;
+        }
+            .label-historico-titulo{
+                color: #fff;
+                font-size: 40px;
+                font-weight: bolder;
+            }
+        .historico-boxs{
+            height: 80%;
+            width: 100%;
+            background-color: transparent;
+        }
