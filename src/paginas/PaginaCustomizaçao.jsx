@@ -3,6 +3,8 @@ import "./PaginaCustomizaçao.css"
 import Navbar from '../componentes/Navbar'
 
 function PaginaCustomizaçao() {
+
+  
   return (
 
     <div className="container-pagina">
@@ -21,13 +23,13 @@ function PaginaCustomizaçao() {
 
             <div className="menu-primario-custom-top">
 
-             <button className='btn-corpo'>CORPO  <img src="./icones/Corpo.svg" alt="" /></button>
-             <button className='btn-corpo-follow'>CABEÇA  <img src="./icones/Cabeça.svg" alt="" /></button>
-             <button className='btn-corpo-follow'>TORSO  <img src="./icones/Torso.svg" alt="" /></button>
-             <button className='btn-corpo-follow'>PERNA  <img src="./icones/Perna.svg" alt="" /></button>
-             <button className='btn-corpo-follow'>SAPATO  <img src="./icones/Pé.svg" alt="" /></button>
-             <button className='btn-corpo-follow'>BASE  <img src="./icones/Base.svg" alt="" /></button>
-             <button className='btn-corpo-follow'>HISTÓRIA  <img src="./icones/História.svg" alt="" /></button>
+             <button className='btn-corpo'> <label className='botaoLbl' >CORPO</label>  <img className='img-btn-icon' src="./icones/Corpo.svg" alt="" /></button>
+             <button className='btn-corpo-follow'>  <label className='botaoLbl' >CABEÇA</label>  <img className='img-btn-icon' src="./icones/Cabeça.svg" alt="" /></button>
+             <button className='btn-corpo-follow'>  <label className='botaoLbl' >TORSO</label>  <img className='img-btn-icon' src="./icones/Torso.svg" alt="" /></button>
+             <button className='btn-corpo-follow'>  <label className='botaoLbl' >PERNA</label>  <img className='img-btn-icon' src="./icones/Perna.svg" alt="" /></button>
+             <button className='btn-corpo-follow'>  <label className='botaoLbl' >SAPATO</label>  <img className='img-btn-icon' src="./icones/Pé.svg" alt="" /></button>
+             <button className='btn-corpo-follow'>  <label className='botaoLbl' >BASE</label>  <img className='img-btn-icon' src="./icones/Base.svg" alt="" /></button>
+             <button className='btn-corpo-follow'>  <label className='botaoLbl' >HISTÓRIA</label>  <img className='img-btn-icon' src="./icones/História.svg" alt="" /></button>
             
 
             </div>
@@ -40,7 +42,18 @@ function PaginaCustomizaçao() {
             </div>
             
           </div>
-          <div className="menu-secundario-custom"></div>
+          <div className="menu-secundario-custom">
+
+
+          {//! Aqui vai ter 4 componentes, os menus secundarios.
+          //!  que dependendo do botão pressionado no menu primario, vai mudar as opções que aparecem.
+          //! 1 para o corpo, 1 para a cabeça, 1 para torso,perna,sapato e base. e 1 para a historia.
+          }
+          <div className="menu-secundario-fundo"></div>
+          
+        
+
+          </div>
 
 
         </div>
