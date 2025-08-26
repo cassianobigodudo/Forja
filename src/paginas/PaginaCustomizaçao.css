@@ -104,14 +104,34 @@
     height: 100%;
     width: 25%;
 
-    background-color: rgb(143, 209, 187, 0.1);
+    transition: 1s;
 
 }
-
 .paperdoll-area img {
     margin-top: -22%;
     height: 96%;
+    transition: 1s;
 }
+ .paperdoll-area-zoom{
+     display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+
+    height: 100%;
+    width: 40%;
+
+    transition: 1s;
+ }
+ 
+.paperdoll-area-zoom img {
+    margin-top: 60%;
+    height: 220%;
+    position: absolute;
+    transition: 1s;
+}
+
 
 .menu-primario-custom-container{
     display: flex;
@@ -123,7 +143,6 @@
     height: 100%;
     width: 21%;
     
-    background-color: rgba(255, 72, 0, 0.1);
 
 
 }
@@ -161,6 +180,38 @@
 
     text-indent: 22px;
     cursor: pointer;
+    transition: 0.6s;
+    }
+    .btn-corpo:hover{
+    margin-left: 10%;
+    transition: 0.3s;
+
+    }
+
+
+    .btn-corpo-ativado{ 
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: row;
+
+    height: 9.4%;
+    width: 80%;
+    margin-top: 15%;
+    margin-left: 10%;
+
+    font-family: "fonte-titulos";
+    border: none;
+
+    
+    background-image: url(./icones/fundo-btn-1.svg);
+    background-size: cover;
+    color: var(--Texto);
+
+    text-indent: 22px;
+    cursor: pointer;
+    transition: 0.3s;
+
     }
 
 
@@ -191,6 +242,37 @@
 
     text-indent: 22px;
     cursor: pointer;
+    transition: 0.6s;
+    }
+    
+    .btn-corpo-follow:hover{ 
+    margin-left: 10%;
+    transition: 0.3s;
+}
+
+    .btn-corpo-follow-ativado{
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: row;
+
+    height: 9.4%;
+    width: 80%;
+
+    margin-top: 6%;
+
+    font-family: "fonte-titulos";
+    border: none;
+
+    
+    background-image: url(./icones/fundo-btn-1.svg);
+    background-size: cover;
+    color: var(--Texto);
+
+    margin-left: 10%;
+    text-indent: 22px;
+    cursor: pointer;
+    transition: 0.3s;
     }
 
     .img-btn-icon{
@@ -250,10 +332,10 @@
     text-align: center;
     flex-direction: column;
 
-    height: 100%;
-    width: 54%;
+    height: 80%;
+    width: 36%;
+    margin-bottom: 2.6%;
     
-    background-color: rgba(12, 182, 40, 0.1);
 
 }
 
@@ -264,14 +346,12 @@
     text-align: center;
     flex-direction: column;
 
-    height: 77.9%;
-    width:71%;
-    margin-bottom: 6%;
-    margin-right: 20%;
-    
+    height: 100%;
+    width: 100%;
+
     
     background-image: url(./fundo/Aresta-menu-secundario.png);
-    background-size: contain;
+    background-size: cover;
     background-color: var(--FundoAlternativo);
 
 

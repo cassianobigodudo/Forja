@@ -1,9 +1,29 @@
 import React from 'react'
 import "./PaginaCustomizaçao.css"
 import Navbar from '../componentes/Navbar'
+import { useState } from 'react'
+import MenuSecCabeca from '../componentes/MenuSecCabeca'
+import MenuSecCorpo from '../componentes/MenuSecCorpo'
+import MenuSecHistoria from '../componentes/MenuSecHistoria'
 
 function PaginaCustomizaçao() {
 
+  const [btnAtivo, setBtnAtivo] = useState('CORPO')
+  const [zoomAtivo, setZoomAtivo] = useState('')
+
+ function handleButtonClick(nomeDoBotao) {
+    setBtnAtivo(nomeDoBotao);
+  }
+
+  function zoomar() {
+
+    if(zoomAtivo == 'paperdoll-area'){
+    setZoomAtivo('paperdoll-area-zoom')}
+    else {
+      setZoomAtivo('paperdoll-area')
+    }
+  }
+  
   
   return (
 
@@ -15,7 +35,7 @@ function PaginaCustomizaçao() {
         </div>
 
         <div className="area-customizacao">
-          <div className="paperdoll-area">
+          <div className={zoomAtivo}>
             <img src="./personagem-FEMININO/CORPO-FEMININO.png" alt="" />
           </div>
           
@@ -23,21 +43,42 @@ function PaginaCustomizaçao() {
 
             <div className="menu-primario-custom-top">
 
-             <button className='btn-corpo'> <label className='botaoLbl' >CORPO</label>  <img className='img-btn-icon' src="./icones/Corpo.svg" alt="" /></button>
-             <button className='btn-corpo-follow'>  <label className='botaoLbl' >CABEÇA</label>  <img className='img-btn-icon' src="./icones/Cabeça.svg" alt="" /></button>
-             <button className='btn-corpo-follow'>  <label className='botaoLbl' >TORSO</label>  <img className='img-btn-icon' src="./icones/Torso.svg" alt="" /></button>
-             <button className='btn-corpo-follow'>  <label className='botaoLbl' >PERNA</label>  <img className='img-btn-icon' src="./icones/Perna.svg" alt="" /></button>
-             <button className='btn-corpo-follow'>  <label className='botaoLbl' >SAPATO</label>  <img className='img-btn-icon' src="./icones/Pé.svg" alt="" /></button>
-             <button className='btn-corpo-follow'>  <label className='botaoLbl' >BASE</label>  <img className='img-btn-icon' src="./icones/Base.svg" alt="" /></button>
-             <button className='btn-corpo-follow'>  <label className='botaoLbl' >HISTÓRIA</label>  <img className='img-btn-icon' src="./icones/História.svg" alt="" /></button>
-            
+           
+
+              <button className={btnAtivo === 'CORPO' ? 'btn-corpo-ativado' : 'btn-corpo'} onClick={() => handleButtonClick('CORPO')}>
+                  <label className='botaoLbl'>CORPO</label> <img className='img-btn-icon' src="./icones/Corpo.svg" alt="" />
+              </button>
+
+              <button className={btnAtivo === 'CABEÇA' ? 'btn-corpo-follow-ativado' : 'btn-corpo-follow'} onClick={() => handleButtonClick('CABEÇA')}>
+                  <label className='botaoLbl'>CABEÇA</label> <img className='img-btn-icon' src="./icones/Cabeça.svg" alt="" />
+              </button>
+
+              <button className={btnAtivo === 'TORSO' ? 'btn-corpo-follow-ativado' : 'btn-corpo-follow'} onClick={() => handleButtonClick('TORSO')}>
+                  <label className='botaoLbl'>TORSO</label> <img className='img-btn-icon' src="./icones/Torso.svg" alt="" />
+              </button>
+
+              <button className={btnAtivo === 'PERNA' ? 'btn-corpo-follow-ativado' : 'btn-corpo-follow'} onClick={() => handleButtonClick('PERNA')}>
+                  <label className='botaoLbl'>PERNA</label> <img className='img-btn-icon' src="./icones/Perna.svg" alt="" />
+              </button>
+
+              <button className={btnAtivo === 'SAPATO' ? 'btn-corpo-follow-ativado' : 'btn-corpo-follow'} onClick={() => handleButtonClick('SAPATO')}>
+                  <label className='botaoLbl'>SAPATO</label> <img className='img-btn-icon' src="./icones/Pé.svg" alt="" />
+              </button>
+
+              <button className={btnAtivo === 'BASE' ? 'btn-corpo-follow-ativado' : 'btn-corpo-follow'} onClick={() => handleButtonClick('BASE')}>
+                  <label className='botaoLbl'>BASE</label> <img className='img-btn-icon' src="./icones/Base.svg" alt="" />
+              </button>
+
+              <button className={btnAtivo === 'HISTÓRIA' ? 'btn-corpo-follow-ativado' : 'btn-corpo-follow'} onClick={() => handleButtonClick('HISTÓRIA')}>
+                  <label className='botaoLbl'>HISTÓRIA</label> <img className='img-btn-icon' src="./icones/História.svg" alt="" />
+              </button>
 
             </div>
             
             <div className="menu-primario-custom-bottom">
 
-              <button className='btn-zoom' ></button>
-              <button className='btn-tirar-zoom'></button>
+              <button onClick={zoomar} className='btn-zoom' ></button>
+              <button onClick={zoomar}  className='btn-tirar-zoom'></button>
 
             </div>
             
@@ -45,12 +86,17 @@ function PaginaCustomizaçao() {
           <div className="menu-secundario-custom">
 
 
-          {//! Aqui vai ter 4 componentes, os menus secundarios.
-          //!  que dependendo do botão pressionado no menu primario, vai mudar as opções que aparecem.
-          //! 1 para o corpo, 1 para a cabeça, 1 para torso,perna,sapato e base. e 1 para a historia.
-          }
-          <div className="menu-secundario-fundo"></div>
           
+           <div className="menu-secundario-fundo">
+
+            {btnAtivo === 'CORPO' && <MenuSecCorpo />}
+            {btnAtivo === 'CABEÇA' && <MenuSecCabeca />}
+            {btnAtivo === 'HISTÓRIA' && <MenuSecHistoria/>}
+            
+           </div>
+          
+
+
         
 
           </div>
