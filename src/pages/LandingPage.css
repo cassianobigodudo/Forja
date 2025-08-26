@@ -1,0 +1,47 @@
+.container-landing-page{ 
+
+    height: 100vh;
+    width: 100vw;
+    background-image: url(./public/fundo/tim-mcburnie-completa.webp);
+    /* background-color: red; */
+    background-position: 10%;
+    background-size: 170%;
+   /* border: 50px solid; */
+   /* border-image: url(./public/fundo/arestas-do-fundo.svg) 60 round; */
+}
+
+    .container-centro{
+
+        height: 70%;
+        width: 100%;
+        background-color: red;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-image: url(./outros/meio-linhas.svg);
+        background-position: 50% 9%;
+        background-size: 350px;
+        background-repeat: no-repeat;
+        
+    }
+
+
+        .titulo-central{
+            font-size: 123px;
+            font-family: 'fonte-logo';
+            margin-top: 20px;
+        }
+
+        .subtitulo-central{
+            font-family: 'fonte-subtitulos';
+            font-size: 20px;
+
+        }
+
+        .linha-subtitulo-landingpage{
+            width: 300px;
+            margin-top: 5px;
+
+        }
+
