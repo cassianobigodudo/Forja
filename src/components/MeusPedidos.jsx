@@ -1,5 +1,6 @@
 import React from 'react'
 import './MeusPedidos.css'
+import BoxItem from './BoxItem'
 
 function MeusPedidos() {
   return (
@@ -10,7 +11,14 @@ function MeusPedidos() {
             <div className="solicitacoes-titulo">
               <label className='titulo-solicitacoes-producao'>SOLICITADOS↗️</label>
             </div>
-            <div className="solicitacoes-boxs"></div>
+            <div className="solicitacoes-boxs">
+              <div className="boxs-itens">
+                <BoxItem/>
+                <BoxItem/>
+                <BoxItem/>
+                <BoxItem/>
+              </div>
+            </div>
           </div>
         </div>
 

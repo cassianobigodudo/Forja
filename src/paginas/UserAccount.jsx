@@ -6,6 +6,7 @@ import MeuHistorico from '../components/MeuHistorico';
 
 function UserAccount() {
     const [componente, setComponente] = useState(<MeusDados />);
+    const [ativo, setAtivo] = useState("dados"); // controla botão ativo
 
   return (
     <div className='container-user-account'>
@@ -16,13 +17,43 @@ function UserAccount() {
 
                     <div className="menu-parte-foto">
                         <div className="parte-foto"></div>
-                        <h3>Nome usuário</h3>
+                        <label className='label-nome-usuario'>Nome usuário</label>
                     </div>
 
                     <div className="menu-parte-botoes">
-                        <button className="botoes-menu" onClick={() => setComponente(<MeusDados/>)}>Meus Dados</button>
-                        <button className="botoes-menu" onClick={() => setComponente(<MeusPedidos/>)}>Pedidos</button>
-                        <button className="botoes-menu" onClick={() => setComponente(<MeuHistorico/>)}>Histórico</button>
+
+                        <button className={`botoes-menu ${ativo === "dados" ? "ativo" : ""}`}
+                            onClick={() => {
+                                setComponente(<MeusDados/>)
+                                setAtivo("dados")
+                                }
+                            }
+                        >
+                            Meus Dados
+                        </button>
+
+                        <button className={`botoes-menu ${ativo === "pedidos" ? "ativo" : ""}`}
+                            onClick={() => {
+                                setComponente(<MeusPedidos />)
+                                setAtivo("pedidos")
+                                }
+                            }
+                        >
+                            Pedidos
+                        </button>
+
+                        <button className={`botoes-menu ${ativo === "historico" ? "ativo" : ""}`}
+                            onClick={() => {
+                                setComponente(<MeuHistorico/>)
+                                setAtivo("historico")
+                                }
+                            }
+                        >
+                            Histórico
+                        </button>
+
+                        {/* <button className="botoes-menu" onClick={() => setComponente(<MeusPedidos/>)}>Pedidos</button>
+                        <button className="botoes-menu" onClick={() => setComponente(<MeuHistorico/>)}>Histórico</button> */}
                     </div>
 
                     <div className="menu-parte-sair">

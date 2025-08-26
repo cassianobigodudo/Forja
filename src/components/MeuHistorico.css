@@ -35,6 +35,10 @@
                 color: #fff;
                 font-size: 40px;
                 font-weight: bolder;
+                font-family: "fonte-titulos";
+                font-size: 40px;
+                font-weight: bolder;
+                color: #fff;
             }
         .historico-boxs{
             height: 80%;

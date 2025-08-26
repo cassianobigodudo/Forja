@@ -8,6 +8,7 @@
 }
     .label-pedidos{
         font-size: 100px;
+        font-family: "fonte-titulos";
         font-weight: bolder;
         color: #fff;
     }
@@ -43,12 +44,30 @@
                 color: #fff;
                 font-size: 40px;
                 font-weight: bolder;
+                font-family: "fonte-titulos";
             }
+            
             .solicitacoes-boxs{
+                display: flex;
+                justify-content: start;
+                align-items: center;
+                flex-direction: column;
                 height: 80%;
                 width: 100%;
                 background-color: transparent;
             }
+                .boxs-itens{
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    /* flex-direction: column; */
+                    /* border: double 2px #fff; */
+                    background-color: transparent;
+                    padding: 10px;
+                    gap: 30px;
+                    overflow: auto;
+                    flex-wrap: wrap;
+                }
 
     .parte-producao{
         display: flex;

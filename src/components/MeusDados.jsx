@@ -6,7 +6,6 @@ function MeusDados() {
     const [email, setEmail] = useState();
     const [senha, setSenha] = useState();
     const [endereco, setEndereco] = useState();
-    const [cartao, setCartao] = useState();
 
   return (
     <div className='container-meus-dados'>
@@ -15,7 +14,7 @@ function MeusDados() {
 
             <div className="inputs">
                 <div className="inputs-parte-dados">
-                    <h3>Apelido</h3>
+                    <label className='label-dados'>Apelido</label>
                     <input 
                         type="text" 
                         className="inputs-dados" 
@@ -32,7 +31,7 @@ function MeusDados() {
 
             <div className="inputs">
                 <div className="inputs-parte-dados">
-                    <h3>E-mail</h3>
+                    <label className='label-dados'>E-mail</label>
                     <input 
                         type="text" 
                         className="inputs-dados" 
@@ -49,7 +48,7 @@ function MeusDados() {
 
             <div className="inputs">
                 <div className="inputs-parte-dados">
-                    <h3>Senha</h3>
+                    <label className='label-dados'>Senha</label>
                     <input 
                         type="text" 
                         className="inputs-dados" 
@@ -66,7 +65,7 @@ function MeusDados() {
 
             <div className="inputs">
                 <div className="inputs-parte-dados">
-                    <h3>Endereço</h3>
+                    <label className='label-dados'>Endereço</label>
                     <input 
                         type="text" 
                         className="inputs-dados" 
@@ -78,23 +77,6 @@ function MeusDados() {
                 </div>
                 <div className="inputs-parte-botao-editar">
                     <button className="botao-editar-dados" onClick={() => alert('Botão para adicionar endereço')}>➕</button>
-                </div>
-            </div>
-
-            <div className="inputs">
-                <div className="inputs-parte-dados">
-                    <h3>Cartão</h3>
-                    <input 
-                        type="text" 
-                        className="inputs-dados" 
-                        placeholder='Cartão' 
-                        disabled
-                        value={cartao}
-                        onChange={(event) => setCartao(event.target.value)}
-                    />
-                </div>
-                <div className="inputs-parte-botao-editar">
-                    <button className="botao-editar-dados" onClick={() => alert('Botão para adicionar cartão de pagamento')}>➕</button>
                 </div>
             </div>
             
