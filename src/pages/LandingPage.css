@@ -1,8 +1,8 @@
-.container-landing-page{ 
+.container-landing-page-cima{ 
 
     height: 100vh;
     width: 100vw;
-    background-image: url(./public/fundo/tim-mcburnie-completa.webp);
+    background-image: url(./public/fundo/tim-mcburnie-completa-escurecido.png);
     /* background-color: red; */
     background-position: 10%;
     background-size: 170%;
@@ -14,7 +14,7 @@
 
         height: 70%;
         width: 100%;
-        background-color: red;
+        /* background-color: red; */
         color: white;
         display: flex;
         flex-direction: column;
@@ -45,3 +45,107 @@
 
         }
 
+        .btn-entrar{
+
+            color: white;
+            font-family: 'fonte-logo';
+            /* background-repeat: no-repeat; */
+            background-size: contain;
+            background-repeat: no-repeat;
+            width: 15%;
+            height: 15%;
+            margin-top: 50px;
+            border: none;
+            cursor: pointer;
+            /* background-color: rgba(16, 14, 11, 0.4); */
+            background-image: url(/fundo/fundo-botaoplus.svg);
+        }
+
+    .container-saberMais{
+
+        height: 15%;
+        width: 37%;
+        /* background-color: blue; */
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        
+        
+    }
+    
+    .lbl-saibaMais{
+        font-family: 'fonte-titulos';
+        color: white;
+        font-size: 35px;            
+        margin: 25px;
+        cursor: pointer;
+    }
+
+    .flechinha{
+
+        width: 50px;
+
+
+    }
+
+.container-landing-page-baixo{
+
+    height: 100vh;
+    width: 100vw;
+    background-image: url(/fundo/tim-mcburnie-completa-escurecido.png);
+    background-color: black;
+    background-position: 10%;
+    background-position-y: 200%;
+    background-size: 170%;
+    background-repeat: no-repeat;
+}
+
+    .container-saberMenos{
+
+        height: 15%;
+        width: 37%;
+        /* background-color: blue; */
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        
+        
+    }
+
+    .lbl-saibaMenos{
+        font-family: 'fonte-titulos';
+        color: white;
+        font-size: 35px;            
+        margin: 25px;
+        cursor: pointer;
+    }
+
+
+    .flechinha-inversa{
+        width: 50px;
+            transform: rotateX(180deg)
+    }
+
+
+.container-pai-infos-forja{
+
+    height: 85%;
+    width: 100%;
+    background-color: red;
+    display: flex;
+
+}
+
+    .container-infos-esquerda{
+        height: 100%;
+        width: 75%;
+        background-color: green;
+
+    }
+
+    .container-gif-direita{
+
+        height: 100%;
+        width: 25%;
+        background-color: salmon;
+    }
