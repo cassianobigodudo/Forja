@@ -1,5 +1,6 @@
 import React from 'react'
 import './MeuHistorico.css'
+import BoxLoginCadastro from './BoxLoginCadastro'
 
 function MeuHistorico() {
   return (
@@ -10,7 +11,9 @@ function MeuHistorico() {
             <label htmlFor="" className="label-historico-titulo">PEDIDOS FINALIZADOS✅</label>
           </div>
 
-          <div className="historico-boxs"></div>
+          <div className="historico-boxs">
+            <BoxLoginCadastro/>
+          </div>
         </div>
       
     </div>

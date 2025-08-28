@@ -52,8 +52,6 @@ function UserAccount() {
                             Histórico
                         </button>
 
-                        {/* <button className="botoes-menu" onClick={() => setComponente(<MeusPedidos/>)}>Pedidos</button>
-                        <button className="botoes-menu" onClick={() => setComponente(<MeuHistorico/>)}>Histórico</button> */}
                     </div>
 
                     <div className="menu-parte-sair">

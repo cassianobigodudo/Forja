@@ -1,0 +1,27 @@
+.container-cadastro{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    background-color: transparent;
+}
+    .cadastro-componente{
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        width: 100%;
+        background-color: transparent;
+    }
+        .cadastro-parte-dados{
+            display: flex;
+            justify-content: center;
+            align-items: start;
+            flex-direction: column;
+            padding: 10px;
+            gap: 10px;
+            height: 25%;
+            width: 100%;
+            background-color: transparent;
+        }
+        

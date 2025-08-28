@@ -28,13 +28,13 @@
         }
             .botao-detalhes-item{
                 height: 25px;
-                width: 150px;
+                width: 100px;
                 border: solid 2px #fff;
                 border-radius: 10px;
                 color: #fff;
                 cursor: pointer;
-                background-color: darkgray;
+                background-color: #5B5E1C;
                 font-family: "fonte-paragrafos";
-                font-size: 20px;
+                font-size: 15px;
             }
     
