@@ -41,13 +41,15 @@ function PaginaPagamento() {
 
                 {/* COLUNA CENTRAL */}
                 <sectiom className='Checkout'>
+
                     <h2 className='titulo'>Pagamento:</h2>
 
                     <div className='lista'>
-                        <article className="item">
+                        <article className="item">                            
                             <div className="thumb thumb-1" />
                             <div className="det">
-                                <h3> <span className="preco">999,99$</span></h3>
+                                
+                                <h3> <span className="preco"> figura (x) 999,99$</span></h3>
                                 <ul>
                                     <li>– cabelo (x) 99$</li>
                                     <li>– topo (x) 99$</li>
@@ -56,6 +58,9 @@ function PaginaPagamento() {
                                     <li>– acessório pescoço (x) 99$</li>
                                     <li>– arma (x) 99$</li>
                                     <li>– marcas (x) 99$</li>
+                                    <li>– sapatos (x) 99$</li>
+                                    <li>– sapatos (x) 99$</li>
+                                    <li>– sapatos (x) 99$</li>
                                     <li>– sapatos (x) 99$</li>
                                 </ul>
                             </div>
@@ -68,17 +73,34 @@ function PaginaPagamento() {
                 {/* COLUNA DIREITA */}
                 <aside className='direita'>
                     <div className='metodos'>
-                        <button className='Pix'>Pix</button>
-                        <button className='Crédito'>Crédito</button>
-                        <button className='Boleto'>Boleto</button>
+                            <div className='metodo1'>
+                            <button>
+                            <div className="metodo-ico metodo-pix" />
+                                Pix
+                            </button>
+                            </div>
+
+                            <div className='metodo2'>
+                            <button>
+                            <div className="metodo-ico metodo-cartao" />
+                                Cartão
+                            </button>
+                            </div>
+
+                            <div className='metodo3'>
+                            <button>
+                            <div className="metodo-ico metodo-boleto" />
+                                Boleto
+                            </button>
+                            </div>
                     </div>
 
-                    <div className="resumo">
+                    <aside className="resumo">
                         <p className="envio">Envio 99,99$</p>
-                        <hr className="risco" />
+                        <hr className='risco'/>
                         <p className="total-label">Total:</p>
                         <p className="total">99.999,99$</p>
-                    </div>
+                    </aside>
                     <button className="btn-prosseguir">PROSSEGUIR</button>
                 </aside>
             </main>
