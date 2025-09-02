@@ -1,15 +1,13 @@
 import { useState } from 'react'
 import './App.css'
-import Teste from './paginas/Teste'
-import PaginaCustomizaçao from './paginas/PaginaCustomizaçao'
-import PaginaPagamento from './paginas/PaginaPagamento'
-import LandingPage from './pages/LandingPage.jsx'
+import PaginaPagamento from './pages/PaginaPagamento'
 
 function App() {
 
   return (
     <PaginaPagamento/>
-    <LandingPage/>
+
+    // <LandingPage/>
   )
 }
 
