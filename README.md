@@ -28,18 +28,18 @@ Utilizando a bancada industrial para Indústria 4.0 disponibilizada pelo SENAI, 
 ## ✨ Funcionalidades
 
 ### Requisitos Funcionais
--   ✅ **Gestão de Usuários (RF-01):** Cadastro, login, edição de perfil e exclusão de conta.
--   ✅ **Customizador de Miniaturas (RF-02):** Ferramenta para personalizar gênero, cor de pele, cabelo, roupas, armas, acessórios e a base da miniatura.
--   ✅ **Criação de Enredo com IA Generativa (RF-03):** Geração de uma história com IA após a criação da miniatura.
--   ✅ **Loja de Miniaturas (RF-04):** Galeria para visualizar e comprar miniaturas pré-fabricadas.
--   ✅ **Gestão de Estoque (RF-05):** Integração com a bancada industrial para monitorar matéria-prima e capacidade de expedição.
--   ✅ **Carrinho de Compras (RF-06):** Adição de miniaturas (customizadas ou pré-fabricadas) ao carrinho para usuários logados.
--   ✅ **Checkout e Histórico (RF-07):** Finalização da compra (Pix, Cartão) e acesso ao histórico de pedidos.
+- ✅ **Gestão de Usuários (RF-01):** Cadastro, login, edição de perfil e exclusão de conta.
+- ✅ **Customizador de Miniaturas (RF-02):** Ferramenta para personalizar gênero, cor de pele, cabelo, roupas, armas, acessórios e a base da miniatura.
+- ✅ **Criação de Enredo com IA Generativa (RF-03):** Geração de uma história com IA após a criação da miniatura.
+- ✅ **Loja de Miniaturas (RF-04):** Galeria para visualizar e comprar miniaturas pré-fabricadas.
+- ✅ **Gestão de Estoque (RF-05):** Integração com a bancada industrial para monitorar matéria-prima e capacidade de expedição.
+- ✅ **Carrinho de Compras (RF-06):** Adição de miniaturas (customizadas ou pré-fabricadas) ao carrinho para usuários logados.
+- ✅ **Checkout e Histórico (RF-07):** Finalização da compra (Pix, Cartão) e acesso ao histórico de pedidos.
 
 ### Requisitos Não-Funcionais
--   ⚙️ **Compatibilidade (RNF-01):** Suporte aos principais navegadores do mercado (Chrome, Firefox, Opera, etc.).
--   ⚙️ **Performance (RNF-02):** Tempo de resposta de até 3 segundos para requisições entre o sistema e a bancada industrial.
--   ⚙️ **Usabilidade (RNF-03):** Interface intuitiva com navegação fluida e respostas de página em até 1 segundo.
+- ⚙️ **Compatibilidade (RNF-01):** Suporte aos principais navegadores do mercado (Chrome, Firefox, Opera, etc.).
+- ⚙️ **Performance (RNF-02):** Tempo de resposta de até 3 segundos para requisições entre o sistema e a bancada industrial.
+- ⚙️ **Usabilidade (RNF-03):** Interface intuitiva com navegação fluida e respostas de página em até 1 segundo.
 
 ## 🎨 Protótipos das Telas
 
