@@ -1,4 +1,4 @@
-# ⚒️ A Forja
+# ⚒️ Forja
 
 > Sua loja de miniaturas de RPG personalizáveis, forjadas para suas aventuras.
 
@@ -6,7 +6,7 @@
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
 <p align="center">
-  <img src="URL_PARA_UM_LOGO_OU_BANNER_AQUI" width="400" alt="Logo do Projeto A Forja">
+  <img src="URL_PARA_UM_LOGO_OU_BANNER_AQUI" width="400" alt="Logo do Projeto Forja">
 </p>
 
 ## 📜 Índice
@@ -21,7 +21,7 @@
 
 ## 📖 Sobre o Projeto
 
-**A Forja** é uma plataforma de e-commerce focada na venda e fabricação de miniaturas customizáveis para campanhas de RPG de mesa.
+**Forja** é uma plataforma de e-commerce focada na venda e fabricação de miniaturas customizáveis para campanhas de RPG de mesa.
 
 Utilizando a bancada industrial para Indústria 4.0 disponibilizada pelo SENAI, nosso objetivo é oferecer aos jogadores um espaço onde eles possam dar vida aos seus personagens, criando e comprando miniaturas com um nível profundo de personalização.
 
