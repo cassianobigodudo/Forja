@@ -1,0 +1,62 @@
+/* .container-pagina{ 
+
+     height: 100vh;
+     width: 100vw;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     flex-direction: column;
+
+     background-image: url(./public/fundo/tim-mcburnie-illustrationtutorial-theentrance.png);
+     background-size: cover; 
+}
+
+.container{
+    
+    display: flex;
+    justify-content: center;a
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+
+    height: 98vh;
+    width: 99vw;
+    background-color: rgba(0, 0, 0, 0.1);
+
+    border-radius: 1%;
+    border: 50px solid;
+    border-image: url(./public/fundo/arestas-do-fundo.svg) 30 round;
+
+}
+
+.logo-texto{
+
+    font-family: "fonte-logo";
+    font-size: 170px;
+    color: var(--Texto);
+}
+.logo-embaixo-texto{
+
+    font-family: "fonte-subtitulos";
+    font-size: 27px;
+    color: var(--Texto);
+    margin-bottom: 15%;
+}
+
+.btn-entrar{
+
+    height: 12%;
+    width: 18.9%;
+
+    font-family: "fonte-logo";
+    font-size: 27px;
+    color: var(--Texto);
+    
+    border: none;
+    background-color: var(--Fundo);
+    background-image: url(./public/fundo/fundo-botao.png);
+    background-size: 100%; 
+
+    cursor: pointer;
+
+} */
