@@ -7,7 +7,7 @@ import MenuSecCorpo from '../componentes/MenuSecCorpo';
 import MenuSecHistoria from '../componentes/MenuSecHistoria';
 
 function PaginaCustomizaçao() {
-const [btnAtivo, setBtnAtivo] = useState('CORPO');
+const [btnAtivo, setBtnAtivo] = useState('');
 const [ZoomAtivo, setZoomAtivo] = useState(false);
 
 function handleButtonClick(nomeDoBotao) {
