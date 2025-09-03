@@ -19,24 +19,52 @@
         width: 100%;
         background-color: rgb(165, 42, 42, 0.5);
     }
-        .label{
+    
+        .label-container{
         display: flex;
-        flex-direction: row;
         justify-content: center;
         align-items: center;
-        height: 30%;
+        text-align: center;
+        height: 40%;
         width: 100%;
-        background-color: rgba(21, 182, 61, 0.5);
+        background-color: rgba(46, 85, 13, 0.5)
     }
+            .lbl{
+            display: flex;
+            margin-top: 0.4%;
+            justify-content: center;
+            align-items: center;;
+            font-size: 39px;
+        }
         .skin-colors{
         display: flex;
-        flex-direction: row;
         justify-content: center;
         align-items: center;
-        height: 70%;
+        height: 60%;
         width: 100%;
         background-color: rgba(146, 163, 53, 0.5);
+        font-size: 46px;
+        gap: 0.86%;
     }
+    .cor-pele{
+
+        display: flex;
+        height: 70%;
+        width: 4%;
+        border-radius: 50%;
+        cursor: pointer;
+
+    }
+    .cor-pele.ativada{
+
+        display: flex;
+        height: 70%;
+        width: 4%;
+        border-radius: 50%;
+        cursor: pointer;
+
+    }
+
 
 
     .bottom{

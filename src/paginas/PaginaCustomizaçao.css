@@ -10,7 +10,6 @@
   }
 }
 
-
 .container-pagina {
 height: 100vh;
 width: 100vw;
@@ -111,6 +110,7 @@ black 95%,
 transparent 100%
 );
 transition: 1s;
+animation: idle infinite 5s ease-in-out;
 }
 
 
@@ -125,11 +125,13 @@ height: 96%;
 transform-origin: center center;
 transition: transform 1s ease-in-out;
 transform: scale(1) translateY(-5%);
+ transition: 1s;
 }
 
 .paperdoll-area.zoomed img {
 margin-right: 1%;
 transform: scale(2.2) translateY(20%);
+transition: 1s;
 }
 
 
