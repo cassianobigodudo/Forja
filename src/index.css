@@ -49,27 +49,27 @@
 
 @font-face {
   font-family: "fonte-logo";
-  src: url(./public/fontes/Hellraiser-SC.ttf);
+  src: url(./fontes/Hellraiser-SC.ttf);
 }
 
 @font-face {
   font-family: "fonte-titulos";
-  src: url(./public/fontes/IMFellEnglishSC-Regular.ttf);
+  src: url(./fontes/IMFellEnglishSC-Regular.ttf);
 }
 
 
 @font-face {
   font-family: "fonte-subtitulos";
-  src: url(./public/fontes/Trykker-Regular.ttf);
+  src: url(.fontes/Trykker-Regular.ttf);
 }
 
 @font-face {
   font-family: "fonte-paragrafos";
-  src: url(./public/fontes/IMFellDoublePica-Regular.ttf);
+  src: url(./fontes/IMFellDoublePica-Regular.ttf);
 }
 
 
 @font-face {
   font-family: "fonte-numeros";
-  src: url(./public/fontes/DonegalOne-Regular.ttf);
+  src: url(./fontes/DonegalOne-Regular.ttf);
 }

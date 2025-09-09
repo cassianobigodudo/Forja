@@ -36,6 +36,11 @@
         justify-content: space-around;
     }
 
+        .label-navbar{
+            cursor: pointer;
+
+        }
+
     .container-carrinho-usuario{
         height: 100%;
         width: 25%;
