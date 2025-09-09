@@ -1,0 +1,84 @@
+.container{ 
+
+     height: 98vh;
+     width: 98.9vw;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     flex-direction: column;
+
+     background-size: cover; 
+}
+
+
+.navbar{
+
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    justify-content: start;
+    align-items: center;
+
+    font-family: "fonte-titulo";
+    color: var(--Texto);
+
+}
+.logo{
+    
+    font-family: "fonte-logo";
+    font-size: 40px;
+    margin-left: 1%;
+    margin-right: 29.3%;
+    cursor: pointer;
+}
+.btn-inicio{
+
+    font-family: "fonte-titulos";
+    margin-right: 5%;
+    cursor: pointer;
+
+}
+.btn-forja{
+
+    font-family: "fonte-titulos";
+    margin-right: 5%;
+    cursor: pointer;
+
+}
+.btn-loja{
+
+    font-family: "fonte-titulos";
+    margin-right: 5%;
+    border: none;
+    cursor: pointer;
+
+}
+
+.btn-carrinho{
+
+    height: 70%;
+    width: 3.31%;
+
+    margin-left: 25%;
+    margin-top: 1%;
+    
+    background-image: url("./icones/Carrinho.svg");
+    border: none;
+    background-size: 100%;
+    background-repeat: no-repeat;
+}
+.btn-user{
+
+    height: 70%;
+    width: 3.31%;
+
+    margin-left: 1%;
+    margin-top: 1%;
+    margin-right: 2%;
+    
+    background-image: url("./icones/Usuario.svg");
+    border: none;
+    background-size: 100%;
+    background-repeat: no-repeat;
+}
