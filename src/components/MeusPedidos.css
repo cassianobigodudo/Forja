@@ -60,8 +60,6 @@
                     display: flex;
                     justify-content: center;
                     align-items: center;
-                    /* flex-direction: column; */
-                    /* border: double 2px #fff; */
                     background-color: transparent;
                     padding: 10px;
                     gap: 20px;

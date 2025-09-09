@@ -5,7 +5,7 @@
     flex-direction: column;
     height: 100vh;
     width: 100vw;
-    background-image: url(./public/fundo/tim-mcburnie-illustrationtutorial-theentrance.png);
+    background-image: url(/public/fundo/tim-mcburnie-illustrationtutorial-theentrance.jpg);
     background-size: cover;
     
 }
@@ -19,15 +19,15 @@
         width: 99vw;
         background-color: rgba(0, 0, 0, 0.1);
         border-radius: 1%;
-        border: 50px solid;
-        border-image: url(./public/fundo/arestas-do-fundo.svg) 30 round;
+        border: 50px solid #fff;
+        border-image: url(/public/fundo/arestas-do-fundo.svg) 30 round;
     }
         .container-principal-menu{
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100%;
-            width: 35%;
+            width: 30%;
             background-color: transparent;
             
         }
@@ -36,7 +36,7 @@
                 justify-content: center;
                 align-items: center;
                 flex-direction: column;
-                height: 95%;
+                height: 100%;
                 width: 80%;
                 border: solid 2px #fff;
                 background-color: var(--Fundo);
@@ -52,8 +52,8 @@
                     background-color: transparent;
                 }
                     .parte-foto{
-                        height: 180px;
-                        width: 180px;
+                        height: 120px;
+                        width: 120px;
                         border-radius: 50%;
                         background-color: whitesmoke;
                     }
@@ -69,7 +69,7 @@
                     justify-content: center;
                     align-items: center;
                     flex-direction: column;
-                    gap: 30px;
+                    gap: 20px;
                     height: 50%;
                     width: 100%;
                     background-color: transparent;
@@ -77,12 +77,12 @@
                     
                     .botoes-menu {
                         display: block;
-                        width: 400px;
+                        width: 300px;
                         height: 80px;
                         border: none;
                         border-radius: 20px;
                         background-color: #e0e0e0;
-                        font-size: 40px;
+                        font-size: 30px;
                         padding: 10px 16px;
                         cursor: pointer;
                         font-weight: bolder;
@@ -132,11 +132,11 @@
             justify-content: center;
             align-items: center;
             height: 100%;
-            width: 65%;
+            width: 70%;
             background-color: transparent;
         }
             .parte-componente{
-                height: 95%;
+                height: 100%;
                 width: 95%;
                 border: solid 2px #fff;
                 background-color: var(--Fundo);

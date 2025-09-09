@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom'
 
 
 function Navbar() {
+  const navigate = useNavigate();
+
   return (
     <div className="container-componente-navbar">
         <div className="container-logo">
@@ -19,8 +21,8 @@ function Navbar() {
         </div>
 
         <div className="container-carrinho-usuario">
-            <img src="./public/icones/Carrinho.svg" alt="" className='carrinho-navbar'/>
-            <img src="./public/icones/Usuario.svg" alt="" className='usuario-navbar'/>
+            <button className='botoes-navbar'><img src="./public/icones/Carrinho.svg" alt="" className='carrinho-navbar'/></button>
+            <button className='botoes-navbar' onClick={() => navigate("/usuario")}><img src="./public/icones/Usuario.svg" alt="" className='usuario-navbar'/></button>
         </div>
 
     </div>

@@ -3,6 +3,7 @@ import './UserAccount.css'
 import MeusDados from '../components/MeusDados';
 import MeusPedidos from '../components/MeusPedidos';
 import MeuHistorico from '../components/MeuHistorico';
+import Navbar from '../components/Navbar';
 
 function UserAccount() {
     const [componente, setComponente] = useState(<MeusDados />);
@@ -10,6 +11,7 @@ function UserAccount() {
 
   return (
     <div className='container-user-account'>
+        <Navbar/>
 
         <div className="container-principal">
             <div className="container-principal-menu">

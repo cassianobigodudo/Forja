@@ -8,6 +8,7 @@ const router = createBrowserRouter([
     {path: "/", element: <LandingPage/>},
     {path: "/custom", element: <PaginaCustomizaçao/>},
     {path: "/usuario", element: <UserAccount/>}
+   
 
 ])
 
