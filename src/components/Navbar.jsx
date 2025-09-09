@@ -1,7 +1,11 @@
 import React from 'react'
 import './Navbar.css'
+// import { useNavigate } from "react-router";
+// import UserAccount from '../pages/UserAccount'
 
 function Navbar() {
+  // let navigate = useNavigate();
+
   return (
     <div className="container-componente-navbar">
         <div className="container-logo">
@@ -15,8 +19,9 @@ function Navbar() {
         </div>
 
         <div className="container-carrinho-usuario">
-            <img src="./public/icones/Carrinho.svg" alt="" className='carrinho-navbar'/>
-            <img src="./public/icones/Usuario.svg" alt="" className='usuario-navbar'/>
+            <button className='botoes-navbar'><img src="./public/icones/Carrinho.svg" alt="" className='carrinho-navbar'/></button>
+            <button className='botoes-navbar'><img src="./public/icones/Usuario.svg" alt="" className='usuario-navbar'/></button>
+            {/* <button onClick={() => navigate(<UserAccount />)}><img src="./public/icones/Usuario.svg" alt="" className='usuario-navbar'/></button> */}
         </div>
 
     </div>
