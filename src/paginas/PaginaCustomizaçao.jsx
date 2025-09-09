@@ -1,10 +1,10 @@
 
 import React, { useState } from 'react';
 import "./PaginaCustomizaçao.css";
-import Navbar from '../componentes/Navbar';
-import MenuSecCabeca from '../componentes/MenuSecCabeca';
-import MenuSecCorpo from '../componentes/MenuSecCorpo';
-import MenuSecHistoria from '../componentes/MenuSecHistoria';
+import Navbar from '../components/Navbar';
+import MenuSecCabeca from '../components/MenuSecCabeca';
+import MenuSecCorpo from '../components/MenuSecCorpo';
+import MenuSecHistoria from '../components/MenuSecHistoria';
 
 function PaginaCustomizaçao() {
 
