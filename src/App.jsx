@@ -9,14 +9,14 @@ import UserAccount from './pages/UserAccount'
 function App() {
 
   return (
-/* 
-    <PaginaCustomizaçao/> */
+
+    <PaginaCustomizaçao/> 
 /* 
     <PaginaPagamento/> */
 /* 
     <LandingPage/> */
 
-    <UserAccount/>
+   /*  <UserAccount/> */
     
   )
 }
