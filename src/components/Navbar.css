@@ -1,5 +1,4 @@
 .container-componente-navbar{
-
     height: 15%;
     width: 100%;
     background: linear-gradient(to top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
@@ -9,48 +8,50 @@
 
 }
 
-    .container-logo{
+.container-logo{
+    height: 100%;
+    width: 25%;
+    display: flex;
+    align-items: center;
+}
 
-        height: 100%;
-        width: 25%;
-        /* background-color: blue; */
-        display: flex;
-        align-items: center;
-    }
+.forja-navbar-logo{
+    font-size: 50px;
+    padding-left: 30px;
+    font-family: 'fonte-logo';
+}
 
-        .forja-navbar-logo{
-            font-size: 50px;
-            padding-left: 30px;
-            font-family: 'fonte-logo';
-        }
+.container-navigate{
+    height: 100%;
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    justify-content: space-around;
+}
 
+.container-carrinho-usuario{
+    
+    width: 25%;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: 10px;
+}
 
-    .container-navigate{
+.carrinho-navbar{
+    width: 45px;;
+    margin-right: 10px;
+}
 
-        height: 100%;
-        width: 50%;
-        /* background-color: green; */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        justify-content: space-around;
-    }
+.usuario-navbar{
+    width: 45px;;
+    margin-right: 30px;
+}
 
-    .container-carrinho-usuario{
-        height: 100%;
-        width: 25%;
-        /* background-color: brown; */
-        display: flex;
-        align-items: center;
-        justify-content: end;
-
-    }
-
-        .carrinho-navbar{
-            width: 45px;;
-            margin-right: 10px;
-        }
-        .usuario-navbar{
-            width: 45px;;
-            margin-right: 30px;
-        }
+.btn-carrinho{
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: relative;
+}
