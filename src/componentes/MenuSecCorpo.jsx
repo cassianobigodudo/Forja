@@ -1,12 +1,7 @@
 import React, { useState } from 'react';
 import "./MenuSecCorpo.css";
 
-function MenuSecCorpo() {
-  const [corPeleAtivada, setCorPeleAtivada] = useState(0);
-
-  const skinTones = [
-    '#3b2010ff', '#8C5230','#D2A17C','#F9E4D4','#4d771eff', '#c26632ff', '#99af9eff', 
-  ];
+function MenuSecCorpo({ onGeneroChange, generoAtual, tomsDePeles, onCorDePeleChange, corPeleAtual }) {
 
   return (
     <div className="container-menuSec-corpo">
@@ -15,19 +10,34 @@ function MenuSecCorpo() {
           <label className='lbl'>CORES DE PELE</label>
         </div>
         <div className="skin-colors">
-          {skinTones.map((color, index) => (
+          {tomsDePeles.map((tomDePele) => (
             <button
-              key={index}
-              className={`cor-pele ${corPeleAtivada === index ? 'ativada' : ''}`}
-              style={{ backgroundColor: color}}
-              onClick={() => setCorPeleAtivada(index)}
+              key={tomDePele.nome}
+              // 4. Determine if this button is 'ativada' by comparing its name with the prop
+              className={`cor-pele ${corPeleAtual === tomDePele.nome ? 'ativada' : ''}`}
+              style={{ backgroundColor: tomDePele.color }}
+              // 5. Correct onClick: Call 'onSkinChange' and pass the tone's NAME back to the parent
+              onClick={() => onCorDePeleChange(tomDePele.nome)}
             ></button>
           ))}
         </div>
       </div>
 
       <div className="bottom">
-        <h1>🟥🟦</h1>
+            <button 
+          className={`btn-genero ${generoAtual === 'FEMININO' ? 'ativado' : ''}`}
+          onClick={() => onGeneroChange('FEMININO')}
+        >
+          FEMININO
+        </button>
+        
+         
+        <button 
+          className={`btn-genero ${generoAtual === 'MASCULINO' ? 'ativado' : ''}`}
+          onClick={() => onGeneroChange('MASCULINO')}
+        >
+          MASCULINO
+        </button>
       </div>
     </div>
   );

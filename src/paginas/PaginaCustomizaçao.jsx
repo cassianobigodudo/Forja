@@ -7,12 +7,36 @@ import MenuSecCorpo from '../componentes/MenuSecCorpo';
 import MenuSecHistoria from '../componentes/MenuSecHistoria';
 
 function PaginaCustomizaçao() {
-const [btnAtivo, setBtnAtivo] = useState('');
+
+const [btnAtivo, setBtnAtivo] = useState('CORPO');
 const [ZoomAtivo, setZoomAtivo] = useState(false);
+const [genero, setGenero] = useState('FEMININO');
+
+const corDePeleData = [
+
+        { nome: 'NEGRA', color: '#3b2010ff' },
+        { nome: 'PARDA', color: '#8C5230' },
+        { nome: 'LEITE', color: '#D2A17C' },
+        { nome: 'BRANCA', color: '#F9E4D4' },
+        { nome: 'VERDE', color: '#4d771eff' },
+        { nome: 'LARANJA', color: '#c26632ff' },
+        { nome: 'CINZA', color: '#99af9eff' },
+]
+
 
 function handleButtonClick(nomeDoBotao) {
 setBtnAtivo(prevBtnAtivo => prevBtnAtivo === nomeDoBotao ? null : nomeDoBotao);
-}
+  }
+
+const handleGeneroChange = (novoGenero) => {
+    setGenero(novoGenero);
+  }; 
+  
+const [corPele, setCorPele] = useState(corDePeleData[0].nome)
+
+ const handleCorDePeleChange = (novaCorDePele) => {
+        setCorPele(novaCorDePele);
+    };
 
 return (
 <div className="container-pagina">
@@ -23,7 +47,9 @@ return (
     <div className="area-customizacao">
 
     <div className={`paperdoll-area ${ZoomAtivo ? 'zoomed' : ''}`}>
-    <img src="./personagem-FEMININO/CORPO-FEMININO.png" alt="" />
+
+    <img src={`./personagem-${genero}/CORPO-${genero}-${corPele}.png`} alt="Personagem" />
+     
     </div>
 
     <div className="menu-primario-custom-container">
@@ -59,7 +85,15 @@ return (
     </div>
     <div className="menu-secundario-custom">
       <div className="menu-secundario-fundo">
-      {btnAtivo === 'CORPO' && <MenuSecCorpo />}
+        
+          {btnAtivo === 'CORPO' && <MenuSecCorpo
+                                onGeneroChange={handleGeneroChange}
+                                generoAtual={genero}
+                                tomsDePeles={corDePeleData}
+                                onCorDePeleChange={handleCorDePeleChange}
+                                corPeleAtual={corPele}
+                            />}
+
       {btnAtivo === 'CABEÇA' && <MenuSecCabeca />}
       {btnAtivo === 'HISTÓRIA' && <MenuSecHistoria />}
       </div>
