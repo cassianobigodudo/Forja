@@ -8,9 +8,18 @@ function App() {
 
   return (
 
+
     <LandingPage/>
     // <PaginaPagamento/>,
     // <PaginaCustomizaçao/>,
+
+    // <PaginaCustomizaçao/> 
+/* 
+    <PaginaPagamento/> */
+/* 
+    <LandingPage/> */
+
+   /*  <UserAccount/> */
     
   )
 }
