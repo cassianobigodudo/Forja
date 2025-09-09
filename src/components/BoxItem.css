@@ -1,0 +1,40 @@
+.container-box-item{
+    display: flex;
+    flex-direction: column;
+    height: 180px;
+    width: 470px;
+    background-color: transparent;
+    border: solid 3px #fff;
+}
+    .box-parte-dados-item{
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        padding-left: 5px;
+        height: 25%;
+        width: 100%;
+        background-color: transparent;
+        font-family: "fonte-paragrafos";
+        font-weight: 30px;
+        font-weight: bold;
+        color: #fff;
+    }
+        .box-parte-detalhes{
+            display: flex;
+            justify-content: end;
+            align-items: end;
+            padding-right: 5px;
+            
+        }
+            .botao-detalhes-item{
+                height: 25px;
+                width: 100px;
+                border: solid 2px #fff;
+                border-radius: 10px;
+                color: #fff;
+                cursor: pointer;
+                background-color: #5B5E1C;
+                font-family: "fonte-paragrafos";
+                font-size: 15px;
+            }
+    
