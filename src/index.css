@@ -15,31 +15,40 @@
     
   --Texto: rgb(255, 255, 255);
   --Fundo: rgba(0, 0, 0, 0.5);
+  --FundoAlternativo: rgb(39, 30, 17, 0.7);
   
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
+
 
 ::-webkit-scrollbar{
 
   width: 11px;
   transition: 1s;
 }
-
-
 ::-webkit-scrollbar-thumb{
 
   border-radius: 2px;
   
-  background-color: rgba(214, 164, 122, 1);
+  background-color: rgba(255, 255, 255,1);
   cursor: pointer;
   transition: 1s;
-  animation: pulse 2s infinite ease-in-out;
+}
+
+::-webkit-scrollbar-button{
+
+  display: none;
+    
+}
+::-webkit-scrollbar-corner {
+    background-color: transparent ; 
 }
 
 
 
 ::selection{
+
   color: rgba(255, 255, 255, 1);
   background-color: rgba(0, 0, 0, 0.4);
    text-shadow: 0px 0px 2px rgba(0, 0, 0, 1); 

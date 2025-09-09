@@ -1,4 +1,4 @@
-# ⚒️ A Forja
+# ⚒️ Forja
 
 > Sua loja de miniaturas de RPG personalizáveis, forjadas para suas aventuras.
 
@@ -6,39 +6,56 @@
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
 <p align="center">
-  <img src="URL_PARA_UM_LOGO_OU_BANNER_AQUI" width="400" alt="Logo do Projeto A Forja">
+  <img src="URL_PARA_UM_LOGO_OU_BANNER_AQUI" width="400" alt="Logo do Projeto Forja">
 </p>
 
 ## 📜 Índice
 
 * [Sobre o Projeto](#-sobre-o-projeto)
 * [✨ Funcionalidades](#-funcionalidades)
+* [🎨 Protótipos das Telas](#-protótipos-das-telas)
 * [🏭 A Produção Industrial](#-a-produção-industrial)
-    * [Relação Miniatura vs. Blocos](#tabela-de-relação-miniatura-vs-blocos)
+* [Relação Miniatura vs. Blocos](#tabela-de-relação-miniatura-vs-blocos)
 * [🚀 Tecnologias Utilizadas](#-tecnologias-utilizadas)
 * [🧑‍💻 Autores](#-autores)
 
 ## 📖 Sobre o Projeto
 
-**A Forja** é uma plataforma de e-commerce focada na venda e fabricação de miniaturas customizáveis para campanhas de RPG de mesa.
+**Forja** é uma plataforma de e-commerce focada na venda e fabricação de miniaturas customizáveis para campanhas de RPG de mesa.
 
 Utilizando a bancada industrial para Indústria 4.0 disponibilizada pelo SENAI, nosso objetivo é oferecer aos jogadores um espaço onde eles possam dar vida aos seus personagens, criando e comprando miniaturas com um nível profundo de personalização.
 
 ## ✨ Funcionalidades
 
 ### Requisitos Funcionais
--   ✅ **Gestão de Usuários (RF-01):** Cadastro, login, edição de perfil e exclusão de conta.
--   ✅ **Customizador de Miniaturas (RF-02):** Ferramenta para personalizar gênero, cor de pele, cabelo, roupas, armas, acessórios e a base da miniatura.
--   ✅ **Criação de Enredo com IA Generativa (RF-03):** Geração de uma história com IA após a criação da miniatura.
--   ✅ **Loja de Miniaturas (RF-04):** Galeria para visualizar e comprar miniaturas pré-fabricadas.
--   ✅ **Gestão de Estoque (RF-05):** Integração com a bancada industrial para monitorar matéria-prima e capacidade de expedição.
--   ✅ **Carrinho de Compras (RF-06):** Adição de miniaturas (customizadas ou pré-fabricadas) ao carrinho para usuários logados.
--   ✅ **Checkout e Histórico (RF-07):** Finalização da compra (Pix, Cartão) e acesso ao histórico de pedidos.
+- ✅ **Gestão de Usuários (RF-01):** Cadastro, login, edição de perfil e exclusão de conta.
+- ✅ **Customizador de Miniaturas (RF-02):** Ferramenta para personalizar gênero, cor de pele, cabelo, roupas, armas, acessórios e a base da miniatura.
+- ✅ **Criação de Enredo com IA Generativa (RF-03):** Geração de uma história com IA após a criação da miniatura.
+- ✅ **Loja de Miniaturas (RF-04):** Galeria para visualizar e comprar miniaturas pré-fabricadas.
+- ✅ **Gestão de Estoque (RF-05):** Integração com a bancada industrial para monitorar matéria-prima e capacidade de expedição.
+- ✅ **Carrinho de Compras (RF-06):** Adição de miniaturas (customizadas ou pré-fabricadas) ao carrinho para usuários logados.
+- ✅ **Checkout e Histórico (RF-07):** Finalização da compra (Pix, Cartão) e acesso ao histórico de pedidos.
 
 ### Requisitos Não-Funcionais
--   ⚙️ **Compatibilidade (RNF-01):** Suporte aos principais navegadores do mercado (Chrome, Firefox, Opera, etc.).
--   ⚙️ **Performance (RNF-02):** Tempo de resposta de até 3 segundos para requisições entre o sistema e a bancada industrial.
--   ⚙️ **Usabilidade (RNF-03):** Interface intuitiva com navegação fluida e respostas de página em até 1 segundo.
+- ⚙️ **Compatibilidade (RNF-01):** Suporte aos principais navegadores do mercado (Chrome, Firefox, Opera, etc.).
+- ⚙️ **Performance (RNF-02):** Tempo de resposta de até 3 segundos para requisições entre o sistema e a bancada industrial.
+- ⚙️ **Usabilidade (RNF-03):** Interface intuitiva com navegação fluida e respostas de página em até 1 segundo.
+
+## 🎨 Protótipos das Telas
+
+### Landing Page
+![LANDING PAGE](https://github.com/user-attachments/assets/c5968872-6540-4be5-8abe-24d631d629ea)
+
+### Página Inicial da Loja
+![PÁGINA INICIAL](https://github.com/user-attachments/assets/959f1910-6284-46cf-a065-a8a70746ac25)
+
+### Forja - Customizador de Personagens
+![CUSTOMIZAÇÃO](https://github.com/user-attachments/assets/99cb8f49-eab9-4561-a80e-c1fce5969e34)
+
+### Finalização de Compra
+![FINALIZAÇÃO DE COMPRA](https://github.com/user-attachments/assets/683ec956-80a3-4d42-ab8a-86811151200d)
+
+
 
 ## 🏭 A Produção Industrial
 
@@ -56,8 +73,8 @@ A variedade de customização é o nosso forte. É possível alterar:
 A bancada materializa a miniatura em um conjunto de blocos. Cada um dos 3 andares do conjunto possui:
 * **3 opções de cor para o bloco:** Azul, Vermelho ou Preto.
 * **3 facetas (frontal, direita, esquerda)** que podem ter:
-    * **7 opções de cor de faceta:** Branco, Preto, Verde, Amarelo, Azul, Vermelho ou Sem Faceta.
-    * **4 opções de ilustração:** Casa, Barco, Estrela ou Sem Ilustração.
+* **7 opções de cor de faceta:** Branco, Preto, Verde, Amarelo, Azul, Vermelho ou Sem Faceta.
+* **4 opções de ilustração:** Casa, Barco, Estrela ou Sem Ilustração.
 
 ### Tabela de Relação: Miniatura vs. Blocos
 Cada variação nos blocos produzidos corresponde a uma característica específica da miniatura, como detalhado abaixo.

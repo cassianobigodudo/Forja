@@ -1,0 +1,32 @@
+.container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; 
+    color: var(--Texto);
+    font-family: "fonte-titulos";
+}
+
+.top {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 30%;
+    width: 100%;
+    background-color: rgba(165, 42, 42, 0.5); 
+}
+
+
+.final {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 3.3%;
+    height: 60%;
+    width: 100%;
+    background-color: rgba(38, 226, 79, 0.5);
+}
