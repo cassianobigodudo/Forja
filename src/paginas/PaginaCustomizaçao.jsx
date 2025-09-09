@@ -12,6 +12,7 @@ const [btnAtivo, setBtnAtivo] = useState('CORPO');
 const [ZoomAtivo, setZoomAtivo] = useState(false);
 const [genero, setGenero] = useState('FEMININO');
 
+//yipe
 const corDePeleData = [
 
         { nome: 'NEGRA', color: '#3b2010ff' },
