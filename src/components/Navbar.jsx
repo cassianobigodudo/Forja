@@ -1,9 +1,13 @@
 import React, { useState } from 'react'
 import './Navbar.css'
+
 import Modal from './Modal';
 
 function Navbar() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  import { useNavigate } from 'react-router-dom'
+
+    const navigate = useNavigate()
 
 
   return (
@@ -13,9 +17,11 @@ function Navbar() {
         </div>
 
         <div className="container-navigate">
-            <label>Início</label>
-            <label>Loja</label>
-            <label>Forjar</label>
+
+
+            <label className='label-navbar' onClick={() => {navigate('/')}}>Início</label>
+            <label className='label-navbar' onClick={() => {navigate('/custom')}}>Loja</label>
+            <label className='label-navbar' onClick={() => {navigate('/usuario')}}>Forjar</label>
         </div>
 
         <div className="container-carrinho-usuario">
@@ -27,6 +33,7 @@ function Navbar() {
             {isModalOpen && <Modal onClose={() => setIsModalOpen(false)} />}
 
             <img src="./public/icones/Usuario.svg" alt="" className='usuario-navbar'/>
+
         </div>
     </div>    
   );

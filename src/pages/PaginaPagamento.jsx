@@ -1,6 +1,8 @@
 import React from 'react'
 import "./PaginaPagamento.css"
+
 import Navbar from '../components/Navbar'
+
 
 function PaginaPagamento() {
   return (
@@ -10,6 +12,7 @@ function PaginaPagamento() {
             <Navbar/>
 
       <div className="container">             
+
 
             <main className='conteudo'>
             

@@ -1,7 +1,11 @@
 .container-landing-page-cima{ 
     height: 100vh;
     width: 100vw;
-    background-image: url(./public/fundo/tim-mcburnie-completa-escurecido.png);
+
+    background-image: url(./fundo/tim-mcburnie-completa-escurecido.png);
+
+    /* background-color: red; */
+
     background-position: 10%;
     background-size: 170%;
 }

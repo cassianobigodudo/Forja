@@ -1,0 +1,97 @@
+.container-meus-pedidos{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+}
+    .label-pedidos{
+        font-size: 100px;
+        font-family: "fonte-titulos";
+        font-weight: bolder;
+        color: #fff;
+    }
+    
+    .parte-solicitacoes{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        width: 50%;
+        background-color: transparent;
+    }
+        .solicitacoes{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 90%;
+            width: 90%;
+            background-color: transparent;
+            border: double 5px #fff;
+        }
+            .solicitacoes-titulo{
+                display: flex;
+                justify-content: start;
+                align-items: center;
+                padding-left: 20px;
+                height: 20%;
+                width: 100%;
+                background-color: transparent;
+            }
+            .titulo-solicitacoes-producao{
+                color: #fff;
+                font-size: 40px;
+                font-weight: bolder;
+                font-family: "fonte-titulos";
+            }
+            
+            .solicitacoes-boxs{
+                display: flex;
+                justify-content: start;
+                align-items: center;
+                flex-direction: column;
+                height: 80%;
+                width: 100%;
+                background-color: transparent;
+            }
+                .boxs-itens{
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    background-color: transparent;
+                    padding: 10px;
+                    gap: 20px;
+                    overflow: auto;
+                    flex-wrap: wrap;
+                }
+
+    .parte-producao{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        width: 50%;
+        background-color: transparent;
+    }
+        .producao{
+            height: 90%;
+            width: 90%;
+            background-color: transparent;
+            border: double 5px #fff;
+        }
+            .producao-titulo{
+                display: flex;
+                justify-content: start;
+                align-items: center;
+                padding-left: 20px;
+                height: 20%;
+                width: 100%;
+                background-color: transparent;
+            }
+            .producao-boxs{
+                height: 80%;
+                width: 100%;
+                background-color: transparent;
+            }
