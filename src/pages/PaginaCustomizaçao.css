@@ -29,60 +29,21 @@ display: flex;
 align-items: center;
 text-align: center;
 flex-direction: column;
-height: 98vh;
-width: 98.9vw;
+height: 85%;
+width: 99.3%;
 margin-left: 0.2%;
-background-color: rgba(0, 0, 0, 0.1);
 border-radius: 1%;
-background-image: url(./public/fundo/arestas-do-fundo.svg);
 background-size: 100%;
 background-repeat: no-repeat;
 }
 
-.navbar-container {
-display: flex;
-justify-content: center;
-align-items: center;
-text-align: center;
-flex-direction: column;
-height: 10%;
-width: 99.4%;
-margin-top: 0.4%;
-background-color: var(--Fundo);
-}
-
-.logo-texto {
-font-family: "fonte-logo";
-font-size: 170px;
-color: var(--Texto);
-}
-
-.logo-embaixo-texto {
-font-family: "fonte-subtitulos";
-font-size: 27px;
-color: var(--Texto);
-margin-bottom: 15%;
-}
-
-.btn-entrar {
-height: 12%;
-width: 18.9%;
-font-family: "fonte-logo";
-font-size: 27px;
-color: var(--Texto);
-border: none;
-background-color: var(--Fundo);
-background-image: url(./public/fundo/fundo-botao.png);
-background-size: 100%;
-cursor: pointer;
-}
 
 .area-customizacao {
 display: flex;
 align-items: center;
 text-align: center;
 flex-direction: row;
-height: 90%;
+height: 100%;
 width: 99.4%;
 margin-top: 0.4%;
 }
@@ -187,7 +148,7 @@ align-items: start;
 text-align: center;
 flex-direction: column;
 height: 75%;
-width: 100%;
+width: 101%;
 background-image: url(./fundo/Fundo-Menu-primario.svg);
 background-size: cover;
 }
@@ -197,9 +158,9 @@ display: flex;
 justify-content: start;
 align-items: center;
 flex-direction: row;
-height: 9.4%;
+height: 10%;
 width: 80%;
-margin-top: 15%;
+margin-top: 13%;
 margin-left: 10%;
 font-family: "fonte-titulos";
 border: none;
@@ -221,9 +182,9 @@ display: flex;
 justify-content: start;
 align-items: center;
 flex-direction: row;
-height: 9.4%;
+height: 10%;
 width: 80%;
-margin-top: 15%;
+margin-top: 13%;
 margin-left: 17%;
 font-family: "fonte-titulos";
 border: none;
@@ -246,9 +207,9 @@ display: flex;
 justify-content: start;
 align-items: center;
 flex-direction: row;
-height: 9.4%;
+height: 10%;
 width: 80%;
-margin-top: 6%;
+margin-top: 3%;
 margin-left: 10%;
 font-family: "fonte-titulos";
 border: none;
@@ -270,9 +231,9 @@ display: flex;
 justify-content: start;
 align-items: center;
 flex-direction: row;
-height: 9.4%;
+height: 10%;
 width: 80%;
-margin-top: 6%;
+margin-top: 3%;
 margin-left: 17%;
 font-family: "fonte-titulos";
 border: none;
@@ -302,7 +263,7 @@ width: 100%;
 }
 
 .btn-zoom {
-height: 100%;
+height: 90%;
 width: 20%;
 margin-top: 1%;
 background-image: url(./icones/Zoom.png);
@@ -314,7 +275,7 @@ margin-left: 10%;
 }
 
 .btn-tirar-zoom {
-height: 100%;
+height: 90%;
 width: 20%;
 margin-top: 1%;
 background-image: url(./icones/Tirar-Zoom.png);

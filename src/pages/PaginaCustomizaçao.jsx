@@ -41,10 +41,11 @@ const [corPele, setCorPele] = useState(corDePeleData[0].nome)
 
 return (
 <div className="container-pagina">
-  <div className="pagina-custom">
-    <div className="navbar-container">
+  
     <Navbar />
-    </div>
+    
+  <div className="pagina-custom">
+    
     <div className="area-customizacao">
 
     <div className={`paperdoll-area ${ZoomAtivo ? 'zoomed' : ''}`}>

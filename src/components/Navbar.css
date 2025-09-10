@@ -2,7 +2,7 @@
 
     height: 15%;
     width: 100%;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
+    background: linear-gradient(rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
     color: white;
     font-family: 'fonte-titulos';
     display: flex;
@@ -40,8 +40,13 @@
         .label-navbar{
             cursor: pointer;
 
+            transition: 0.3s;
         }
 
+        .label-navbar:hover{
+            font-size: 27px;
+            transition: 0.1s;
+        }
     .container-carrinho-usuario{
         height: 100%;
         width: 25%;
