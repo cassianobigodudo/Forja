@@ -1,33 +1,18 @@
 import React from 'react'
 import "./PaginaPagamento.css"
 
+import Navbar from '../components/Navbar'
+
 
 function PaginaPagamento() {
   return (
 
     <div className="container-pagina"> 
             
-      <div className="container">
-             <header className="nav">
-              <div className='logo-texto'>FORJA</div>
-                
+            <Navbar/>
 
-                    <nav className='navbar-links'>
-                     <a href='#'>Início</a>
-                     <a href='#'>Loja</a>
-                     <a href='#'>Forjar</a>
-                    </nav>
+      <div className="container">             
 
-                <div className='nav-icons'>
-                    <button className='ico1' aria-label='conta'>
-                        {/* Trocar por Usuario.svg */}
-                    </button>
-            
-                    <button className='ico2' aria-label='Carrinho'>
-                      {/* Trocar por Carrinho.svg */}
-                    </button>
-                </div>
-            </header>
 
             <main className='conteudo'>
             

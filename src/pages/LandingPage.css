@@ -1,96 +1,78 @@
 .container-landing-page-cima{ 
-
     height: 100vh;
     width: 100vw;
+
     background-image: url(./fundo/tim-mcburnie-completa-escurecido.png);
 
     /* background-color: red; */
+
     background-position: 10%;
     background-size: 170%;
-   /* border: 50px solid; */
-   /* border-image: url(./public/fundo/arestas-do-fundo.svg) 60 round; */
 }
 
-    .container-centro{
+.container-centro{
+    height: 70%;
+    width: 100%;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-image: url(./outros/meio-linhas.svg);
+    background-position: 50% 9%;
+    background-size: 350px;
+    background-repeat: no-repeat;
+}
 
-        height: 70%;
-        width: 100%;
-        /* background-color: red; */
-        color: white;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        background-image: url(./outros/meio-linhas.svg);
-        background-position: 50% 9%;
-        background-size: 350px;
-        background-repeat: no-repeat;
-        
-    }
+.titulo-central{
+    font-size: 123px;
+    font-family: 'fonte-logo';
+    margin-top: 20px;
+}
 
+.subtitulo-central{
+    font-family: 'fonte-subtitulos';
+    font-size: 20px;
+}
 
-        .titulo-central{
-            font-size: 123px;
-            font-family: 'fonte-logo';
-            margin-top: 20px;
-        }
+.linha-subtitulo-landingpage{
+    width: 300px;
+    margin-top: 5px;
+}
 
-        .subtitulo-central{
-            font-family: 'fonte-subtitulos';
-            font-size: 20px;
+.btn-entrar{
+    color: white;
+    font-family: 'fonte-logo';
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 15%;
+    height: 15%;
+    margin-top: 50px;
+    border: none;
+    cursor: pointer;
+    background-image: url(/fundo/fundo-botaoplus.svg);
+}
 
-        }
-
-        .linha-subtitulo-landingpage{
-            width: 300px;
-            margin-top: 5px;
-
-        }
-
-        .btn-entrar{
-
-            color: white;
-            font-family: 'fonte-logo';
-            /* background-repeat: no-repeat; */
-            background-size: contain;
-            background-repeat: no-repeat;
-            width: 15%;
-            height: 15%;
-            margin-top: 50px;
-            border: none;
-            cursor: pointer;
-            /* background-color: rgba(16, 14, 11, 0.4); */
-            background-image: url(/fundo/fundo-botaoplus.svg);
-        }
-
-    .container-saberMais{
-
-        height: 15%;
-        width: 37%;
-        /* background-color: blue; */
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-        
-        
-    }
+.container-saberMais{
+    height: 15%;
+    width: 37%;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
     
-    .lbl-saibaMais{
-        font-family: 'fonte-titulos';
-        color: white;
-        font-size: 35px;            
-        margin: 25px;
-        cursor: pointer;
-    }
+.lbl-saibaMais{
+    font-family: 'fonte-titulos';
+    color: white;
+    font-size: 35px;            
+    margin: 25px;
+    cursor: pointer;
+}
 
-    .flechinha{
-
-        width: 50px;
-
-
-    }
+.flechinha{
+    width: 50px;
+}
 
 .container-landing-page-baixo{
-
     height: 100vh;
     width: 100vw;
     background-image: url(/fundo/tim-mcburnie-completa-escurecido.png);
@@ -101,52 +83,42 @@
     background-repeat: no-repeat;
 }
 
-    .container-saberMenos{
+.container-saberMenos{
+    height: 15%;
+    width: 37%;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
 
-        height: 15%;
-        width: 37%;
-        /* background-color: blue; */
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-        
-        
-    }
+.lbl-saibaMenos{
+    font-family: 'fonte-titulos';
+    color: white;
+    font-size: 35px;            
+    margin: 25px;
+    cursor: pointer;
+}
 
-    .lbl-saibaMenos{
-        font-family: 'fonte-titulos';
-        color: white;
-        font-size: 35px;            
-        margin: 25px;
-        cursor: pointer;
-    }
-
-
-    .flechinha-inversa{
-        width: 50px;
-            transform: rotateX(180deg)
-    }
-
+.flechinha-inversa{
+    width: 50px;
+    transform: rotateX(180deg)
+}
 
 .container-pai-infos-forja{
-
     height: 85%;
     width: 100%;
     background-color: red;
     display: flex;
-
 }
 
-    .container-infos-esquerda{
-        height: 100%;
-        width: 75%;
-        background-color: green;
+.container-infos-esquerda{
+    height: 100%;
+    width: 75%;
+    background-color: green;
+}
 
-    }
-
-    .container-gif-direita{
-
-        height: 100%;
-        width: 25%;
-        background-color: salmon;
-    }
+.container-gif-direita{
+    height: 100%;
+    width: 25%;
+    background-color: salmon;
+}
