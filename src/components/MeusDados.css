@@ -5,11 +5,11 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    gap: 30px;
+    gap: 10px;
     background-color: transparent;
 }
     .label-dados{
-        font-size: 30px;
+        font-size: 20px;
         font-weight: bolder;
         font-family: "fonte-paragrafos";
         color: #fff;
@@ -20,10 +20,10 @@
         justify-content: start;
         align-items: center;
         flex-direction: column;
-        gap: 30px;
+        gap: 20px;
         padding-left: 10px;
-        padding-top: 10px;
-        height: 80%;
+        padding-top: 20px;
+        height: 90%;
         width: 98%;
         background-color: transparent;  
     }
@@ -48,13 +48,14 @@
                 background-color: transparent;
             }
                 .inputs-dados{
-                    height: 60px;
+                    height: 40px;
                     width: 750px;
                     background-color: #5B5E1C;
                     opacity: 80%;
                     color: #fff;
                     padding-left: 5px;
                     font-family: "fonte-paragrafos";
+                    font-size: 18px;
                 }
 
             .inputs-parte-botao-editar{
@@ -67,8 +68,8 @@
                 background-color: transparent;
             }
                 .botao-editar-dados{
-                    height: 60px;
-                    width: 60px;
+                    height: 40px;
+                    width: 40px;
                     border: solid 1px #fff;
                     /* background-color: #5B5E1C; */
                     opacity: 80%;
@@ -91,22 +92,23 @@
             height: 100%;
             width: 50%;
             background-color: transparent;
+            padding-bottom: 10px;
+            padding-left: 20px;
         }
             .botao-deletar-conta{
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                height: 40px;
-                width: 200px;
+                height: 30px;
+                width: 120px;
                 border: none;
                 background-color: transparent;
                 color: #fff;
                 text-decoration: underline;
                 cursor: pointer;
-                font-size: 25px;
+                font-size: 15px;
                 padding-left: 5px;
                 font-family: "fonte-subtitulos";
-                font-size: 20px;
                 font-weight: bolder;
                 color: #fff;
             }
@@ -115,7 +117,7 @@
                     color: #fff;
                     font-weight: bolder;
                     border: solid 2px #fff;
-                    border-radius: 20px;
+                    border-radius: 10px;
                 }
 
         .parte-salvar-edicao{
@@ -128,16 +130,15 @@
             padding-right: 10px;
         }
             .botao-salvar-edicao{
-                height: 50px;
-                width: 200px;
+                height: 30px;
+                width: 120px;
                 border: solid 1px #fff;
                 border-radius: 10px;
-                font-size: 30px;
+                font-size: 20px;
                 font-weight: bolder;
                 cursor: pointer;
                 background-color: #5B5E1C;
                 font-family: "fonte-subtitulos";
-                font-size: 30px;
                 font-weight: bolder;
                 color: #fff;
             }
