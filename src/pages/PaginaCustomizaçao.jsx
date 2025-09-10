@@ -15,7 +15,7 @@ const [genero, setGenero] = useState('FEMININO');
 //yipe
 const corDePeleData = [
 
-        { nome: 'NEGRA', color: '#3b2010ff' },
+        { nome: 'NEGRA', color: '#3b2010ff'},
         { nome: 'PARDA', color: '#8C5230' },
         { nome: 'LEITE', color: '#D2A17C' },
         { nome: 'BRANCA', color: '#F9E4D4' },
@@ -38,6 +38,59 @@ const [corPele, setCorPele] = useState(corDePeleData[0].nome)
  const handleCorDePeleChange = (novaCorDePele) => {
         setCorPele(novaCorDePele);
     };
+
+const handleSalvarPersonagem = async () => {
+
+const mapeamentoGenero = {
+
+'FEMININO': 2,
+'MASCULINO': 3
+
+};
+
+const mapeamentoCorPele = {
+
+'NEGRA': 0,
+'PARDA': 1,
+'LEITE': 2,
+'BRANCA': 3,
+'VERDE': 4,
+'LARANJA': 5,
+'CINZA': 6
+
+};
+
+const dadosPersonagem = {
+
+generoId: mapeamentoGenero[genero],
+
+corDaPeleId: mapeamentoCorPele[corPele]
+
+};
+
+
+
+try {
+
+console.log("Enviando os seguintes IDs:", dadosPersonagem);
+
+/* 
+const response = await axios.post('http://sua-api.com/personagem', dadosPersonagem);
+ */
+/* 
+console.log('Personagem salvo com sucesso:', response.data); */
+/* 
+alert('Personagem salvo com sucesso!'); */
+
+} catch (error) {
+/* 
+console.error('Erro ao salvar o personagem:', error);
+
+alert('Houve um erro ao salvar o personagem. Tente novamente.'); */
+
+}
+
+};
 
 return (
 <div className="container-pagina">
@@ -82,6 +135,7 @@ return (
 
       <button onClick={() => setZoomAtivo(true)} className='btn-zoom'></button>
       <button onClick={() => setZoomAtivo(false)} className='btn-tirar-zoom'></button>
+      <button onClick={handleSalvarPersonagem} className='btn-tirar-zooms'>SALVAR</button>
       
       </div>
     </div>
