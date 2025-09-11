@@ -73,6 +73,7 @@ transparent 100%
 );
 transition: 1s;
 animation: idle infinite 5s ease-in-out;
+  user-select: none;
 }
 
 
@@ -139,6 +140,7 @@ text-align: center;
 flex-direction: column;
 height: 100%;
 width: 21%;
+  user-select: none;
 }
 
 .menu-primario-custom-top {
@@ -283,9 +285,30 @@ background-size: contain;
 background-repeat: no-repeat;
 border: none;
 cursor: pointer;
-margin-left: 7%;
+margin-left: 3%;
+}
+.btn-tirar-zooms {
+height: 90%;
+width: 34%;
+margin-top: 1%;
+background-color: var(--Fundo);
+color: white;
+border-style: solid;
+border-width: 2px;
+border-color: white;
+font-size: 21px;
+font-family: "fonte-titulos";
+background-size: contain;
+background-repeat: no-repeat;
+cursor: pointer;
+margin-left: 3%;
+transition: 1s;
 }
 
+.btn-tirar-zooms:hover{
+background-color: rgb(31, 19, 14, 0.8);
+transition: 1s;
+}
 .menu-secundario-custom {
 display: flex;
 justify-content: center;
