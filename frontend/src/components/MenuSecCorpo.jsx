@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import "./MenuSecCorpo.css";
 
 function MenuSecCorpo({ onGeneroChange, generoAtual, tomsDePeles, onCorDePeleChange, corPeleAtual }) {
@@ -13,10 +13,8 @@ function MenuSecCorpo({ onGeneroChange, generoAtual, tomsDePeles, onCorDePeleCha
           {tomsDePeles.map((tomDePele) => (
             <button
               key={tomDePele.nome}
-              // 4. Determine if this button is 'ativada' by comparing its name with the prop
               className={`cor-pele ${corPeleAtual === tomDePele.nome ? 'ativada' : ''}`}
               style={{ backgroundColor: tomDePele.color }}
-              // 5. Correct onClick: Call 'onSkinChange' and pass the tone's NAME back to the parent
               onClick={() => onCorDePeleChange(tomDePele.nome)}
             ></button>
           ))}
@@ -24,19 +22,18 @@ function MenuSecCorpo({ onGeneroChange, generoAtual, tomsDePeles, onCorDePeleCha
       </div>
 
       <div className="bottom">
-            <button 
+        <button 
           className={`btn-genero ${generoAtual === 'FEMININO' ? 'ativado' : ''}`}
           onClick={() => onGeneroChange('FEMININO')}
         >
-          FEMININO
+          <img src="./icones/ICONE-CORPO-FEMININO.png" alt="Ícone corpo feminino" />
         </button>
         
-         
         <button 
           className={`btn-genero ${generoAtual === 'MASCULINO' ? 'ativado' : ''}`}
           onClick={() => onGeneroChange('MASCULINO')}
         >
-          MASCULINO
+          <img src="./icones/ICONE-CORPO-MASCULINO.png" alt="Ícone corpo masculino" />
         </button>
       </div>
     </div>

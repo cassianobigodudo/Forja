@@ -8,7 +8,7 @@ import MenuSecHistoria from '../components/MenuSecHistoria';
 
 function PaginaCustomizaçao() {
 
-const [btnAtivo, setBtnAtivo] = useState('CORPO');
+const [btnAtivo, setBtnAtivo] = useState('');
 const [ZoomAtivo, setZoomAtivo] = useState(false);
 const [genero, setGenero] = useState('FEMININO');
 

@@ -1,11 +1,22 @@
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .container-menuSec-corpo{
     height: 100%;
-    width: 100%;
+    width: 99%;
     display: flex;
     justify-content: start;
     flex-direction: column;
     color: var(--Texto);
     font-family: "fonte-titulos";
+    animation: fadeIn 0.2s ease-out;
+    transition: 1s;
 }
 
 .top-menuSec {
@@ -18,7 +29,7 @@
     
     border-width: 2px;
     border-style: solid;
-    background-color: var(--Fundo);
+    background-color: rgba(51, 37, 31, 0.8);
 }
 
 .label-container {
@@ -70,16 +81,17 @@
     height: 70%;
     width: 100%;
     margin-top: 2%;
-    background-color: var(--Fundo);
+    background-color: rgba(51, 37, 31, 0.8);
     border-width: 2px;
     border-style: solid;
 }
 
 .btn-genero{
     display: flex;
-    font-family: "Fonte-texto";
-    width: 40%;
-    height: 20%;
+    text-align: center;
+    font-family: "Fonte-Titulos";
+    width: 94%;
+    height: 61%;
     text-align: center;
     justify-content: center;
     align-items: center;
@@ -88,9 +100,13 @@
     border-width: 2px;
     border-color: #fff;
 
-    font-size: 30px;
+    font-size: 28px;
     margin: 5%;
     color: white;
-    background-color: var(--Fundo);
     cursor: pointer;
+    transition: 1S;
+}
+
+.btn-genero.ativado{
+    background-color: black;
 }
