@@ -78,11 +78,11 @@
                     .botoes-menu {
                         display: block;
                         width: 300px;
-                        height: 80px;
+                        height: 60px;
                         border: none;
                         border-radius: 20px;
                         background-color: #e0e0e0;
-                        font-size: 30px;
+                        font-size: 25px;
                         padding: 10px 16px;
                         cursor: pointer;
                         font-weight: bolder;
@@ -107,23 +107,23 @@
 
                 .menu-parte-sair{
                     display: flex;
-                    justify-content: end;
+                    justify-content: center;
                     align-items: center;
-                    padding-right: 70px;
+                    /* padding-right: 0px; */
                     height: 15%;
                     width: 100%;
                     background-color: transparent;
                 }
                     .botao-deslogar{
-                        height: 40px;
-                        width: 200px;
+                        height: 25px;
+                        width: 150px;
                         background-color: red;
                         border: none;
                         border-radius: 10px;
                         cursor: pointer;
                         color: #fff;
                         font-family: "fonte-subtitulos";
-                        font-size: 30px;
+                        font-size: 20px;
                         font-weight: bolder;
                     }
 
