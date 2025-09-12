@@ -2,10 +2,11 @@ import React, { useState } from 'react'
 import './Navbar.css'
 
 import Modal from './Modal';
+import { useNavigate } from 'react-router-dom'
 
 function Navbar() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  import { useNavigate } from 'react-router-dom'
+  
 
     const navigate = useNavigate()
 
