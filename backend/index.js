@@ -28,7 +28,7 @@ app.post('/enviar-caixa', async (req, res) => {
     try {
         // 3. Usa o Axios para fazer a requisição POST, com a URL diretamente na chamada
         const respostaDoProfessor = await axios.post(
-            'http://10.28.196.250:8000/api/requisicoes', // URL inserida diretamente aqui
+            'http://52.1.197.112:3000/queue/items', // URL inserida diretamente aqui
             payloadParaEnviar
         );
 
