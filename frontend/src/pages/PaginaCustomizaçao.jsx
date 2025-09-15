@@ -59,37 +59,52 @@ const mapeamentoCorPele = {
 'CINZA': 6
 
 };
+    const dadosPersonagem = {
+        "payload": {
+            "orderId": "ABC-123",
+            "order": {
+                "codigoProduto": 1,
+                "bloco1": {
+                    "cor": 1,
+                    "lamina1": 1,
+                    "lamina2": 1,
+                    "lamina3": 1,
+                    "padrao1": "1",
+                    "padrao2": "1",
+                    "padrao3": "1"
+                },
+                "bloco2": {
+                    "cor": 1,
+                    "lamina1": 1,
+                    "lamina2": 1,
+                    "lamina3": 1,
+                    "padrao1": "1",
+                    "padrao2": "1",
+                    "padrao3": "1"
+                },
+                "bloco3": {
+                    "cor": mapeamentoGenero[genero],
+                    "lamina1": mapeamentoCorPele[corPele],
+                    "lamina2": 1,
+                    "lamina3": 1,
+                    "padrao1": "1",
+                    "padrao2": "1",
+                    "padrao3": "1"
+                }
+            },
+            "sku": "KIT-01"
+        },
+    };
 
-const dadosPersonagem = {
+    try {
+        console.log("Enviando os seguintes IDs:", dadosPersonagem);
 
-generoId: mapeamentoGenero[genero],
+       const resposta = await axios.post('http://1234/dadosCustomão', dadosPersonagem);
+        
 
-corDaPeleId: mapeamentoCorPele[corPele]
-
-};
-
-
-
-try {
-
-console.log("Enviando os seguintes IDs:", dadosPersonagem);
-
-/* 
-const response = await axios.post('http://sua-api.com/personagem', dadosPersonagem);
- */
-/* 
-console.log('Personagem salvo com sucesso:', response.data); */
-/* 
-alert('Personagem salvo com sucesso!'); */
-
-} catch (error) {
-/* 
-console.error('Erro ao salvar o personagem:', error);
-
-alert('Houve um erro ao salvar o personagem. Tente novamente.'); */
-
-}
-
+    } catch (error) {
+       console.error('Erro ao salvar o personagem:', error);
+    }
 };
 
 return (
