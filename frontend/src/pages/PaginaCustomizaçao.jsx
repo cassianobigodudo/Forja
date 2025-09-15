@@ -5,6 +5,7 @@ import Navbar from '../components/Navbar';
 import MenuSecCabeca from '../components/MenuSecCabeca';
 import MenuSecCorpo from '../components/MenuSecCorpo';
 import MenuSecHistoria from '../components/MenuSecHistoria';
+import axios from 'axios'
 
 function PaginaCustomizaçao() {
 
@@ -26,8 +27,8 @@ const corDePeleData = [
 
 
 function handleButtonClick(nomeDoBotao) {
-setBtnAtivo(prevBtnAtivo => prevBtnAtivo === nomeDoBotao ? null : nomeDoBotao);
-  }
+  setBtnAtivo(prevBtnAtivo => prevBtnAtivo === nomeDoBotao ? null : nomeDoBotao);
+}
 
 const handleGeneroChange = (novoGenero) => {
     setGenero(novoGenero);
@@ -41,70 +42,73 @@ const [corPele, setCorPele] = useState(corDePeleData[0].nome)
 
 const handleSalvarPersonagem = async () => {
 
-const mapeamentoGenero = {
+  const mapeamentoGenero = {
 
-'FEMININO': 2,
-'MASCULINO': 3
+  'FEMININO': 2,
+  'MASCULINO': 3
 
-};
+  };
 
-const mapeamentoCorPele = {
+  const mapeamentoCorPele = {
 
-'NEGRA': 0,
-'PARDA': 1,
-'LEITE': 2,
-'BRANCA': 3,
-'VERDE': 4,
-'LARANJA': 5,
-'CINZA': 6
+  'NEGRA': 0,
+  'PARDA': 1,
+  'LEITE': 2,
+  'BRANCA': 3,
+  'VERDE': 4,
+  'LARANJA': 5,
+  'CINZA': 6
 
-};
-    const dadosPersonagem = {
-        "payload": {
-            "orderId": "ABC-123",
-            "order": {
-                "codigoProduto": 1,
-                "bloco1": {
-                    "cor": 1,
-                    "lamina1": 1,
-                    "lamina2": 1,
-                    "lamina3": 1,
-                    "padrao1": "1",
-                    "padrao2": "1",
-                    "padrao3": "1"
-                },
-                "bloco2": {
-                    "cor": 1,
-                    "lamina1": 1,
-                    "lamina2": 1,
-                    "lamina3": 1,
-                    "padrao1": "1",
-                    "padrao2": "1",
-                    "padrao3": "1"
-                },
-                "bloco3": {
-                    "cor": mapeamentoGenero[genero],
-                    "lamina1": mapeamentoCorPele[corPele],
-                    "lamina2": 1,
-                    "lamina3": 1,
-                    "padrao1": "1",
-                    "padrao2": "1",
-                    "padrao3": "1"
-                }
-            },
-            "sku": "KIT-01"
-        },
-    };
+  };
+      const dadosPersonagem = {
+          "payload": {
+              "orderId": "ABC-123",
+              "order": {
+                  "codigoProduto": 1,
+                  "bloco1": {
+                      "cor": 1,
+                      "lamina1": 1,
+                      "lamina2": 1,
+                      "lamina3": 1,
+                      "padrao1": "1",
+                      "padrao2": "1",
+                      "padrao3": "1"
+                  },
+                  "bloco2": {
+                      "cor": 1,
+                      "lamina1": 1,
+                      "lamina2": 1,
+                      "lamina3": 1,
+                      "padrao1": "1",
+                      "padrao2": "1",
+                      "padrao3": "1"
+                  },
+                  "bloco3": {
+                      "cor": mapeamentoGenero[genero],
+                      "lamina1": mapeamentoCorPele[corPele],
+                      "lamina2": 1,
+                      "lamina3": 1,
+                      "padrao1": "1",
+                      "padrao2": "1",
+                      "padrao3": "1"
+                    },
+                    "sku": "KIT-01",
+                  },
+                  "callbackUrl": "http://localhost:3000/callback"
+          },
+      };
 
-    try {
-        console.log("Enviando os seguintes IDs:", dadosPersonagem);
+      
+      try {
+        // console.log("Objeto da caixa ", dadosPersonagem)
+          console.log("Enviando os seguintes IDs:", dadosPersonagem);
 
-       const resposta = await axios.post('http://1234/dadosCustomão', dadosPersonagem);
-        
+        const resposta = await axios.post('http://localhost:3000/enviar-caixa', dadosPersonagem);
+          
 
-    } catch (error) {
-       console.error('Erro ao salvar o personagem:', error);
-    }
+      } catch (error) {
+        console.error('Erro ao salvar o personagem:', error);
+      }
 };
 
 return (

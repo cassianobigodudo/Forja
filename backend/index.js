@@ -14,14 +14,18 @@ app.post('/enviar-caixa', async (req, res) => {
     const requisicaoCompleta = req.body;
     console.log('--- Requisição recebida do frontend ---');
     console.log(requisicaoCompleta);
-
+    
     // 2. Extrai o "payload" para encaminhar
-    const payloadParaEnviar = requisicaoCompleta.payload;
+    const payloadParaEnviar = requisicaoCompleta;
+    console.log('--- variável payload para enviar ---');
+    console.log(payloadParaEnviar)
 
     if (!payloadParaEnviar) {
         console.error('ERRO: O objeto "payload" não foi encontrado no corpo da requisição.');
         return res.status(400).json({ mensagem: 'Formato da requisição inválido: objeto "payload" ausente.' });
     }
+
+    // console.log(payloadParaEnviar)
 
     console.log('>>> Encaminhando payload para o servidor do professor...');
 
