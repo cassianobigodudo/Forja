@@ -38,7 +38,29 @@ function BoxItem() {
             </div>
 
             <div className="dialog-detalhes-informacoes-direita">
-              <div className="dialog-detalhes-informacoes-direita-dados"></div>
+
+              <div className="dialog-detalhes-informacoes-direita-dados">
+                <div className="dialog-detalhes-informacoes-direita-dados-id">
+                  <label htmlFor="" className="label-dialog-detalhes-informacoes-direita-dados">ID:</label>
+                </div>
+
+                <div className="dialog-detalhes-informacoes-direita-dados-id">
+                  <label htmlFor="" className="label-dialog-detalhes-informacoes-direita-dados">TÍTULO:</label>
+                </div>
+
+                <div className="dialog-detalhes-informacoes-direita-dados-id">
+                  <label htmlFor="" className="label-dialog-detalhes-informacoes-direita-dados">HORÁRIO:</label>
+                </div>
+                
+                <div className="dialog-detalhes-informacoes-direita-dados-descricao">
+
+                  <div className="dialog-detalhes-dados-descricao">
+                    <label htmlFor="" className="label-dialog-detalhes-informacoes-direita-dados">HISTÓRIA: Lorem ipsum dolor sit, amet consectetur adipisicing elit. Impedit quis id, ipsum veniam illum voluptatem quam mollitia alias temporibus quae! Blanditiis ea harum culpa, facere ut aut quasi eaque quia? Lorem ipsum dolor sit, amet consectetur adipisicing elit. Illo minus aut eos enim, nulla, blanditiis vitae iste numquam in atque, aperiam assumenda voluptates iusto voluptate ex! Minima nemo ipsum vero. Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum, aut veritatis optio incidunt eaque illo quibusdam modi nihil neque quo, beatae magnam consequuntur nisi voluptatum dolore nostrum in corporis iste.</label>
+                  </div>
+
+                </div>
+
+              </div>
             </div>
 
           </div>

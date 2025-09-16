@@ -18,10 +18,26 @@
             justify-content: center;
             align-items: start;
             flex-direction: column;
-            padding: 10px;
-            gap: 10px;
+            padding: 5px;
+            gap: 5px;
             height: 25%;
             width: 100%;
             background-color: transparent;
         }
+            .login-labels{
+                font-family: "fonte-subtitulos";
+                font-weight: bolder;
+                font-size: 15px;
+                color: #fff;
+            }
+
+            .login-inputs{
+                height: 40px;
+                width: 400px;
+                border: solid 3px #fff;
+                border-radius: 7px;
+                background-color: transparent;
+                color: whitesmoke;
+                padding-left: 5px;
+            }
         

@@ -40,11 +40,11 @@
                 border: none;
                 background-color: transparent;
             }
-            .botao-detalhes-item:hover{
-                    border-radius: 5px;
-                    border: solid 2px #fff; 
-                    background-color: #5B5E1C;
-                }
+                .botao-detalhes-item:hover{
+                        border-radius: 5px;
+                        border: solid 2px #fff; 
+                        background-color: #5B5E1C;
+                    }
         
         .dialog-ver-detalhes{
             height: 500px;
@@ -79,11 +79,11 @@
                         display: flex;
                         justify-content: center;
                         align-items: center;
-                        height: 25px;
-                        width: 25px;
+                        height: 20px;
+                        width: 20px;
                         border: none;
                         cursor: pointer;
-                        font-size: 18px;
+                        font-size: 15px;
                     }
                         .dialog-botao-fechar:hover{
                             border: solid 1px red;
@@ -105,7 +105,7 @@
                         background-color: transparent;
                     }
                         .dialog-detalhes-informacoes-esquerda-foto{
-                            height: 90%;
+                            height: 97%;
                             width: 95%;
                             background-color: #fff;
                             border-radius: 10px;
@@ -127,11 +127,50 @@
                         background-color: transparent;
                     }
                         .dialog-detalhes-informacoes-direita-dados{
-                            height: 90%;
+                            display: flex;
+                            flex-direction: column;
+                            height: 97%;
                             width: 98%;
                             background-color: #fff;
                             border-radius: 10px;
                         }
+                            .dialog-detalhes-informacoes-direita-dados-id{
+                                display: flex;
+                                justify-self: start;
+                                align-items: center;
+                                padding-left: 5px;
+                                height: 10%;
+                                width: 100%;
+                                background-color: transparent;
+                            }
+                                .label-dialog-detalhes-informacoes-direita-dados{
+                                    font-size: 15px;
+                                    font-family: "fonte-paragrafos";
+                                }
+
+                            .dialog-detalhes-informacoes-direita-dados-descricao{
+                                display: flex;
+                                justify-self: start;
+                                align-items: start;
+                                flex-direction: column;
+                                border: solid 1px #000;
+                                border-radius: 5px;
+                                height: 70%;
+                                width: 100%;
+                                background-color: transparent;
+                                overflow-y: auto;
+                            }
+                                .dialog-detalhes-dados-descricao{
+                                    display: flex;
+                                    justify-content: center;
+                                    align-items: center;
+                                    background-color: transparent;
+                                    padding: 10px 5px;
+                                    text-align: justify;
+                                    gap: 20px;
+                                    overflow: auto;
+                                    flex-wrap: wrap;
+                                }
                 
                 .dialog-detalhes-progresso{
                     display: flex;

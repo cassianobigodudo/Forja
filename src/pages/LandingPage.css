@@ -150,3 +150,24 @@
         width: 25%;
         background-color: salmon;
     }
+
+
+.dialog-login-cadastro{
+     height: 500px;
+    background-color: transparent;
+    border: none;
+    width: 40%;
+    position: fixed;
+    top: 50%;
+    left: 65%;
+    transform: translate(-10%, -50%);
+}
+    .container-dialog-log{
+        height: 90%;
+        width: 90%;
+        background-color: transparent;
+        display: flex;
+        flex-direction: column;
+        border-radius: 10px;
+        /* border: double 4px #fff; */
+    }
