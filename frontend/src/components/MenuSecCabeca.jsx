@@ -3,18 +3,21 @@ import "./MenuSecCabeca.css"
 
 function MenuSecCabeca() {
   return (
-   <div className="container">
-        <div className="top">
-         <h1>COISA COISA COISA</h1>
-        </div>
+      <div className="container-menuSec-cabeca">
+      <div className="top-menuSecc">  
+        <button className='btn-acessorios'>
+        <img src="./icones/ICONE-CORPO-MASCULINO.png" alt="Ícone corpo masculino" />
+        </button>  
+        <button className='btn-acessorios'>
+        <img src="./icones/ICONE-CORPO-MASCULINO.png" alt="Ícone corpo masculino" />
+        </button>  
+        <button className='btn-acessorios'>
+        <img src="./icones/ICONE-CORPO-MASCULINO.png" alt="Ícone corpo masculino" />
+        </button>
+      </div>
 
-        <div className="final">
-            
-         <h1>COISA COISA COISA</h1>
-         <h1>COISA COISA COISA</h1>
-
-        </div>
-
+      <div className="bottom">
+      </div>
     </div>
   )
 }
