@@ -3,10 +3,12 @@ import "./MenuSecHistoria.css"
 
 function MenuSecHistoria() {
   return (
-    <div className="container">
+        <div className="container-menuSec-corpo">
+      <div className="top-menuSec">
+      </div>
 
-        <h1>COISA</h1>
-
+      <div className="bottom">
+      </div>
     </div>
   )
 }
