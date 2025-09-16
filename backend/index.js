@@ -1,71 +1,92 @@
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
+const db = require('./db'); // <-- 1. Importe a configuração do banco
+
 const app = express();
 const PORT = 3000;
 
 app.use(cors());
 app.use(express.json());
 
-// Rota POST que recebe os dados do seu frontend e envia para o professor
 app.post('/enviar-caixa', async (req, res) => {
     
-    // 1. Recebe a requisição completa do seu frontend
     const requisicaoCompleta = req.body;
-    console.log('--- Requisição recebida do frontend ---');
-    console.log(requisicaoCompleta);
-    
-    // 2. Extrai o "payload" para encaminhar
-    const payloadParaEnviar = requisicaoCompleta;
-    console.log('--- variável payload para enviar ---');
-    console.log(payloadParaEnviar)
+    console.log('--- Requisição completa recebida do frontend ---');
+    console.log(JSON.stringify(requisicaoCompleta, null, 2));
 
-    if (!payloadParaEnviar) {
-        console.error('ERRO: O objeto "payload" não foi encontrado no corpo da requisição.');
-        return res.status(400).json({ mensagem: 'Formato da requisição inválido: objeto "payload" ausente.' });
+    // 1. CORREÇÃO: Desestruturamos 'payload' E 'callbackUrl' DIRETAMENTE do corpo da requisição.
+    const { payload, callbackUrl } = requisicaoCompleta;
+
+    // 2. CORREÇÃO: A validação agora checa 'callbackUrl' no nível correto e os campos dentro de 'payload'.
+    if (!payload || !callbackUrl || !payload.orderId || !payload.order) {
+        console.error('ERRO: Requisição inválida. Campos obrigatórios: payload, callbackUrl, payload.orderId, payload.order.');
+        return res.status(400).json({ mensagem: 'Formato da requisição inválido.' });
     }
 
-    // console.log(payloadParaEnviar)
-
-    console.log('>>> Encaminhando payload para o servidor do professor...');
-
     try {
-        // 3. Usa o Axios para fazer a requisição POST, com a URL diretamente na chamada
+        // --- LÓGICA DO BANCO DE DADOS ---
+        const insertQuery = `
+            INSERT INTO pedidos(order_id, dados_do_pedido, callback_url)
+            VALUES($1, $2, $3)
+            RETURNING id;
+        `;
+        
+        // 3. CORREÇÃO: O array de valores usa a variável 'callbackUrl' que acabamos de extrair.
+        const values = [
+            payload.orderId,    // Para $1
+            payload.order,      // Para $2
+            callbackUrl         // Para $3
+        ];
+
+        console.log('>>> Valores que serão inseridos no banco de dados:');
+        console.log(values);
+        
+        const result = await db.query(insertQuery, values);
+        console.log(`+++ SUCESSO! Pedido salvo no banco de dados com o ID: ${result.rows[0].id} +++`);
+
+        // --- FIM DA LÓGICA DO BANCO DE DADOS ---
+
+        // O encaminhamento para o servidor do professor já estava correto,
+        // pois ele envia a 'requisicaoCompleta' original.
+        console.log('>>> Encaminhando a requisição completa para o servidor do professor...');
+        
         const respostaDoProfessor = await axios.post(
-            'http://52.1.197.112:3000/queue/items', // URL inserida diretamente aqui
-            payloadParaEnviar
+            'http://52.1.197.112:3000/queue/items',
+            requisicaoCompleta
         );
 
-        // 4. Se a requisição foi bem-sucedida, loga a resposta e avisa o frontend
         console.log('+++ SUCESSO! Resposta do servidor do professor: +++');
         console.log('Status:', respostaDoProfessor.status);
         console.log('Dados:', respostaDoProfessor.data);
 
-        // Envia uma resposta final de sucesso para o seu frontend
         res.status(200).json({ 
-            mensagem: 'Pedido enviado com sucesso para produção!', 
+            mensagem: 'Pedido salvo e enviado com sucesso!', 
             respostaDoServidor: respostaDoProfessor.data 
         });
 
     } catch (error) {
-        // 5. Se a comunicação com o servidor do professor falhar, captura e loga o erro
-        console.error('### FALHA AO COMUNICAR COM O SERVIDOR DO PROFESSOR ###');
+        // Bloco de tratamento de erro (sem alterações)
+        console.error('### FALHA NA OPERAÇÃO ###');
         
         if (error.response) {
             console.error('O servidor de destino respondeu com um erro.');
             console.error('Status do erro:', error.response.status);
             console.error('Dados do erro:', error.response.data);
-        } else if (error.request) {
-            console.error('A requisição foi enviada, mas não houve resposta do servidor de destino.');
+            res.status(500).json({ mensagem: 'Erro ao encaminhar o pedido para o servidor de produção.' });
+        
+        } else if (error.code) { 
+            console.error('Erro no banco de dados:', error.message);
+            if (error.code === '23505') {
+                 return res.status(409).json({ mensagem: `Erro: O order_id '${payload.orderId}' já existe no banco de dados.` });
+            }
+            res.status(500).json({ mensagem: 'Erro ao salvar o pedido no banco de dados.' });
         } else {
-            console.error('Erro ao configurar a requisição:', error.message);
+            console.error('Erro desconhecido:', error.message);
+            res.status(500).json({ mensagem: 'Ocorreu um erro inesperado.' });
         }
-
-        // Envia uma resposta de erro para o seu frontend
-        res.status(500).json({ mensagem: 'Erro ao encaminhar o pedido para o servidor de produção.' });
     }
 });
-
 
 app.listen(PORT, () => {
     console.log(`Servidor principal rodando na porta ${PORT} =)`)
