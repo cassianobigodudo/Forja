@@ -11,7 +11,7 @@ app.use(express.json());
 app.post('/enviar-caixa', async (req, res) => {
     
     // 1. Recebe a requisição completa do seu frontend
-    const requisicaoCompleta = req.body;
+    const requisicaoCompleta = req.body
     console.log('--- Requisição recebida do frontend ---');
     console.log(requisicaoCompleta);
     

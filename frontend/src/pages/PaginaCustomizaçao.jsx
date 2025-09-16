@@ -13,7 +13,7 @@ const [btnAtivo, setBtnAtivo] = useState('');
 const [ZoomAtivo, setZoomAtivo] = useState(false);
 const [genero, setGenero] = useState('FEMININO');
 
-//yipe
+//yip
 const corDePeleData = [
 
         { nome: 'NEGRA', color: '#3b2010ff'},
@@ -92,10 +92,10 @@ const handleSalvarPersonagem = async () => {
                       "padrao2": "1",
                       "padrao3": "1"
                     },
-                    "sku": "KIT-01",
                   },
-                  "callbackUrl": "http://localhost:3000/callback"
-          },
+                  "sku": "KIT-01",
+                },
+                "callbackUrl": "http://localhost:3333/callback"
       };
 
       
