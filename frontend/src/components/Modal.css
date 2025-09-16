@@ -46,12 +46,14 @@
   text-indent: 10px;
   margin-top: -52px; 
   transition: 1s;
+  color: white;
 }
 
 .exemploDeCompra{
   font-family: 'fonte-subtitulo';
   font-size: 18px;
   margin-bottom: 25px;
+  color: white;
 
 }
 
@@ -91,5 +93,10 @@
 }
 .lblPagamento{
   font-size: 28px;
+  cursor: pointer;
+}
+.lblPedidos{
+  font-size: 28px;
+  color: white;
   cursor: pointer;
 }
