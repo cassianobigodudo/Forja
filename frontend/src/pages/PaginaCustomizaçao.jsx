@@ -32,7 +32,6 @@ function PaginaCustomizaçao() {
   }
 
   const handleGeneroChange = (novoGenero) => {
-
     setGenero(novoGenero);
   };
 
@@ -90,71 +89,6 @@ function PaginaCustomizaçao() {
       console.error('Erro ao salvar o personagem:', error);
     }
   };
-      const dadosPersonagem = {
-          "payload": {
-              "orderId": "ABC-123",
-              "order": {
-                  "codigoProduto": 1,
-                  "bloco1": {
-                      "cor": 1,
-                      "lamina1": 1,
-                      "lamina2": 1,
-                      "lamina3": 1,
-                      "padrao1": "1",
-                      "padrao2": "1",
-                      "padrao3": "1"
-                  },
-                  "bloco2": {
-                      "cor": 1,
-                      "lamina1": 1,
-                      "lamina2": 1,
-                      "lamina3": 1,
-                      "padrao1": "1",
-                      "padrao2": "1",
-                      "padrao3": "1"
-                  },
-                  "bloco3": {
-                      "cor": mapeamentoGenero[genero],
-                      "lamina1": mapeamentoCorPele[corPele],
-                      "lamina2": 1,
-                      "lamina3": 1,
-                      "padrao1": "1",
-                      "padrao2": "1",
-                      "padrao3": "1"
-                    },
-                  },
-                  "sku": "KIT-01",
-                },
-                "callbackUrl": "http://localhost:3333/callback"
-      };
-
-      
-      try {
-        // console.log("Objeto da caixa ", dadosPersonagem)
-          console.log("Enviando os seguintes IDs:", dadosPersonagem);
-
-        const resposta = await axios.post('http://localhost:3000/enviar-caixa', dadosPersonagem);
-          
-
-      } catch (error) {
-        console.error('Erro ao salvar o personagem:', error);
-      }
-};
-
-return (
-<div className="container-pagina">
-  
-    <Navbar />
-    
-  <div className="pagina-custom">
-    
-    <div className="area-customizacao">
-
-    <div className={`paperdoll-area ${ZoomAtivo ? 'zoomed' : ''}`}>
-
-    <img src={`./personagem-${genero}/CORPO-${genero}-${corPele}.png`} alt="Personagem" />
-     
-    </div>
 
   return (
     <div className="container-pagina">
