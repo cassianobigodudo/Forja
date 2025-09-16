@@ -1,17 +1,15 @@
 import React from 'react'
 import "./PaginaPagamento.css"
-
 import Navbar from '../components/Navbar'
-
 
 function PaginaPagamento() {
   return (
 
     <div className="container-pagina"> 
-            
+
             <Navbar/>
 
-      <div className="container">             
+        <div className="container">             
 
 
             <main className='conteudo'>

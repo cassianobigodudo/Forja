@@ -8,7 +8,7 @@
      align-items: center;
      flex-direction: column;
 
-     background-image: url(./public/fundo/tim-mcburnie-illustrationtutorial-theentrance.png);
+     background-image: url(../../public/fundo/tim-mcburnie-completa-escurecido.png);
      background-size: cover; 
 }
 
@@ -177,7 +177,7 @@
 }
 
 .btn-prosseguir{
-    margin-top: auto; width: 95%; height: 23%;
+    margin-top: auto; width: 93%; height: 22%;
     border: none; cursor: pointer; color: var(--Texto);
     font-family: "fonte-logo"; font-size: 32px; padding: 22px 0;
     background: var(--Fundo) url("/fundo/fundo-botao.png") center/100% no-repeat;
