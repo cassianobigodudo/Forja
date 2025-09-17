@@ -1,6 +1,5 @@
 import React from 'react'
 import "./PaginaPagamento.css"
-
 import Navbar from '../components/Navbar'
 import { useNavigate } from 'react-router-dom'
 
@@ -8,10 +7,10 @@ function PaginaPagamento() {
   return (
 
     <div className="container-pagina"> 
-            
+
             <Navbar/>
 
-      <div className="container">             
+        <div className="container">             
 
 
             <main className='conteudo'>
@@ -58,26 +57,23 @@ function PaginaPagamento() {
                 {/* COLUNA DIREITA */}
                 <aside className='direita'>
                     <div className='metodos'>
-                            <div className='metodo1'>
-                            <button>
-                            <div className="metodo-ico metodo-pix" />
+
+                            <button className="metodo-pix" >
                                 Pix
                             </button>
-                            </div>
 
-                            <div className='metodo2'>
-                            <button>
-                            <div className="metodo-ico metodo-cartao" />
+
+
+                            <button className="metodo-cartao" >
                                 Cartão
                             </button>
-                            </div>
 
-                            <div className='metodo3'>
-                            <button>
-                            <div className="metodo-ico metodo-boleto" />
+
+
+                            <button className="metodo-boleto" >
                                 Boleto
                             </button>
-                            </div>
+
                     </div>
 
                     <aside className="resumo">
