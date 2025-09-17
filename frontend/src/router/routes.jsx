@@ -3,7 +3,6 @@ import LandingPage from "../pages/LandingPage"
 import UserAccount from "../pages/UserAccount"
 import PaginaCustomizaçao from "../pages/PaginaCustomizaçao"
 import PaginaPagamento from "../pages/PaginaPagamento"
-import PaginaPagamento from "../pages/PaginaPagamento"
 
 const router = createBrowserRouter([
 
