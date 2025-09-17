@@ -56,26 +56,23 @@ function PaginaPagamento() {
                 {/* COLUNA DIREITA */}
                 <aside className='direita'>
                     <div className='metodos'>
-                            <div className='metodo1'>
-                            <button>
-                            <div className="metodo-ico metodo-pix" />
+
+                            <button className="metodo-pix" >
                                 Pix
                             </button>
-                            </div>
 
-                            <div className='metodo2'>
-                            <button>
-                            <div className="metodo-ico metodo-cartao" />
+
+
+                            <button className="metodo-cartao" >
                                 Cartão
                             </button>
-                            </div>
 
-                            <div className='metodo3'>
-                            <button>
-                            <div className="metodo-ico metodo-boleto" />
+
+
+                            <button className="metodo-boleto" >
                                 Boleto
                             </button>
-                            </div>
+
                     </div>
 
                     <aside className="resumo">
