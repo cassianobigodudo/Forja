@@ -13,9 +13,43 @@ function PaginaCustomizaçao() {
 
   const [btnAtivo, setBtnAtivo] = useState('');
   const [ZoomAtivo, setZoomAtivo] = useState(false);
-  const [genero, setGenero] = useState('FEMININO');
-  const [corPele, setCorPele] = useState('NEGRA');
   const myPointer = useRef(null);
+  const [personagem, setPersonagem] = useState({
+    
+    genero: '',
+    generoNun:'',
+    corPele: '',
+    corPeleNum: '',
+    marcas: '',
+    marcasNum: '',
+    cabelo: '',
+    cabeloNum: '',
+    corCabelo: '',
+    corCabeloNum: '',
+    acessCabeca: '',
+    acessCabecaNum: '',
+    acessPescoco: '',
+    acessPescocoNum: '',
+    roupaCima: '',
+    roupaCimaNum: '',
+    roupaCimaVariante: '',
+    roupaCimaVarianteNum: '',
+    armas: '',
+    armasNum: '',
+    baseMini: '',
+    baseMiniNum: '',
+    roupaBaixo: '',
+    roupaBaixoNum: '',
+    roupaBaixoVariante: '',
+    roupaBaixoVarianteNum: '',
+    sapato: '',
+    sapatoNum: '',
+    sapatoVariante: '',
+    sapatoVarianteNum: '',
+    img: '',
+    historia: ''
+
+  })
 
   const corDePeleData = [
     { nome: 'NEGRA', color: '#3b2010ff' },
@@ -65,19 +99,6 @@ function PaginaCustomizaçao() {
       'CINZA': 6
     };
 
-    const dadosPersonagem = {
-      "payload": {
-        "orderId": "FORJA-TESTE",
-        "order": {
-          "codigoProduto": 1,
-          "bloco1": { "cor": 1, "lamina1": 1, "lamina2": 1, "lamina3": 1, "padrao1": "1", "padrao2": "1", "padrao3": "1" },
-          "bloco2": { "cor": 1, "lamina1": 1, "lamina2": 1, "lamina3": 1, "padrao1": "1", "padrao2": "1", "padrao3": "1" },
-          "bloco3": { "cor": mapeamentoGenero[genero], "lamina1": mapeamentoCorPele[corPele], "lamina2": 1, "lamina3": 1, "padrao1": "1", "padrao2": "1", "padrao3": "1" },
-        },
-      },
-      "sku": "KIT-01",
-      "callbackUrl": "http://localhost:3000/callback"
-    };
 
     setDadosDoPersonagem(dadosPersonagem);
     setBtnAtivo('SALVAR');
