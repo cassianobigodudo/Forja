@@ -67,7 +67,7 @@ function PaginaCustomizaçao() {
 
     const dadosPersonagem = {
       "payload": {
-        "orderId": "ABC-123",
+        "orderId": "FORJA-TESTE",
         "order": {
           "codigoProduto": 1,
           "bloco1": { "cor": 1, "lamina1": 1, "lamina2": 1, "lamina3": 1, "padrao1": "1", "padrao2": "1", "padrao3": "1" },
