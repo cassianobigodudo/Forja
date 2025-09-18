@@ -21,7 +21,7 @@
             align-items: start;
             flex-direction: column;
             padding: 10px;
-            gap: 10px;
+            gap: 5px;
             height: 50%;
             width: 100%;
             background-color: transparent;
@@ -30,13 +30,13 @@
         .login-labels{
             font-family: "fonte-subtitulos";
             font-weight: bolder;
-            font-size: 20px;
+            font-size: 15px;
             color: #fff;
         }
 
         .login-inputs{
             height: 40px;
-            width: 500px;
+            width: 400px;
             border: solid 3px #fff;
             border-radius: 7px;
             background-color: transparent;
