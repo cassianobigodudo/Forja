@@ -1,0 +1,329 @@
+@keyframes slideIn {
+  from {
+    transform: translateX(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.container-pagina {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+    background-image: url(./fundo/tim-mcburnie-completa-escurecido.png);
+  background-repeat: no-repeat;
+  background-size: 170%;
+  background-position: 90% 50%;
+}
+
+.pagina-custom {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  flex-direction: column;
+  height: 85%;
+  width: 99.3%;
+  margin-left: 0.2%;
+  border-radius: 1%;
+  background-size: 100%;
+  background-repeat: no-repeat;
+}
+
+.area-customizacao {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  flex-direction: row;
+  height: 100%;
+  width: 99.4%;
+  margin-top: 0.4%;
+}
+.paperdoll-area {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  flex-direction: column;
+  height: 100%;
+  width: 25%;
+  transition: width 1s ease-in-out;
+  overflow-y: scroll;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 3%,
+    black 95%,
+    transparent 100%
+  );
+  transition: 1s;
+  animation: idle infinite 5s ease-in-out;
+  user-select: none;
+}
+
+.paperdoll-area.zoomed {
+  width: 40%;
+}
+
+.paperdoll-area img {
+  margin-top: -2%;
+  margin-right: -17%;
+  height: 96%;
+  transform-origin: center center;
+  transition: transform 1s ease-in-out;
+  transform: scale(1) translateY(-5%);
+  transition: 1s;
+}
+
+.paperdoll-area.zoomed img {
+  margin-right: 1%;
+  transform: scale(2.2) translateY(20%);
+  transition: 1s;
+}
+
+.paperdoll-area::-webkit-scrollbar {
+  width: 1px;
+}
+
+.paperdoll-area.zoomed::-webkit-scrollbar {
+  background-image: url(./fundo/TRACK.png);
+  width: 40px;
+}
+
+.paperdoll-area::-webkit-scrollbar-track {
+  background-clip: content-box;
+}
+
+.paperdoll-area::-webkit-scrollbar-thumb {
+  border-top: 21px solid transparent;
+  border-bottom: 237px solid transparent;
+  background-image: url(./fundo/DRAG-HANDLE.png);
+  background-color: transparent;
+  background-clip: padding-box;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+
+.paperdoll-area::-webkit-scrollbar-corner {
+  background-color: transparent;
+  transition: 1s;
+}
+
+.paperdoll-area::-webkit-scrollbar-button {
+  background-color: transparent;
+  transition: 1s;
+}
+
+.menu-primario-custom-container {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  text-align: center;
+  flex-direction: column;
+  height: 100%;
+  width: 21%;
+  user-select: none;
+}
+
+.menu-primario-custom-top {
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  text-align: center;
+  flex-direction: column;
+  height: 75%;
+  width: 101%;
+  background-image: url(./fundo/Fundo-Menu-primario.svg);
+  background-size: cover;
+}
+
+.btn-corpo {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  flex-direction: row;
+  height: 10%;
+  width: 80%;
+  margin-top: 13%;
+  margin-left: 10%;
+  font-family: "fonte-titulos";
+  border: none;
+  background-image: url(./icones/fundo-btn.svg);
+  background-size: cover;
+  color: var(--Texto);
+  text-indent: 22px;
+  cursor: pointer;
+  transition: 0.6s;
+}
+
+.btn-corpo:hover {
+  margin-left: 10%;
+  transition: 0.3s;
+}
+
+.btn-corpo-ativado {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  flex-direction: row;
+  height: 10%;
+  width: 80%;
+  margin-top: 13%;
+  margin-left: 17%;
+  font-family: "fonte-titulos";
+  border: none;
+  background-image: url(./icones/fundo-btn-1.svg);
+  background-size: cover;
+  color: var(--Texto);
+  text-indent: 22px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.botaoLbl {
+  margin-top: 2%;
+  font-size: 19px;
+  letter-spacing: 3px;
+}
+
+.btn-corpo-follow {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  flex-direction: row;
+  height: 10%;
+  width: 80%;
+  margin-top: 3%;
+  margin-left: 10%;
+  font-family: "fonte-titulos";
+  border: none;
+  background-image: url(./icones/fundo-btn.svg);
+  background-size: cover;
+  color: var(--Texto);
+  text-indent: 22px;
+  cursor: pointer;
+  transition: 0.6s;
+}
+
+.btn-corpo-follow:hover {
+  margin-left: 15%;
+  transition: 0.3s;
+}
+
+.btn-corpo-follow-ativado {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  flex-direction: row;
+  height: 10%;
+  width: 80%;
+  margin-top: 3%;
+  margin-left: 17%;
+  font-family: "fonte-titulos";
+  border: none;
+  background-image: url(./icones/fundo-btn-1.svg);
+  background-size: cover;
+  color: var(--Texto);
+  text-indent: 22px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.img-btn-icon {
+  height: 30px;
+  width: 40px;
+  margin-left: 12.5%;
+  position: absolute;
+}
+
+.menu-primario-custom-bottom {
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  text-align: center;
+  flex-direction: row;
+  height: 10%;
+  width: 100%;
+}
+
+.btn-zoom {
+  height: 90%;
+  width: 20%;
+  margin-top: 1%;
+  background-image: url(./icones/Zoom.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  border: none;
+  cursor: pointer;
+  margin-left: 10%;
+}
+
+
+.btn-tirar-zoom {
+  height: 90%;
+  width: 20%;
+  margin-top: 1%;
+  background-image: url(./icones/Tirar-Zoom.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  border: none;
+  cursor: pointer;
+  margin-left: 3%;
+}
+.btn-tirar-zooms {
+  height: 90%;
+  width: 34%;
+  margin-top: 1%;
+  background-color: var(--Fundo);
+  color: white;
+  border-style: solid;
+  border-width: 2px;
+  border-color: white;
+  font-size: 21px;
+  font-family: "fonte-titulos";
+  background-size: contain;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  margin-left: 3%;
+  transition: 1s;
+}
+
+.btn-tirar-zooms:hover {
+  background-color: rgb(31, 19, 14, 0.8);
+  transition: 1s;
+}
+.menu-secundario-custom {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  flex-direction: column;
+  height: 80%;
+  width: 36%;
+  margin-bottom: 2.6%;
+  margin-left: 1.5%;
+  animation: slideIn 1s ease-out 0.2s backwards;
+}
+
+.menu-secundario-fundo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  background-size: cover;
+}

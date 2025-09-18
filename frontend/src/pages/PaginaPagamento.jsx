@@ -1,33 +1,17 @@
 import React from 'react'
 import "./PaginaPagamento.css"
-
+import Navbar from '../components/Navbar'
+import { useNavigate } from 'react-router-dom'
 
 function PaginaPagamento() {
   return (
 
     <div className="container-pagina"> 
-            
-      <div className="container">
-             <header className="nav">
-              <div className='logo-texto'>FORJA</div>
-                
 
-                    <nav className='navbar-links'>
-                     <a href='#'>Início</a>
-                     <a href='#'>Loja</a>
-                     <a href='#'>Forjar</a>
-                    </nav>
+            <Navbar/>
 
-                <div className='nav-icons'>
-                    <button className='ico1' aria-label='conta'>
-                        {/* Trocar por Usuario.svg */}
-                    </button>
-            
-                    <button className='ico2' aria-label='Carrinho'>
-                      {/* Trocar por Carrinho.svg */}
-                    </button>
-                </div>
-            </header>
+        <div className="container">             
+
 
             <main className='conteudo'>
             
@@ -73,26 +57,23 @@ function PaginaPagamento() {
                 {/* COLUNA DIREITA */}
                 <aside className='direita'>
                     <div className='metodos'>
-                            <div className='metodo1'>
-                            <button>
-                            <div className="metodo-ico metodo-pix" />
+
+                            <button className="metodo-pix" >
                                 Pix
                             </button>
-                            </div>
 
-                            <div className='metodo2'>
-                            <button>
-                            <div className="metodo-ico metodo-cartao" />
+
+
+                            <button className="metodo-cartao" >
                                 Cartão
                             </button>
-                            </div>
 
-                            <div className='metodo3'>
-                            <button>
-                            <div className="metodo-ico metodo-boleto" />
+
+
+                            <button className="metodo-boleto" >
                                 Boleto
                             </button>
-                            </div>
+
                     </div>
 
                     <aside className="resumo">

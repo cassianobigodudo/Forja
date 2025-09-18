@@ -1,0 +1,52 @@
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.container-menuSec-corpo{
+    height: 100%;
+    width: 99%;
+    display: flex;
+    justify-content: start;
+    flex-direction: column;
+    color: var(--Texto);
+    font-family: "fonte-titulos";
+    animation: fadeIn 0.2s ease-out;
+    transition: 1s;
+}
+
+.top-menuSec {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 30%;
+    width: 100%;
+    
+    border-width: 2px;
+    border-style: solid;
+    background-color: rgba(51, 37, 31, 0.8);
+}
+
+.lbl {
+    margin-top: 2.5%;
+    font-size: 39px;
+    letter-spacing: 2px;
+}
+
+
+.bottom {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70%;
+    width: 100%;
+    margin-top: 2%;
+    background-color: rgba(51, 37, 31, 0.8);
+    border-width: 2px;
+    border-style: solid;
+}

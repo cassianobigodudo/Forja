@@ -1,0 +1,102 @@
+@keyframes slideIn {
+  from {
+    transform: translatey(-250px);
+    opacity: 0.9;
+  }
+  to {
+    transform: translatey(0);
+    opacity: 1;
+  }
+}
+
+.modal-dropdown {
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  flex-direction: column;
+  position: absolute;
+  top: 90px;
+  right: 31px;
+  background: #fff;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  min-width: 250px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1;
+  padding: 12px;
+  animation: slideIn 0.5s ease-in-out;
+  background-color: rgba(26, 21, 17, 0.96);
+}
+
+.modal-content{
+  font-family: "fonte-subtitulos";
+  padding: 20px;
+  border-radius: 12px;
+  min-width: 300px;
+  max-width: 600px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  background-color: var(--Fundo);
+}
+
+
+.titulo{
+  font-family: 'fonte-logo';
+  font-size: 28px;
+  margin-bottom: 22px;
+  text-indent: 10px;
+  margin-top: -52px; 
+  transition: 1s;
+  color: white;
+}
+
+.exemploDeCompra{
+  font-family: 'fonte-subtitulo';
+  font-size: 18px;
+  margin-bottom: 25px;
+  color: white;
+
+}
+
+.fechar{
+  transform: translateX(319px);
+  color: rgb(255, 255, 255);
+  font-family: 'fonte-subtitulo';
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 20px;
+  transition: 1s;
+  margin-top: 10px;
+  margin-bottom: 25px;
+}
+
+.fechar:hover{
+  font-size: 25px;
+  transition: 1s;
+}
+
+.btnIrParaPagamento{
+  color: white;
+  height: 20%;
+  width: 75%;
+  margin-left: 50px;
+  margin-top: 24px;
+  margin-bottom: 12px;
+  font-family: 'fonte-Titulos';
+  border-style: solid;
+  border-width: 2px;
+  border-color: white;
+  cursor: pointer;
+  transition: 1s;
+  background-color: rgb(41, 35, 24,0.4);
+
+}
+.lblPagamento{
+  font-size: 28px;
+  cursor: pointer;
+}
+.lblPedidos{
+  font-size: 28px;
+  color: white;
+  cursor: pointer;
+}
