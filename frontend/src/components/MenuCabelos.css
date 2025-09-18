@@ -1,0 +1,21 @@
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.container-menu-cabelos{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: start;
+    flex-direction: column;
+    gap: 1px;
+    color: var(--Texto);
+    font-family: "fonte-titulos";
+    animation: fadeIn 0.2s ease-out;
+    transition: 1s;
+}
