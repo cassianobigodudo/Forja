@@ -32,7 +32,7 @@ function Navbar() {
             </button>
             {isModalOpen && <Modal onClose={() => setIsModalOpen(false)} />}
 
-            <img src="./public/icones/Usuario.svg" alt="" className='usuario-navbar'/>
+            <img src="./public/icones/Usuario.svg" alt="" className='usuario-navbar' onClick={() => navigate('/usuario')}/>
 
         </div>
     </div>    
