@@ -17,5 +17,5 @@
     color: var(--Texto);
     font-family: "fonte-titulos";
     animation: fadeIn 0.2s ease-out;
-    transition: 1s;
+    transition: 0.5s;
 }

@@ -5,44 +5,48 @@ import MenuCabelos from './MenuCabelos'
 
 function MenuSecCabeca() {
   const [btnAtivo, setBtnAtivo] = useState('')
+  const [topEncolher, setEncolher] = useState('')
 
-  function handleButtonClick() {
+ function handleButtonClick(nomeDoBotao) {
+    setBtnAtivo(prevBtnAtivo => prevBtnAtivo === nomeDoBotao ? null : nomeDoBotao);
 
-    if (btnAtivo == true) {
+    if (topEncolher === 'ENCOLHER'){
 
-      btnAtivo = false
-      
-    } else {
+    setEncolher('')
 
-      btnAtivo = true
+    } else{
+      setEncolher('ENCOLHER')
     }
-    
   }
 
 
   return (
       <div className="container-menuSec-cabeca">
-      <div className="top-menuSecc">  
+      <div  className={topEncolher === 'ENCOLHER' ? 'div-top-encolhe' : 'div-top-normal'}>  
 
-        <button className={btnAtivo === 'CABELO' ? 'btn-cabelo-ativado' : 'btn-cabelo'} 
-        onClick={() => handleButtonClick('CABELO')}> CABELO
-        <img src="./icones/ICONE-CORPO-MASCULINO.png" alt="Ícone corpo masculino" />
+        <button className={btnAtivo === 'CABELOS' ? 'btn-ativado' : 'btn-desativado'} 
+        onClick={() => handleButtonClick('CABELOS')}> CABELO
+        
         </button>  
 
-        <button className={btnAtivo === 'ACESSORIOS' ? 'btn-acessorios-ativado' : 'btn-'} 
+        <button className={btnAtivo === 'ACESSORIOS' ? 'btn-ativado' : 'btn-desativado'} 
         onClick={() => handleButtonClick('ACESSORIOS')}> ACESSORIOS
 
-        <img src="./icones/ICONE-CORPO-MASCULINO.png" alt="Ícone corpo masculino" />
         </button>  
 
-        <button className='btn-acessorios'> MARCAS
-        <img src="./icones/ICONE-CORPO-MASCULINO.png" alt="Ícone corpo masculino" />
+        <button className={btnAtivo === 'MARCAS' ? 'btn-ativado' : 'btn-desativado'} 
+        onClick={() => handleButtonClick('MARCAS')}> MARCAS
+
         </button>
+
+        
       </div>
 
       <div className="bottom">
 
-        <MenuCabelos/>
+        {btnAtivo === 'CABELOS' && <MenuCabelos/>}
+
+        
       </div>
     </div>
   )

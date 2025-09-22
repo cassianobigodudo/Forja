@@ -6,8 +6,13 @@ function MenuCabelos() {
 
         
         <button className='btn-acessorios'> 
-        <img src="./icones/ICONE-CORPO-MASCULINO.png" alt="Ícone corpo masculino" />
+
+            <h1> CABELO 1</h1>
+           
         </button> 
+
+
+        <h1>CORES DE CABELO</h1>
       
      
 
