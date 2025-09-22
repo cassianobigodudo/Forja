@@ -1,0 +1,1 @@
+// Arquivo que de fato inicia o servidor (antes estava em index.js)
