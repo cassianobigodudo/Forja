@@ -9,8 +9,9 @@ import html2canvas from 'html2canvas';
 import { useGlobalContext } from '../context/GlobalContext';
 
 function PaginaCustomizaçao() {
-  const { setDadosDoPersonagem, setImagemPersonagem } = useGlobalContext();
-
+  const { dadosPersonagem, setDadosDoPersonagem, setImagemPersonagem } = useGlobalContext();
+  const [genero, setGenero] = useState('FEMININO')
+  const [corPele, setCorPele] = useState('NEGRA')
   const [btnAtivo, setBtnAtivo] = useState('');
   const [ZoomAtivo, setZoomAtivo] = useState(false);
   const myPointer = useRef(null);
@@ -65,29 +66,30 @@ function PaginaCustomizaçao() {
     setBtnAtivo(prevBtnAtivo => prevBtnAtivo === nomeDoBotao ? null : nomeDoBotao);
   }
 
+  //escolhendo o gênero da personagem
   const handleGeneroChange = (novoGenero) => {
     setGenero(novoGenero);
-  };
-
-  const handleCorDePeleChange = (novaCorDePele) => {
-    setCorPele(novaCorDePele);
-  };
-
-  const handleSalvarPersonagem = async () => {
-    const options = {
-      backgroundColor: null,
-      scale: 0.45
-    };
-
-    const canvas = await html2canvas(myPointer.current, options);
-    const base64image = canvas.toDataURL('image/png');
-
-    setImagemPersonagem(base64image);
 
     const mapeamentoGenero = {
       'FEMININO': 2,
       'MASCULINO': 3
     };
+
+    setPersonagem(prev => {
+      const atualizado = {
+        ...prev,
+        genero: novoGenero,
+        generoNum: mapeamentoGenero[novoGenero]
+      };
+
+      console.log("➡️ Gênero atualizado:", atualizado); // debug
+      return atualizado;
+    });
+  };
+
+  //escolhendo a cor da pele do personagem
+  const handleCorDePeleChange = (novaCorDePele) => {
+    setCorPele(novaCorDePele);
 
     const mapeamentoCorPele = {
       'NEGRA': 0,
@@ -99,21 +101,51 @@ function PaginaCustomizaçao() {
       'CINZA': 6
     };
 
+    setPersonagem(prev => {
+      const atualizado = {
+        ...prev,
+        corPele: novaCorDePele,
+        corPeleNum: mapeamentoCorPele[novaCorDePele]
+      };
+
+      console.log("➡️ Cor de pele atualizada:", atualizado); // debug
+      return atualizado;
+    });
+  };
+
+  //função para salvar o personagem após a customização
+  const handleSalvarPersonagem = async () => {
+
+    const options = {
+      backgroundColor: null,
+      scale: 0.45
+    };
+
+    const canvas = await html2canvas(myPointer.current, options);
+    const base64image = canvas.toDataURL('image/png');
+
+    setImagemPersonagem(base64image);
 
     setDadosDoPersonagem(dadosPersonagem);
     setBtnAtivo('SALVAR');
 
     try {
+
       console.log("Enviando os seguintes IDs:", dadosPersonagem);
-      const resposta = await axios.post('http://localhost:3000/enviar-caixa', dadosPersonagem);
+      const resposta = await axios.post('http://localhost:3000/pedidos', dadosPersonagem);
+
     } catch (error) {
+
       console.error('Erro ao salvar o personagem:', error);
+      
     }
+
   };
 
   return (
     <div className="container-pagina">
       <Navbar />
+
       <div className="pagina-custom">
 
         <div className="area-customizacao">

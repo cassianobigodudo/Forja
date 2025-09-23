@@ -22,6 +22,7 @@ function MenuSecCorpo({ onGeneroChange, generoAtual, tomsDePeles, onCorDePeleCha
       </div>
 
       <div className="bottom">
+
         <button 
           className={`btn-genero ${generoAtual === 'FEMININO' ? 'ativado' : ''}`}
           onClick={() => onGeneroChange('FEMININO')}
@@ -35,7 +36,9 @@ function MenuSecCorpo({ onGeneroChange, generoAtual, tomsDePeles, onCorDePeleCha
         >
           <img src="./icones/ICONE-CORPO-MASCULINO.png" alt="Ícone corpo masculino" />
         </button>
+
       </div>
+      
     </div>
   );
 }
