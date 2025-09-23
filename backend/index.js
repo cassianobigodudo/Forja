@@ -1,3 +1,4 @@
+//index.js
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
@@ -8,6 +9,56 @@ const PORT = 3000;
 
 app.use(cors());
 app.use(express.json());
+
+//rota para cadastrar um usuário
+app.post('/usuarios', async(req, res) => {
+    const { apelido, email, senha, confirmarSenha } = req.body;
+
+    // 👇 Log dos dados recebidos do Thunder Client / frontend
+    console.log('📥 Dados recebidos no cadastro de usuário:', req.body);
+
+    // 🔒 Validação: senha e confirmarSenha precisam ser iguais
+    if (senha !== confirmarSenha) {
+        return res.status(400).json({
+            message: "As senhas não coincidem!"
+        });
+    }
+
+    try {
+        const result = await db.query(
+            `INSERT INTO usuarios (apelido, email, senha)
+            VALUES ($1, $2, $3)
+            RETURNING *`,
+            [apelido, email, senha]
+        );
+        res.status(201).json(result.rows[0]);
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({
+            message: "Erro ao cadastro o usuário!!!"
+        })
+        
+    }
+});
+
+//rota para salvar o pedido no banco de dados
+app.post('/pedidos', async (req, res) => {
+    const { genero, generonum, corpele, corpelenum, img } = req.body;
+
+    try {
+        const result = await db.query(
+        `INSERT INTO pedidos (genero, generonum, corpele, corpelenum, img)
+        VALUES ($1, $2, $3, $4, $5)
+        RETURNING *;`,
+        [genero, generonum, corpele, corpelenum, img]
+        );
+        res.status(201).json(result.rows[0]);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Erro ao salvar personagem no banco.' });
+    }
+
+})
 
 app.post('/enviar-caixa', async (req, res) => {
     
