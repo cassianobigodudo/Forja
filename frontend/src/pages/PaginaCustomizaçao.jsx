@@ -17,7 +17,7 @@ function PaginaCustomizaçao() {
   const [personagem, setPersonagem] = useState({
     
     genero: '',
-    generoNun:'',
+    generoNum:'',
     corPele: '',
     corPeleNum: '',
     marcas: '',
@@ -115,27 +115,41 @@ function PaginaCustomizaçao() {
     <div className="container-pagina">
       <Navbar />
       <div className="pagina-custom">
+
         <div className="area-customizacao">
+
           <div className={`paperdoll-area ${ZoomAtivo ? 'zoomed' : ''}`}>
             <img ref={myPointer} src={`./personagem-${genero}/CORPO-${genero}-${corPele}.png`} alt="Personagem" />
           </div>
+
           <div className="menu-primario-custom-container">
+
             <div className="menu-primario-custom-top">
+
               <button className={btnAtivo === 'CORPO' ? 'btn-corpo-ativado' : 'btn-corpo'} onClick={() => handleButtonClick('CORPO')}>
                 <label className='botaoLbl'>CORPO</label> <img className='img-btn-icon' src="./icones/Corpo.svg" alt="" />
               </button>
+
               <button className={btnAtivo === 'CABEÇA' ? 'btn-corpo-follow-ativado' : 'btn-corpo-follow'} onClick={() => handleButtonClick('CABEÇA')}>
                 <label className='botaoLbl'>CABEÇA</label> <img className='img-btn-icon' src="./icones/Cabeça.svg" alt="" />
               </button>
+
             </div>
+
             <div className="menu-primario-custom-bottom">
+
               <button onClick={() => setZoomAtivo(true)} className='btn-zoom'></button>
               <button onClick={() => setZoomAtivo(false)} className='btn-tirar-zoom'></button>
               <button onClick={handleSalvarPersonagem} className='btn-tirar-zooms'>SALVAR</button>
+
             </div>
+
           </div>
+
           <div className="menu-secundario-custom">
+
             <div className="menu-secundario-fundo">
+
               {btnAtivo === 'CORPO' && <MenuSecCorpo
                 onGeneroChange={handleGeneroChange}
                 generoAtual={genero}
@@ -143,10 +157,14 @@ function PaginaCustomizaçao() {
                 onCorDePeleChange={handleCorDePeleChange}
                 corPeleAtual={corPele}
               />}
+
               {btnAtivo === 'CABEÇA' && <MenuSecCabeca />}
               {btnAtivo === 'HISTÓRIA' && <MenuSecHistoria />}
+
             </div>
+
           </div>
+
         </div>
       </div>
     </div>
