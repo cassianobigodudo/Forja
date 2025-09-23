@@ -9,13 +9,48 @@ import html2canvas from 'html2canvas';
 import { useGlobalContext } from '../context/GlobalContext';
 
 function PaginaCustomizaçao() {
-  const { setDadosDoPersonagem, setImagemPersonagem } = useGlobalContext();
-
+  const { dadosPersonagem, setDadosDoPersonagem, setImagemPersonagem } = useGlobalContext();
+  const [genero, setGenero] = useState('FEMININO')
+  const [corPele, setCorPele] = useState('NEGRA')
   const [btnAtivo, setBtnAtivo] = useState('');
   const [ZoomAtivo, setZoomAtivo] = useState(false);
-  const [genero, setGenero] = useState('FEMININO');
-  const [corPele, setCorPele] = useState('NEGRA');
   const myPointer = useRef(null);
+  const [personagem, setPersonagem] = useState({
+    
+    genero: '',
+    generoNum:'',
+    corPele: '',
+    corPeleNum: '',
+    marcas: '',
+    marcasNum: '',
+    cabelo: '',
+    cabeloNum: '',
+    corCabelo: '',
+    corCabeloNum: '',
+    acessCabeca: '',
+    acessCabecaNum: '',
+    acessPescoco: '',
+    acessPescocoNum: '',
+    roupaCima: '',
+    roupaCimaNum: '',
+    roupaCimaVariante: '',
+    roupaCimaVarianteNum: '',
+    armas: '',
+    armasNum: '',
+    baseMini: '',
+    baseMiniNum: '',
+    roupaBaixo: '',
+    roupaBaixoNum: '',
+    roupaBaixoVariante: '',
+    roupaBaixoVarianteNum: '',
+    sapato: '',
+    sapatoNum: '',
+    sapatoVariante: '',
+    sapatoVarianteNum: '',
+    img: '',
+    historia: ''
+
+  })
 
   const corDePeleData = [
     { nome: 'NEGRA', color: '#3b2010ff' },
@@ -31,29 +66,30 @@ function PaginaCustomizaçao() {
     setBtnAtivo(prevBtnAtivo => prevBtnAtivo === nomeDoBotao ? null : nomeDoBotao);
   }
 
+  //escolhendo o gênero da personagem
   const handleGeneroChange = (novoGenero) => {
     setGenero(novoGenero);
-  };
-
-  const handleCorDePeleChange = (novaCorDePele) => {
-    setCorPele(novaCorDePele);
-  };
-
-  const handleSalvarPersonagem = async () => {
-    const options = {
-      backgroundColor: null,
-      scale: 0.45
-    };
-
-    const canvas = await html2canvas(myPointer.current, options);
-    const base64image = canvas.toDataURL('image/png');
-
-    setImagemPersonagem(base64image);
 
     const mapeamentoGenero = {
       'FEMININO': 2,
       'MASCULINO': 3
     };
+
+    setPersonagem(prev => {
+      const atualizado = {
+        ...prev,
+        genero: novoGenero,
+        generoNum: mapeamentoGenero[novoGenero]
+      };
+
+      console.log("➡️ Gênero atualizado:", atualizado); // debug
+      return atualizado;
+    });
+  };
+
+  //escolhendo a cor da pele do personagem
+  const handleCorDePeleChange = (novaCorDePele) => {
+    setCorPele(novaCorDePele);
 
     const mapeamentoCorPele = {
       'NEGRA': 0,
@@ -65,56 +101,87 @@ function PaginaCustomizaçao() {
       'CINZA': 6
     };
 
-    const dadosPersonagem = {
-      "payload": {
-        "orderId": "ABC-123",
-        "order": {
-          "codigoProduto": 1,
-          "bloco1": { "cor": 1, "lamina1": 1, "lamina2": 1, "lamina3": 1, "padrao1": "1", "padrao2": "1", "padrao3": "1" },
-          "bloco2": { "cor": 1, "lamina1": 1, "lamina2": 1, "lamina3": 1, "padrao1": "1", "padrao2": "1", "padrao3": "1" },
-          "bloco3": { "cor": mapeamentoGenero[genero], "lamina1": mapeamentoCorPele[corPele], "lamina2": 1, "lamina3": 1, "padrao1": "1", "padrao2": "1", "padrao3": "1" },
-        },
-      },
-      "sku": "KIT-01",
-      "callbackUrl": "http://localhost:3000/callback"
+    setPersonagem(prev => {
+      const atualizado = {
+        ...prev,
+        corPele: novaCorDePele,
+        corPeleNum: mapeamentoCorPele[novaCorDePele]
+      };
+
+      console.log("➡️ Cor de pele atualizada:", atualizado); // debug
+      return atualizado;
+    });
+  };
+
+  //função para salvar o personagem após a customização
+  const handleSalvarPersonagem = async () => {
+
+    const options = {
+      backgroundColor: null,
+      scale: 0.45
     };
+
+    const canvas = await html2canvas(myPointer.current, options);
+    const base64image = canvas.toDataURL('image/png');
+
+    setImagemPersonagem(base64image);
 
     setDadosDoPersonagem(dadosPersonagem);
     setBtnAtivo('SALVAR');
 
     try {
+
       console.log("Enviando os seguintes IDs:", dadosPersonagem);
-      const resposta = await axios.post('http://localhost:3000/enviar-caixa', dadosPersonagem);
+      const resposta = await axios.post('http://localhost:3000/pedidos', dadosPersonagem);
+
     } catch (error) {
+
       console.error('Erro ao salvar o personagem:', error);
+      
     }
+
   };
 
   return (
     <div className="container-pagina">
       <Navbar />
+
       <div className="pagina-custom">
+
         <div className="area-customizacao">
+
           <div className={`paperdoll-area ${ZoomAtivo ? 'zoomed' : ''}`}>
             <img ref={myPointer} src={`./personagem-${genero}/CORPO-${genero}-${corPele}.png`} alt="Personagem" />
           </div>
+
           <div className="menu-primario-custom-container">
+
             <div className="menu-primario-custom-top">
+
               <button className={btnAtivo === 'CORPO' ? 'btn-corpo-ativado' : 'btn-corpo'} onClick={() => handleButtonClick('CORPO')}>
                 <label className='botaoLbl'>CORPO</label> <img className='img-btn-icon' src="./icones/Corpo.svg" alt="" />
               </button>
+
               <button className={btnAtivo === 'CABEÇA' ? 'btn-corpo-follow-ativado' : 'btn-corpo-follow'} onClick={() => handleButtonClick('CABEÇA')}>
                 <label className='botaoLbl'>CABEÇA</label> <img className='img-btn-icon' src="./icones/Cabeça.svg" alt="" />
               </button>
+
             </div>
+
             <div className="menu-primario-custom-bottom">
+
               <button onClick={() => setZoomAtivo(true)} className='btn-zoom'></button>
               <button onClick={() => setZoomAtivo(false)} className='btn-tirar-zoom'></button>
               <button onClick={handleSalvarPersonagem} className='btn-tirar-zooms'>SALVAR</button>
+
             </div>
+
           </div>
+
           <div className="menu-secundario-custom">
+
             <div className="menu-secundario-fundo">
+
               {btnAtivo === 'CORPO' && <MenuSecCorpo
                 onGeneroChange={handleGeneroChange}
                 generoAtual={genero}
@@ -122,10 +189,14 @@ function PaginaCustomizaçao() {
                 onCorDePeleChange={handleCorDePeleChange}
                 corPeleAtual={corPele}
               />}
+
               {btnAtivo === 'CABEÇA' && <MenuSecCabeca />}
               {btnAtivo === 'HISTÓRIA' && <MenuSecHistoria />}
+
             </div>
+
           </div>
+
         </div>
       </div>
     </div>

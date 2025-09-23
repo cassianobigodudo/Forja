@@ -6,19 +6,14 @@
     align-items: center;
     background-color: transparent;
 }
-    .label-historico{
-        font-size: 100px;
-        font-weight: bolder;
-        color: #fff;
-    }
 
     .historico{
         display: flex;
         justify-content: center;
         align-items: center;
         flex-direction: column;
-        height: 90%;
-        width: 90%;
+        height: 95%;
+        width: 95%;
         border: double 5px #fff;
         background-color: transparent;
     }
@@ -27,24 +22,22 @@
             justify-content: start;
             align-items: center;
             padding-left: 20px;
-            height: 20%;
+            height: 15%;
             width: 100%;
             background-color: transparent;
         }
             .label-historico-titulo{
                 color: #fff;
-                font-size: 40px;
+                font-size: 30px;
                 font-weight: bolder;
                 font-family: "fonte-titulos";
-                font-size: 40px;
-                font-weight: bolder;
-                color: #fff;
             }
+
         .historico-boxs{
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 80%;
+            height: 85%;
             width: 100%;
             background-color: transparent;
         }

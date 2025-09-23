@@ -6,12 +6,6 @@
     align-items: center;
     background-color: transparent;
 }
-    .label-pedidos{
-        font-size: 100px;
-        font-family: "fonte-titulos";
-        font-weight: bolder;
-        color: #fff;
-    }
     
     .parte-solicitacoes{
         display: flex;
@@ -26,8 +20,8 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            height: 90%;
-            width: 90%;
+            height: 95%;
+            width: 95%;
             background-color: transparent;
             border: double 5px #fff;
         }
@@ -36,13 +30,13 @@
                 justify-content: start;
                 align-items: center;
                 padding-left: 20px;
-                height: 20%;
+                height: 15%;
                 width: 100%;
                 background-color: transparent;
             }
             .titulo-solicitacoes-producao{
                 color: #fff;
-                font-size: 40px;
+                font-size: 30px;
                 font-weight: bolder;
                 font-family: "fonte-titulos";
             }
@@ -52,7 +46,7 @@
                 justify-content: start;
                 align-items: center;
                 flex-direction: column;
-                height: 80%;
+                height: 85%;
                 width: 100%;
                 background-color: transparent;
             }
@@ -76,8 +70,8 @@
         background-color: transparent;
     }
         .producao{
-            height: 90%;
-            width: 90%;
+            height: 95%;
+            width: 95%;
             background-color: transparent;
             border: double 5px #fff;
         }
@@ -86,12 +80,12 @@
                 justify-content: start;
                 align-items: center;
                 padding-left: 20px;
-                height: 20%;
+                height: 15%;
                 width: 100%;
                 background-color: transparent;
             }
             .producao-boxs{
-                height: 80%;
+                height: 85%;
                 width: 100%;
                 background-color: transparent;
             }
