@@ -4,6 +4,7 @@ import UserAccount from "../pages/UserAccount"
 import PaginaCustomizaçao from "../pages/PaginaCustomizaçao"
 import PaginaPagamento from "../pages/PaginaPagamento"
 
+
 const router = createBrowserRouter([
 
     {path: "/", element: <LandingPage/>},
