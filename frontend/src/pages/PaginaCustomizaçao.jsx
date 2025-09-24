@@ -14,7 +14,7 @@ function PaginaCustomizaçao() {
     const [btnAtivo, setBtnAtivo] = useState('');
     const [ZoomAtivo, setZoomAtivo] = useState(false);
     const [genero, setGenero] = useState('MASCULINO');
-    const [corPele, setCorPele] = useState('NEGRA'); 
+    const [corPele, setCorPele] = useState('NEGRA');
     const [cabelo, setCabelo] = useState(null);
     const [corCabelo, setCorCabelo] = useState('PRETO');
     const myPointer = useRef(null);
@@ -66,6 +66,45 @@ function PaginaCustomizaçao() {
         const canvas = await html2canvas(myPointer.current, options);
         const base64image = canvas.toDataURL('image/png');
         setImagemPersonagem(base64image);
+
+        const mapeamentoGenero = {
+           'FEMININO': 2,
+           'MASCULINO': 3
+        };
+
+        const mapeamentoCorPele = {
+           'NEGRA': 0,
+           'PARDA': 1,
+           'LEITE': 2,
+           'BRANCA': 3,
+           'VERDE': 4,
+           'LARANJA': 5,
+           'CINZA': 6
+        };
+
+        const dadosPersonagem = {
+           "payload": {
+            "orderId": "ABC-123",
+            "order": {
+             "codigoProduto": 1,
+             "bloco1": { "cor": 1, "lamina1": 1, "lamina2": 1, "lamina3": 1, "padrao1": "1", "padrao2": "1", "padrao3": "1" },
+             "bloco2": { "cor": 1, "lamina1": 1, "lamina2": 1, "lamina3": 1, "padrao1": "1", "padrao2": "1", "padrao3": "1" },
+             "bloco3": { "cor": mapeamentoGenero[genero], "lamina1": mapeamentoCorPele[corPele], "lamina2": 1, "lamina3": 1, "padrao1": "1", "padrao2": "1", "padrao3": "1" },
+            },
+           },
+           "sku": "KIT-01",
+           "callbackUrl": "http://localhost:3000/callback"
+        };
+
+        setDadosDoPersonagem(dadosPersonagem);
+        setBtnAtivo('SALVAR');
+
+        try {
+           console.log("Enviando os seguintes IDs:", dadosPersonagem);
+           await axios.post('http://localhost:3000/enviar-caixa', dadosPersonagem);
+        } catch (error) {
+           console.error('Erro ao salvar o personagem:', error);
+        }
     };
     
     const corpoPath = genero === 'MASCULINO'
