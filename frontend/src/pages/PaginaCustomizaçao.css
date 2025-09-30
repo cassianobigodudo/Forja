@@ -43,71 +43,60 @@
  height: 100%;
  width: 99.4%;
  margin-top: 0.4%;
-}
-.paperdoll-area {
- display: flex;
- justify-content: center;
- align-items: center;
- text-align: center;
- flex-direction: column;
- height: 100%;
- width: 25%;
- transition: width 1s ease-in-out;
- overflow-y: scroll;
- -webkit-mask-image: linear-gradient(
-  to bottom,
-  transparent 0%,
-  black 10%,
-  black 90%,
-  transparent 100%
- );
- mask-image: linear-gradient(
-  to bottom,
-  transparent 0%,
-  black 1%,
-  black 95%,
-  transparent 100%
- );
- transition: 1s;
- animation: idle infinite 5s ease-in-out;
- user-select: none;
+}.paperdoll-area {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  flex-direction: column;
+  height: 100%;
+  width: 25%;
+  transition: width 1s ease-in-out;
+  overflow-y: scroll;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 1%,
+    black 95%,
+    transparent 100%
+  );
+  transition: 1s;
+  animation: idle infinite 5s ease-in-out;
+  user-select: none;
 }
 
 .paperdoll-area.zoomed {
- width: 40%;
+  width: 40%;
 }
 
-/* --- FIX STARTS HERE --- */
-
-/* This new class holds both body and hair */
 .character-container {
- position: relative;
- transform-origin: center center;
- transition: transform 1s ease-in-out;
- /* Default state */
- transform: scale(1) translateY(-5%);
+  position: relative;
+  /* This is the fix: scale from the top, not the center */
+  transform-origin: center top;
+  transition: transform 1s ease-in-out;
+  /* Default state */
+  transform: scale(1) translateY(-2%);
 }
 
-/* When zoomed, we transform the container */
 .paperdoll-area.zoomed .character-container {
- transform: scale(2.2) translateY(20%);
+  /* You might want to adjust translateY to better frame the face */
+  transform: scale(2.2) translateY(-3%);
 }
 
 .paperdoll-area img {
- margin-top: -2%;
- height: 96%;
+  margin-top: -2%;
+  height: 96%;
 }
 
-/* This rule is no longer needed */
-/*
-.paperdoll-area.zoomed img {
- margin-right: 1%;
- transform: scale(2.2) translateY(20%);
- transition: 1s;
-}
-*/
-
-/* --- FIX ENDS HERE --- */
 
 .paperdoll-area::-webkit-scrollbar {
  width: 1px;
