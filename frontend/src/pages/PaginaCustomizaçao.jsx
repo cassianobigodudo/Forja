@@ -129,10 +129,20 @@ function PaginaCustomizaçao() {
     setDadosDoPersonagem(dadosPersonagem);
     setBtnAtivo('SALVAR');
 
+    // Cria o objeto com os dados que você quer enviar
+    const dadosParaEnviar = {
+      genero: personagem.genero,
+      generonum: personagem.generoNum,
+      corpele: personagem.corPele,
+      corpelenum: personagem.corPeleNum,
+      img: base64image
+    };
+
     try {
 
-      console.log("Enviando os seguintes IDs:", dadosPersonagem);
-      const resposta = await axios.post('http://localhost:3000/pedidos', dadosPersonagem);
+      console.log("Enviando os seguintes dados:", dadosParaEnviar);
+      const resposta = await axios.post('http://localhost:3000/pedidos', dadosParaEnviar);
+      console.log("Personagem salvo com sucesso:", resposta.data);
 
     } catch (error) {
 
