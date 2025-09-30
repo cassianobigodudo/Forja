@@ -1,25 +1,46 @@
-import React from 'react'
-import "./MenuSecCabeca.css"
+import React, { useState } from 'react';
+import "./MenuSecCabeca.css";
+import MenuCabelos from './MenuCabelos';
 
-function MenuSecCabeca() {
-  return (
-      <div className="container-menuSec-cabeca">
-      <div className="top-menuSecc">  
-        <button className='btn-acessorios'>
-        <img src="./icones/ICONE-CORPO-MASCULINO.png" alt="Ícone corpo masculino" />
-        </button>  
-        <button className='btn-acessorios'>
-        <img src="./icones/ICONE-CORPO-MASCULINO.png" alt="Ícone corpo masculino" />
-        </button>  
-        <button className='btn-acessorios'>
-        <img src="./icones/ICONE-CORPO-MASCULINO.png" alt="Ícone corpo masculino" />
-        </button>
-      </div>
+function MenuSecCabeca({ onCabeloChange, onCorCabeloChange, cabeloAtual, corCabeloAtual, cabelosDisponiveis, coresCabeloDisponiveis }) {
+    const [btnAtivo, setBtnAtivo] = useState('CABELOS');
+    const [topEncolher, setEncolher] = useState('ENCOLHER');
 
-      <div className="bottom">
-      </div>
-    </div>
-  )
+    function handleButtonClick(nomeDoBotao) {
+        if (btnAtivo === nomeDoBotao) {
+            setBtnAtivo(null);
+            setEncolher('');
+        } else {
+            setBtnAtivo(nomeDoBotao);
+            setEncolher('ENCOLHER');
+        }
+    }
+
+    return (
+        <div className="container-menuSec-cabeca">
+            <div className={topEncolher === 'ENCOLHER' ? 'div-top-encolhe' : 'div-top-normal'}>
+                <button className={btnAtivo === 'CABELOS' ? 'btn-ativado' : 'btn-desativado'}
+                    onClick={() => handleButtonClick('CABELOS')}> CABELO
+                </button>
+                <button className={btnAtivo === 'ACESSORIOS' ? 'btn-ativado' : 'btn-desativado'}
+                    onClick={() => handleButtonClick('ACESSORIOS')}> ACESSORIOS
+                </button>
+                <button className={btnAtivo === 'MARCAS' ? 'btn-ativado' : 'btn-desativado'}
+                    onClick={() => handleButtonClick('MARCAS')}> MARCAS
+                </button>
+            </div>
+            <div className="bottom">
+                {btnAtivo === 'CABELOS' && <MenuCabelos
+                    onCabeloChange={onCabeloChange}
+                    onCorCabeloChange={onCorCabeloChange}
+                    cabeloAtual={cabeloAtual}
+                    corCabeloAtual={corCabeloAtual}
+                    cabelosDisponiveis={cabelosDisponiveis}
+                    coresCabeloDisponiveis={coresCabeloDisponiveis}
+                />}
+            </div>
+        </div>
+    );
 }
 
-export default MenuSecCabeca
+export default MenuSecCabeca;

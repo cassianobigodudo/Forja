@@ -1,0 +1,91 @@
+@keyframes fadeIn {
+ from {
+  opacity: 0;
+ }
+ to {
+  opacity: 1;
+ }
+}
+
+.container-menu-cabelos {
+ height: 100%;
+ width: 100%;
+ display: flex;
+ flex-direction: column;
+ justify-content: space-evenly;
+ align-items: center;
+ padding: 10px;
+ gap: 15px;
+ animation: fadeIn 0.3s ease-out;
+}
+
+.cabelos-grid {
+ display: grid;
+ grid-template-columns: repeat(4, 1fr);
+ gap: 10px;
+ width: 90%;
+}
+
+.cabelo-opcao {
+ aspect-ratio: 1 / 1;
+ background-color: rgba(0, 0, 0, 0.2);
+ border: 2px solid white;
+ cursor: pointer;
+ transition: background-color 0.3s, border-color 0.3s;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ padding: 5px;
+}
+
+.cabelo-opcao:hover {
+ background-color: rgba(255, 255, 255, 0.2);
+}
+
+.cabelo-opcao.ativada {
+ border-color: #ffc107;
+}
+
+.cabelo-opcao img {
+ width: 90%;
+ height: 90%;
+ object-fit: contain;
+}
+
+.cores-cabelo-container {
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ width: 100%;
+ gap: 15px;
+}
+
+.lbl-cabelo {
+ font-size: 20px;
+ letter-spacing: 2px;
+ color: white;
+ font-family: "fonte-titulos";
+}
+
+.cores-cabelo {
+ display: flex;
+ justify-content: center;
+ gap: 15px;
+}
+
+.cor-cabelo {
+ width: 40px;
+ height: 40px;
+ border-radius: 50%;
+ border: 3px solid #5a5a5a;
+ cursor: pointer;
+ transition: border-color 0.3s, transform 0.2s;
+}
+
+.cor-cabelo:hover {
+ transform: scale(1.1);
+}
+
+.cor-cabelo.ativada {
+ border-color: white;
+}
