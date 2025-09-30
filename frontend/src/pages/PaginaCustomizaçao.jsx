@@ -136,15 +136,6 @@ function PaginaCustomizaçao() {
     setDadosDoPersonagem(personagem);
     setBtnAtivo('SALVAR');
 
-    // Cria o objeto com os dados que você quer enviar
-    const dadosParaEnviar = {
-      genero: personagem.genero,
-      generonum: personagem.generoNum,
-      corpele: personagem.corPele,
-      corpelenum: personagem.corPeleNum,
-      img: base64image
-    };
-
     try {
       const personagemCompleto = { ...personagem, img: base64image};
 

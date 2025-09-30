@@ -43,16 +43,18 @@ app.post('/usuarios', async(req, res) => {
 
 //rota para salvar o pedido no banco de dados
 app.post('/pedidos', async (req, res) => {
-    const { genero, generonum, corpele, corpelenum, img } = req.body;
+    const { genero, generoNum, corPele, corPeleNum, img } = req.body;
+    console.log ('requisição ', req.body)
 
     try {
         const result = await db.query(
-        `INSERT INTO pedidos (genero, generonum, corpele, corpelenum, img)
+        `INSERT INTO pedidos (genero, generoNum, corPele, corPeleNum, img)
         VALUES ($1, $2, $3, $4, $5)
         RETURNING *;`,
-        [genero, generonum, corpele, corpelenum, img]
+        [genero, generoNum, corPele, corPeleNum, img]
         );
         res.status(201).json(result.rows[0]);
+        console.log('Personagem salvo no banco de dados com sucesso!!')
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Erro ao salvar personagem no banco.' });
@@ -60,82 +62,78 @@ app.post('/pedidos', async (req, res) => {
 
 })
 
-app.post('/enviar-caixa', async (req, res) => {
-    
-    const requisicaoCompleta = req.body;
-    console.log('--- Requisição completa recebida do frontend ---');
-    console.log(JSON.stringify(requisicaoCompleta, null, 2));
-
-    // 1. CORREÇÃO: Desestruturamos 'payload' E 'callbackUrl' DIRETAMENTE do corpo da requisição.
-    const { payload, callbackUrl } = requisicaoCompleta;
-
-    // 2. CORREÇÃO: A validação agora checa 'callbackUrl' no nível correto e os campos dentro de 'payload'.
-    if (!payload || !callbackUrl || !payload.orderId || !payload.order) {
-        console.error('ERRO: Requisição inválida. Campos obrigatórios: payload, callbackUrl, payload.orderId, payload.order.');
-        return res.status(400).json({ mensagem: 'Formato da requisição inválido.' });
-    }
+app.post('/enviar-pedidos-pendentes', async (req, res) => {
+    console.log('--- Iniciando envio em lote de todos os pedidos pendentes ---');
 
     try {
-        // --- LÓGICA DO BANCO DE DADOS ---
-        const insertQuery = `
-            INSERT INTO pedidos(order_id, dados_do_pedido, callback_url)
-            VALUES($1, $2, $3)
-            RETURNING id;
-        `;
-        
-        // 3. CORREÇÃO: O array de valores usa a variável 'callbackUrl' que acabamos de extrair.
-        const values = [
-            payload.orderId,    // Para $1
-            payload.order,      // Para $2
-            callbackUrl         // Para $3
-        ];
-
-        console.log('>>> Valores que serão inseridos no banco de dados:');
-        console.log(values);
-        
-        const result = await db.query(insertQuery, values);
-        console.log(`+++ SUCESSO! Pedido salvo no banco de dados com o ID: ${result.rows[0].id} +++`);
-
-        // --- FIM DA LÓGICA DO BANCO DE DADOS ---
-
-        // O encaminhamento para o servidor do professor já estava correto,
-        // pois ele envia a 'requisicaoCompleta' original.
-        console.log('>>> Encaminhando a requisição completa para o servidor do professor...');
-        
-        const respostaDoProfessor = await axios.post(
-            'http://52.1.197.112:3000/queue/items',
-            requisicaoCompleta
+        // 1. Buscar todos os pedidos que ainda não foram enviados.
+        const { rows: pedidosPendentes } = await db.query(
+            "SELECT id, generoNum, corPeleNum FROM pedidos WHERE status = 'pendente'"
         );
 
-        console.log('+++ SUCESSO! Resposta do servidor do professor: +++');
-        console.log('Status:', respostaDoProfessor.status);
-        console.log('Dados:', respostaDoProfessor.data);
+        if (pedidosPendentes.length === 0) {
+            console.log('>>> Nenhum pedido pendente para enviar.');
+            return res.status(200).json({ mensagem: 'Nenhum pedido pendente para enviar.' });
+        }
 
-        res.status(200).json({ 
-            mensagem: 'Pedido salvo e enviado com sucesso!', 
-            respostaDoServidor: respostaDoProfessor.data 
+        console.log(`>>> Encontrados ${pedidosPendentes.length} pedidos para enviar.`);
+
+        const resultados = {
+            sucessos: [],
+            falhas: []
+        };
+
+        // 2. Passar por cada pedido pendente, um por um.
+        for (const pedido of pedidosPendentes) {
+            const pedidoId = pedido.id;
+            try {
+                // 3. Montar o payload para cada pedido.
+                const requisicaoParaProfessor = {
+                    payload: {
+                        orderId: `pedido-forja-${pedidoId}`,
+                        order: {
+                            codigoProduto: 1,
+                            bloco1: { cor: 1, lamina1: 1, lamina2: 1, lamina3: 1, padrao1: "1", padrao2: "1", padrao3: "1" },
+                            bloco2: { cor: 1, lamina1: 1, lamina2: 1, lamina3: 1, padrao1: "1", padrao2: "1", padrao3: "1" },
+                            bloco3: {
+                                "cor": pedido.generonum,
+                                "lamina1": 1,
+                                "lamina2": pedido.corpelenum,
+                                "lamina3": 1,
+                                "padrao1": "1",
+                                "padrao2": "1",
+                                "padrao3": "1"
+                            }
+                        },
+                        sku: "KIT-01"
+                    },
+                    callbackUrl: "http://localhost:3333/callback"
+                };
+
+                // 4. Enviar para o servidor do professor.
+                await axios.post('http://52.1.197.112:3000/queue/items', requisicaoParaProfessor);
+                
+                // 5. Se o envio deu certo, ATUALIZAR o status no banco.
+                await db.query("UPDATE pedidos SET status = 'enviado' WHERE id = $1", [pedidoId]);
+                
+                console.log(`+++ SUCESSO! Pedido ${pedidoId} enviado e status atualizado.`);
+                resultados.sucessos.push(pedidoId);
+
+            } catch (error) {
+                console.error(`### FALHA ao processar o pedido ${pedidoId}: ${error.message}`);
+                resultados.falhas.push({ pedidoId, erro: error.message });
+            }
+        }
+
+        // 6. Enviar uma resposta final para o frontend.
+        res.status(200).json({
+            mensagem: 'Processamento de pedidos pendentes finalizado.',
+            ...resultados
         });
 
-    } catch (error) {
-        // Bloco de tratamento de erro (sem alterações)
-        console.error('### FALHA NA OPERAÇÃO ###');
-        
-        if (error.response) {
-            console.error('O servidor de destino respondeu com um erro.');
-            console.error('Status do erro:', error.response.status);
-            console.error('Dados do erro:', error.response.data);
-            res.status(500).json({ mensagem: 'Erro ao encaminhar o pedido para o servidor de produção.' });
-        
-        } else if (error.code) { 
-            console.error('Erro no banco de dados:', error.message);
-            if (error.code === '23505') {
-                 return res.status(409).json({ mensagem: `Erro: O order_id '${payload.orderId}' já existe no banco de dados.` });
-            }
-            res.status(500).json({ mensagem: 'Erro ao salvar o pedido no banco de dados.' });
-        } else {
-            console.error('Erro desconhecido:', error.message);
-            res.status(500).json({ mensagem: 'Ocorreu um erro inesperado.' });
-        }
+    } catch (dbError) {
+        console.error('### FALHA GERAL: Erro ao consultar o banco de dados ###', dbError);
+        res.status(500).json({ mensagem: 'Ocorreu um erro grave ao processar os pedidos.' });
     }
 });
 
