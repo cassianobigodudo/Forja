@@ -1,15 +1,12 @@
-
-.container-pagina{ 
-
-     height: 100vh;
-     width: 100vw;
-     display: flex;
-     justify-content: center;
-     align-items: center;
-     flex-direction: column;
-
-     background-image: url(../../public/fundo/tim-mcburnie-completa-escurecido.png);
-     background-size: cover; 
+.container-pagina{
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-image: url(../../public/fundo/tim-mcburnie-completa-escurecido.png);
+    background-size: cover; 
 }
 
 .container{
@@ -28,16 +25,17 @@
     color: var(--Texto);
 }
 
-
 .logo-texto{
-
     font-family: "fonte-logo";
     font-size: 32px;
     letter-spacing: 3px;
     color: var(--Texto);
 }
 
-.navbar-links{ display: flex; gap: 72px;}
+.navbar-links{
+    display: flex;
+    gap: 72px;
+}
 
 .navbar-links a{
     text-decoration: none;
@@ -53,7 +51,7 @@
     padding: 8px 10px; 
     border-radius: 999px; 
     cursor: pointer;
-    }
+}
 
 .ico2{
     border: 1px solid rgba(233,225,209,.26);
@@ -71,19 +69,36 @@
     color: var(--Texto);
 }
 
-.left{  display: flex; flex-direction: column; align-items: flex-start; }
 
-.continue { font-family: 'fonte-subtitulos'; font-size: 22px; margin: 8px 0 4px;}
+.left{ 
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.continue{
+    font-family: 'fonte-subtitulos';
+    font-size: 22px;
+    margin: 8px 0 4px;
+}
 
 .btn-voltar{
-    width: 210px; min-height: 210px;
-    font-family: 'fonte-logo'; font-size: 32px; color: var(--Texto);
-    border: none; cursor: pointer; text-transform: uppercase; line-height: 1.6;
+    width: 210px;
+    min-height: 210px;
+    font-family: 'fonte-logo';
+    font-size: 32px;
+    color: var(--Texto);
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    line-height: 1.6;
     background: var(--Fundo) url("/fundo/fundo-voltar.png") center/95% no-repeat;
 }
 
 .Checkout .titulo{
-    font-family: 'fonte-subtitulos'; font-size: 28px; margin: 8px 0 12px;
+    font-family: 'fonte-logo';
+    font-size: 28px;
+    margin: 8px 0 12px;
 }
 
 .lista{
@@ -93,25 +108,34 @@
     background: var(--Fundo) url("/fundo/fundo-voltar.png") center/110% no-repeat;
 }
 
-.item{ display: flex; gap: 20px; padding: 16px 0;}
+.item{
+    display: flex;
+    position: center;
+    padding: 19px;
+    font-family: 'fonte-subtitulo';
+}
 
-.thumb{ width: 200px; height: 350px; 
+.thumb{
+    width: 150px;
+    height: 350px; 
+    margin: 0 0 6px;
+    justify-content: center;
     background-size: contain;
-    background-position: center;
+    background-position: 19%;
     background-repeat: no-repeat;
 }
 
-.thumb-1 {background-image: url("/fundo/figura.png");}
-    
-.det h3{ margin: 0 0 6px; font-family: "fonte-subtitulos"; font-size: 22px;}
+.descicao{
+    font-family: 'fonte-logo';
+    font-size: 28px;
+    margin: 8px 0 12px;
+}
 
-.preco{ margin-left: 8px; font-family: "fonte-logo"; font-size: 20px;}
-
-.det ul{ margin: 0; padding-left: 0; list-style: none; line-height: 1.8;}
-
-.right{ display: flex; flex-direction: column; align-items: center;}
-
-.metodos{ display: flex; gap: 14px; margin-top: 10px;}
+.metodos{
+    display: flex;
+    gap: 14px;
+    margin-top: 10px;
+}
 
 /* .metodo-ico{ 
     background-size: contain;
@@ -126,32 +150,48 @@
 } */
 
 .metodo-pix{ 
-    width: 118px; height: 118px; 
+    width: 118px;
+    height: 118px; 
     background-image: url("/icones/pix.png");
-     background-size: 80%;
-         background-repeat: no-repeat;
-    border: 1px solid rgba(0, 0, 0, 0.25); color: var(--Texto);
-    display: flex; align-items: end; justify-content: center;
+    background-size: 80%;
+    background-repeat: no-repeat;
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    color: var(--Texto);
+    display: flex;
+    align-items: end;
+    justify-content: center;
 }
 
 .metodo-cartao{ 
-    width: 118px; height: 118px;
+    width: 118px;
+    height: 118px;
     background-size: contain;
     background-image: url("/icones/credito.png");
-    border: 1px solid rgba(0, 0, 0, 0.25); color: var(--Texto);
-       display: flex; align-items: end; justify-content: center;
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    color: var(--Texto);
+    display: flex;
+    align-items: end;
+    justify-content: center;
 }
 
 .metodo-boleto{ 
-    width: 118px; height: 118px;
-     background-size: 80%;
-         background-repeat: no-repeat;
+    width: 118px;
+    height: 118px;
+    background-size: 80%;
+    background-repeat: no-repeat;
     background-image: url("/icones/boleto.png");
-     border: 1px solid rgba(0, 0, 0, 0.25); color: var(--Texto);
-        display: flex; align-items: end; justify-content: center;
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    color: var(--Texto);
+    display: flex;
+    align-items: end;
+    justify-content: center;
 }
 
-.resumo{ width: 100%; text-align: center; margin-top: 30px;}
+.resumo{
+    width: 100%;
+    text-align: center;
+    margin-top: 30px;
+}
 
 .envio{ 
     font-family: "fonte-subtitulos"; 
@@ -160,9 +200,16 @@
     margin-bottom: 30px;
 }
 
-.total-label{ margin-top: 23px; font-family: "fonte-subtitulos"; font-size: 22px;}
+.total-label{
+    margin-top: 23px;
+    font-family: "fonte-subtitulos";
+    font-size: 22px;
+}
 
-.total{ font-family: "fonte-logo"; font-size: 28px;}
+.total{
+    font-family: "fonte-logo";
+    font-size: 28px;
+}
 
 .risco{
     width: 100%;
@@ -174,8 +221,14 @@
 }
 
 .btn-prosseguir{
-    margin-top: auto; width: 93%; height: 22%;
-    border: none; cursor: pointer; color: var(--Texto);
-    font-family: "fonte-logo"; font-size: 32px; padding: 22px 0;
+    margin-top: auto;
+    width: 95%;
+    height: 23%;
+    border: none;
+    cursor: pointer;
+    color: var(--Texto);
+    font-family: "fonte-logo";
+    font-size: 32px;
+    padding: 22px 0;
     background: var(--Fundo) url("/fundo/fundo-botao.png") center/100% no-repeat;
 }

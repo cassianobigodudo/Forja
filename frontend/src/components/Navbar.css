@@ -48,6 +48,7 @@
 .usuario-navbar{
     width: 45px;;
     margin-right: 30px;
+    cursor: pointer;
 }
 
 .btn-carrinho{

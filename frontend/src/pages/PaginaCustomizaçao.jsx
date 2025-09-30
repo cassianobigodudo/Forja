@@ -5,10 +5,10 @@ import MenuSecCabeca from '../components/MenuSecCabeca';
 import MenuSecCorpo from '../components/MenuSecCorpo';
 import MenuSecHistoria from '../components/MenuSecHistoria';
 import { useGlobalContext } from '../context/GlobalContext';
-// CORREÇÃO 1: Importe o nome correto do hook
 import { useLogicaCustomizacao } from './Hook/HookCustomizacao';
 
 function PaginaCustomizaçao() {
+  
     const { setDadosDoPersonagem, setImagemPersonagem } = useGlobalContext();
     
     const { 
