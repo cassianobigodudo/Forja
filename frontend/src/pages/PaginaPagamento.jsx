@@ -8,25 +8,10 @@ import { useGlobalContext } from '../context/GlobalContext';
 function PaginaPagamento() {
     const { dadosDoPersonagem, imagemPersonagem } = useGlobalContext();
     
-    const generoMap = {
-        2:"Feminino",
-        3:"Masculino"
-    };
+  const genero = dadosDoPersonagem?.genero
+  const corPele = dadosDoPersonagem?.corPele
 
-      const corPeleMap = {
-    0: "NEGRA",
-    1: "PARDA",
-    2: "LEITE",
-    3: "BRANCA",
-    4: "VERDE",
-    5: "LARANJA",
-    6: "CINZA"
-  };
-
-  const genero = dadosDoPersonagem?.payload?.order?.bloco3?.cor;
-  const corPele = dadosDoPersonagem?.payload?.order?.bloco3?.lamina1;
-
-    if (!dadosDoPersonagem || !dadosDoPersonagem.payload) {
+    if (!dadosDoPersonagem) {
         return (
 
             <div className="container-pagina"> 
@@ -134,9 +119,9 @@ function PaginaPagamento() {
                                 <img src={imagemPersonagem} className='thumb' />
 
                                 <label>
-                                    <h1>Gênero: {generoMap[genero]}</h1>
+                                    <h1>Gênero: {genero}</h1>
                                 
-                                    <h2>Tom de pele: {corPeleMap[corPele]}</h2>
+                                    <h2>Tom de pele: {corPele}</h2>
 
                                 </label>
                             </article>

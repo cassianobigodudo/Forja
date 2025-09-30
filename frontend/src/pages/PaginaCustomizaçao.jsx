@@ -15,38 +15,45 @@ function PaginaCustomizaçao() {
   const [btnAtivo, setBtnAtivo] = useState('');
   const [ZoomAtivo, setZoomAtivo] = useState(false);
   const myPointer = useRef(null);
+
   const [personagem, setPersonagem] = useState({
     
-    genero: '',
-    generoNum:'',
-    corPele: '',
-    corPeleNum: '',
+    genero: 'FEMININO',
+    generoNum:2, // 3 bloco cor
+    corPele: 'NEGRA',
+    corPeleNum: 0, //3 bloco faceta frontal
     marcas: '',
-    marcasNum: '',
+    marcasNum: '',  //3 bloco simbolo faceta frontal (tem que ser string)
     cabelo: '',
-    cabeloNum: '',
+    cabeloNum: '', //3 bloco faceta direita
     corCabelo: '',
-    corCabeloNum: '',
+    corCabeloNum: '',// 3 bloco simbolo faceta direita (tem que ser string)
     acessCabeca: '',
-    acessCabecaNum: '',
+    acessCabeca1Num: '',// 3 bloco faceta esquerda
+    acessCabeca2Num: '', // 3 bloco simbolo faceta esquerda (tem que ser string)
     acessPescoco: '',
-    acessPescocoNum: '',
+    acessPescocoNum: '',// 2 bloco cor
     roupaCima: '',
-    roupaCimaNum: '',
+    roupaCima1Num: '',// 2 bloco faceta frontal
+    roupaCima2Num: '',// 2 bloco simbolo faceta frontal (tem que ser string)
     roupaCimaVariante: '',
-    roupaCimaVarianteNum: '',
+    roupaCimaVariante1Num: 6,// 2 bloco faceta direita (sempre vai ser 6)
+    roupaCimaVariante2Num: '',// 2 bloco simbolo faceta direita (tem que ser string)
     armas: '',
-    armasNum: '',
+    armas1Num: '',// 2 bloco faceta esquerda
+    armas2Num: '',// 2 bloco simbolo faceta esquerda (tem que ser string)
     baseMini: '',
-    baseMiniNum: '',
+    baseMiniNum: '',// 1 bloco cor
     roupaBaixo: '',
-    roupaBaixoNum: '',
+    roupaBaixo1Num: '',// 1 bloco faceta frontal
+    roupaBaixo2Num: '',// 1 bloco simbolo faceta frontal (tem que ser string)
     roupaBaixoVariante: '',
-    roupaBaixoVarianteNum: '',
+    roupaBaixoVariante1Num: 6,// 1 bloco faceta direita (sempre vai ser 6)
+    roupaBaixoVariante2Num: '',// 1 bloco simbolo faceta direita (tem que ser string)
     sapato: '',
-    sapatoNum: '',
+    sapatoNum: '',// 1 bloco faceta esquerda
     sapatoVariante: '',
-    sapatoVarianteNum: '',
+    sapatoVarianteNum: '',// 1 bloco simbolo faceta esquerda (tem que ser string)
     img: '',
     historia: ''
 
@@ -126,7 +133,7 @@ function PaginaCustomizaçao() {
 
     setImagemPersonagem(base64image);
 
-    setDadosDoPersonagem(dadosPersonagem);
+    setDadosDoPersonagem(personagem);
     setBtnAtivo('SALVAR');
 
     // Cria o objeto com os dados que você quer enviar
@@ -139,9 +146,11 @@ function PaginaCustomizaçao() {
     };
 
     try {
+      const personagemCompleto = { ...personagem, img: base64image};
 
-      console.log("Enviando os seguintes dados:", dadosParaEnviar);
-      const resposta = await axios.post('http://localhost:3000/pedidos', dadosParaEnviar);
+
+      console.log("Enviando os seguintes IDs:", personagemCompleto);
+      const resposta = await axios.post('http://localhost:3000/pedidos', personagemCompleto);
       console.log("Personagem salvo com sucesso:", resposta.data);
 
     } catch (error) {

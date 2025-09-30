@@ -7,7 +7,7 @@ function Modal({ onClose }) {
     const { dadosDoPersonagem, imagemPersonagem } = useGlobalContext();
     const navigate = useNavigate();
 
-    if (!dadosDoPersonagem || !dadosDoPersonagem.payload) {
+    if (!dadosDoPersonagem) {
         return (
             <div className="modal-dropdown">
                 <button className='fechar' onClick={onClose}>X</button>
