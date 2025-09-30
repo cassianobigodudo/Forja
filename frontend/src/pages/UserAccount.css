@@ -78,11 +78,11 @@
                     .botoes-menu {
                         display: block;
                         width: 300px;
-                        height: 80px;
+                        height: 60px;
                         border: none;
                         border-radius: 20px;
                         background-color: #e0e0e0;
-                        font-size: 30px;
+                        font-size: 25px;
                         padding: 10px 16px;
                         cursor: pointer;
                         font-weight: bolder;

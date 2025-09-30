@@ -66,6 +66,7 @@
                 height: 100%;
                 width: 30%;
                 background-color: transparent;
+                gap: 10px;
             }
                 .botao-editar-dados{
                     height: 40px;
@@ -75,6 +76,7 @@
                     opacity: 80%;
                     cursor: pointer;
                     margin-bottom: 3px;
+                    box-shadow: 0px 0px 2px 1px #fff inset;
                 }
 
     .parte-salvar-dados{
@@ -142,3 +144,180 @@
                 font-weight: bolder;
                 color: #fff;
             }
+
+.dialog-endereco{
+    height: 500px;
+    background-color: transparent;
+    border: none;
+    width: 36%;
+    position: fixed;
+    top: 56%;
+    left: 40%;
+    transform: translate(-10%, -50%);
+}
+    .container-dialog-endereco{
+        display: flex;
+        flex-direction: column;
+        height: 95%;
+        width: 95%;
+        background-color: whitesmoke;
+    }
+        .parte-fechar-dialog{
+            display: flex;
+            justify-content: end;
+            align-items: center;
+            padding-right: 10px;
+            height: 10%;
+            width: 100%;
+            background-color: darkcyan;
+        }
+
+        .parte-pegar-endereco{
+            display: flex;
+            flex-direction: column;
+            height: 90%;
+            width: 100%;
+            background-color: rgb(68, 144, 144);
+        }
+            .buscar-cep{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 10px;
+                height: 15%;
+                width: 100%;
+                background-color: white;
+            }
+                .input-buscar-cep{
+                    font-size: 10px;
+                    height: 35px;
+                    width: 200px;
+                    padding-left: 10px;
+                }
+                .botao-pesquisar-cep{
+                    height: 35px;
+                    width: 35px;
+                }
+
+            .dados-endereco{
+                display: flex;
+                flex-direction: column;
+                height: 85%;
+                width: 100%;
+                background-color: whitesmoke;
+            }
+                .dados-endereco-usuario{
+                    display: flex;
+                    height: 25%;
+                    width: 100%;
+                    background-color: darkgray;
+                }
+                    .endereco-casa{
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100%;
+                        width: 75%;
+                        background-color: darkgreen;
+                    }
+                        .input-endereco{
+                            height: 40px;
+                            width: 360px;
+                            padding-left: 5px;
+                            border: solid 1px #fff;
+                            font-size: 15px;
+                        }
+                        
+                    .numero-casa{
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100%;
+                        width: 25%;
+                        background-color: rgb(93, 137, 93);
+                    }
+                        .input-numero-casa{
+                            height: 40px;
+                            width: 100px;
+                            padding-left: 5px;
+                            border: solid 1px #fff;
+                            font-size: 15px;
+                        }
+
+                    .uf-endereco{
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100%;
+                        width: 20%;
+                        background-color: darkcyan;
+                    }
+                        .input-uf-endereco{
+                            height: 40px;
+                            width: 70px;
+                            border: solid 1px #fff;
+                            font-size: 15px;
+                            padding-left: 5px;
+                        }
+                    .cidade-endereco{
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100%;
+                        width: 40%;
+                        background-color: rgb(74, 125, 125);
+                    }
+                        .input-cidade-endereco{
+                            height: 40px;
+                            width: 200px;
+                            border: solid 1px #fff;
+                            font-size: 15px;
+                            padding-left: 5px;
+                        }
+                    .bairro-endereco{
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100%;
+                        width: 40%;
+                        background-color: rgb(159, 197, 197);
+                    }
+                        .input-bairro-endereco{
+                            height: 40px;
+                            width: 200px;
+                            border: solid 1px #fff;
+                            font-size: 15px;
+                            padding-left: 5px;
+                        }
+
+                    .complemento-casa{
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100%;
+                        width: 75%;
+                        background-color: darkkhaki;
+                    }
+                        .input-complemento{
+                            height: 40px;
+                            width: 360px;
+                            border: solid 1px #fff;
+                            font-size: 15px;
+                            padding-left: 5px;
+                        }
+
+                    .cep-casa{
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100%;
+                        width: 25%;
+                        background-color: rgb(232, 227, 153);
+                    }
+                        .input-cep{
+                            height: 40px;
+                            width: 100px;
+                            border: solid 1px #fff;
+                            font-size: 15px;
+                            padding-left: 5px;
+                        }

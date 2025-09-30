@@ -10,9 +10,9 @@ const PORT = 3000;
 app.use(cors());
 app.use(express.json());
 
-//rota para cadastrar um usuário
+//cadastra um usuário no banco
 app.post('/usuarios', async(req, res) => {
-    const { apelido, email, senha, confirmarSenha } = req.body;
+    const { apelido, email, senha } = req.body;
 
     // 👇 Log dos dados recebidos do Thunder Client / frontend
     console.log('📥 Dados recebidos no cadastro de usuário:', req.body);
@@ -32,13 +32,74 @@ app.post('/usuarios', async(req, res) => {
             [apelido, email, senha]
         );
         res.status(201).json(result.rows[0]);
+
     } catch (error) {
+        
         console.error(error)
         res.status(500).json({
             message: "Erro ao cadastro o usuário!!!"
         })
         
     }
+});
+
+// GET busca dados do usuário pelo id
+app.get("/usuarios/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const resultado = await db.query("SELECT id, apelido, email, senha FROM usuarios WHERE id = $1", [id]);
+    if (resultado.rows.length === 0) {
+      return res.status(404).json({ erro: "Usuário não encontrado" });
+    }
+    res.json(resultado.rows[0]);
+  } catch (erro) {
+    console.error(erro);
+    res.status(500).json({ erro: "Erro ao buscar usuário" });
+  }
+});
+
+// PATCH atualiza campos do usuário pelo id
+app.patch("/usuarios/:id", async (req, res) => {
+  const { id } = req.params;
+  const campos = req.body; // Ex.: { apelido: "Novo Apelido" }
+
+  // Gera dinamicamente a query de update
+  const chaves = Object.keys(campos);
+  if (chaves.length === 0) return res.status(400).json({ erro: "Nenhum campo para atualizar" });
+
+  const valores = Object.values(campos);
+  const setString = chaves.map((chave, index) => `${chave} = $${index + 1}`).join(", ");
+
+  try {
+    const resultado = await db.query(
+      `UPDATE usuarios SET ${setString} WHERE id = $${chaves.length + 1} RETURNING *`,
+      [...valores, id]
+    );
+
+    if (resultado.rows.length === 0) {
+      return res.status(404).json({ erro: "Usuário não encontrado" });
+    }
+
+    res.json(resultado.rows[0]);
+  } catch (erro) {
+    console.error(erro);
+    res.status(500).json({ erro: "Erro ao atualizar usuário" });
+  }
+});
+
+// DELETE usuário pelo id
+app.delete("/usuarios/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const resultado = await db.query("DELETE FROM usuarios WHERE id = $1 RETURNING *", [id]);
+    if (resultado.rows.length === 0) {
+      return res.status(404).json({ erro: "Usuário não encontrado" });
+    }
+    res.json({ mensagem: "Usuário excluído com sucesso" });
+  } catch (erro) {
+    console.error(erro);
+    res.status(500).json({ erro: "Erro ao excluir usuário" });
+  }
 });
 
 //rota para salvar o pedido no banco de dados
