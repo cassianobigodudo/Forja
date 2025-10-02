@@ -5,7 +5,7 @@ import MenuSecCabeca from '../components/MenuSecCabeca';
 import MenuSecCorpo from '../components/MenuSecCorpo';
 import MenuSecHistoria from '../components/MenuSecHistoria';
 import { useGlobalContext } from '../context/GlobalContext';
-import { useLogicaCustomizacao } from './Hook/HookCustomizacao';
+import { useLogicaCustomizacao } from '../hooks/HookCustomizacao';
 
 function PaginaCustomizaçao() {
   
