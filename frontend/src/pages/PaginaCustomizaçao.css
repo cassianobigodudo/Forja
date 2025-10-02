@@ -159,7 +159,7 @@
  justify-content: start;
  align-items: center;
  flex-direction: row;
- height: 10%;
+ height: 10.5%;
  width: 80%;
  margin-top: 13%;
  margin-left: 10%;
@@ -174,7 +174,7 @@
 }
 
 .btn-corpo:hover {
- margin-left: 10%;
+ margin-left: 15%;
  transition: 0.3s;
 }
 
@@ -183,7 +183,7 @@
  justify-content: start;
  align-items: center;
  flex-direction: row;
- height: 10%;
+ height: 10.5%;
  width: 80%;
  margin-top: 13%;
  margin-left: 17%;
@@ -208,7 +208,7 @@
  justify-content: start;
  align-items: center;
  flex-direction: row;
- height: 10%;
+ height: 10.5%;
  width: 80%;
  margin-top: 3%;
  margin-left: 10%;
@@ -232,7 +232,7 @@
  justify-content: start;
  align-items: center;
  flex-direction: row;
- height: 10%;
+ height: 10.5%;
  width: 80%;
  margin-top: 3%;
  margin-left: 17%;

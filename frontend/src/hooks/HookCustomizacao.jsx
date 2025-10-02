@@ -106,7 +106,7 @@ export const useLogicaCustomizacao = () => {
 
     const salvarPersonagem = async (referenciaDoElemento, setDadosDoPersonagem, setImagemPersonagem) => {
         try {
-            const canvas = await html2canvas(referenciaDoElemento.current, { backgroundColor: null, scale: 0.45 });
+            const canvas = await html2canvas(referenciaDoElemento.current, { backgroundColor: null, scale: 0.60 });
             const imagemEmBase64 = canvas.toDataURL('image/png');
             const personagemCompleto = { ...personagem, img: imagemEmBase64 };
 

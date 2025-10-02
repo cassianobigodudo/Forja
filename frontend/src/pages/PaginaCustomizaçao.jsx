@@ -89,6 +89,15 @@ function PaginaCustomizaçao() {
                                 corCabeloAtual={personagem.corCabelo}
                                 cabelosDisponiveis={opcoesDoPersonagem.cabelo[personagem.genero]}
                                 coresCabeloDisponiveis={opcoesDoPersonagem.corCabelo}
+
+                                onAcessorioChange={(v) => atualizarPersonagem('acessorios', v)}
+                                onVariacaoAcessorioChange={(v) => atualizarPersonagem('variacaoAcessorio', v)}
+                                acessoriosAtuais={personagem.acessorios}
+                                variacaoAcessorioAtual={personagem.variacaoAcessorio}
+                                acessoriosExclusivosDisponiveis={opcoesDoPersonagem.acessoriosExclusivos}
+                                acessoriosMixDisponiveis={opcoesDoPersonagem.acessoriosMix}
+                                variacaoAcessoriosDisponiveis={opcoesDoPersonagem.variacaoAcessorio}
+                                
                             />}
                             {btnAtivo === 'HISTÓRIA' && <MenuSecHistoria />}
                         </div>
