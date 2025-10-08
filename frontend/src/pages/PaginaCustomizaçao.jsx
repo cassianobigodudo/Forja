@@ -1,20 +1,23 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import "./PaginaCustomizaçao.css";
+
 import Navbar from '../components/Navbar';
 import MenuSecCabeca from '../components/MenuSecCabeca';
 import MenuSecCorpo from '../components/MenuSecCorpo';
 import MenuSecHistoria from '../components/MenuSecHistoria';
+
 import { useGlobalContext } from '../context/GlobalContext';
 import { useLogicaCustomizacao } from '../hooks/HookCustomizacao';
 
 function PaginaCustomizaçao() {
-  
-    const { setDadosDoPersonagem, setImagemPersonagem } = useGlobalContext();
+    const { sessionId } = useGlobalContext(); // Pega o sessionId global
     
+    // Pega a nova função do seu hook
     const { 
         personagem, 
         atualizarPersonagem, 
-        salvarPersonagem, 
+        adicionarPersonagemAoCarrinho, // <-- A NOVA FUNÇÃO DO HOOK
         caminhosDasImagens, 
         opcoesDoPersonagem 
     } = useLogicaCustomizacao();
@@ -22,30 +25,40 @@ function PaginaCustomizaçao() {
     const [btnAtivo, setBtnAtivo] = useState('CORPO');
     const [zoomAtivo, setZoomAtivo] = useState(false);
     const characterRef = useRef(null);
-    const [isSaving, setIsSaving] = useState(false);
+    
+    // Estado da UI para feedback
+    const [isAdding, setIsAdding] = useState(false);
+    const [message, setMessage] = useState('');
 
-    useEffect(() => {
-        if (isSaving && !zoomAtivo) {
-            const captureAndSave = async () => {
-                await salvarPersonagem(characterRef, setDadosDoPersonagem, setImagemPersonagem);
-                setBtnAtivo('SALVAR');
-                setIsSaving(false);
-            };
-            
-            const timer = setTimeout(captureAndSave, 100);
-            return () => clearTimeout(timer);
-        }
-    }, [isSaving, zoomAtivo, salvarPersonagem, setDadosDoPersonagem, setImagemPersonagem, characterRef]);
+    const handleAdicionarClick = async () => {
+        if (!sessionId) return; // Garante que o session Id já foi carregado
 
+        setIsAdding(true);
+        setMessage('Adicionando ao carrinho...');
+        setZoomAtivo(false);
+
+        // Pequeno delay para a UI atualizar antes de capturar a imagem
+        setTimeout(async () => {
+            try {
+                // Chama a função do hook, que agora faz todo o trabalho pesado
+                await adicionarPersonagemAoCarrinho(characterRef, sessionId);
+
+                setMessage('Personagem adicionado com sucesso! Redirecionando...');
+                
+
+                setIsAdding(false); // Libera o botão para nova tentativa
+            } catch (error) {
+                // Como o hook lança o erro, podemos pegá-lo aqui
+                setMessage('Falha ao adicionar. Tente novamente.');
+                setIsAdding(false); // Libera o botão para nova tentativa
+            }
+        }, 200);
+    };
+
+    
     const handleButtonClick = (nomeDoBotao) => {
         setBtnAtivo(prev => prev === nomeDoBotao ? null : nomeDoBotao);
     };
-
-    const handleSaveClick = () => {
-        setIsSaving(true); 
-        setZoomAtivo(false);
-    };
-
     return (
         <div className="container-pagina">
             <Navbar />
@@ -70,7 +83,9 @@ function PaginaCustomizaçao() {
                          <div className="menu-primario-custom-bottom">
                              <button onClick={() => setZoomAtivo(true)} className='btn-zoom'></button>
                              <button onClick={() => setZoomAtivo(false)} className='btn-tirar-zoom'></button>
-                             <button onClick={handleSaveClick} className='btn-tirar-zooms'>Adicionar ao carrinho</button>
+                             <button onClick={handleAdicionarClick} className='btn-tirar-zooms' disabled={isAdding}>
+                                {isAdding ? 'ADICIONANDO...' : 'Adicionar ao carrinho'}
+                            </button>
                          </div>
                     </div>
                     <div className="menu-secundario-custom">

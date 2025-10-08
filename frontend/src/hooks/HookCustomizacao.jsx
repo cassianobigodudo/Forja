@@ -104,21 +104,43 @@ export const useLogicaCustomizacao = () => {
         });
     };
 
-    const salvarPersonagem = async (referenciaDoElemento, setDadosDoPersonagem, setImagemPersonagem) => {
+    const adicionarPersonagemAoCarrinho = async (referenciaDoElemento, sessionId) => {
+        // A função não precisa mais de setDadosDoPersonagem e setImagemPersonagem
+        // Ela fará as chamadas de API e retornará sucesso ou erro.
+
         try {
+            // 1. Capturar a imagem
             const canvas = await html2canvas(referenciaDoElemento.current, { backgroundColor: null, scale: 0.45 });
             const imagemEmBase64 = canvas.toDataURL('image/png');
-            const personagemCompleto = { ...personagem, img: imagemEmBase64 };
+            
+            // 2. Montar o objeto completo, incluindo o session_id
+            const personagemCompleto = { 
+                ...personagem, 
+                img: imagemEmBase64,
+                session_id: sessionId 
+            };
+            
+            console.log("Enviando os seguintes dados para /personagens:", personagemCompleto);
 
-            setImagemPersonagem(imagemEmBase64);
-            setDadosDoPersonagem(personagemCompleto);
+            // 3. Salvar o personagem no banco (API Call 1)
+            const resposta = await axios.post('http://localhost:3000/api/personagens', personagemCompleto);
+            const novoPersonagemSalvo = resposta.data;
+            console.log("Personagem salvo com sucesso:", novoPersonagemSalvo);
+            
+            // 4. Adicionar o personagem recém-salvo ao carrinho (API Call 2)
+            await axios.post('http://localhost:3000/api/carrinho', {
+                session_id: sessionId,
+                personagem_id: novoPersonagemSalvo.id
+            });
+            console.log(`Personagem ID ${novoPersonagemSalvo.id} adicionado ao carrinho.`);
 
-            console.log("Enviando os seguintes dados:", personagemCompleto);
-            const resposta = await axios.post('http://localhost:3000/pedidos', personagemCompleto);
-            console.log("Personagem salvo com sucesso:", resposta.data);
+            // 5. Retornar os dados do personagem salvo em caso de sucesso
+            return novoPersonagemSalvo;
 
         } catch (erro) {
-            console.error('Erro ao salvar o personagem:', erro);
+            console.error('Erro no processo de adicionar ao carrinho:', erro);
+            // 6. Lançar o erro para que o componente que chamou possa tratá-lo (mostrar uma mensagem, etc.)
+            throw erro;
         }
     };
     
@@ -162,8 +184,9 @@ export const useLogicaCustomizacao = () => {
     return { 
         personagem, 
         atualizarPersonagem, 
-        salvarPersonagem, 
+        adicionarPersonagemAoCarrinho, 
         caminhosDasImagens, 
-        opcoesDoPersonagem 
+        opcoesDoPersonagem,
+
     };
 };
