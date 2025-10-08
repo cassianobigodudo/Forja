@@ -22,7 +22,7 @@ function PaginaPagamento() {
         if (sessionId) {
             const fetchCartItems = async () => {
                 try {
-                    const response = await axios.get(`http://localhost:3000/carrinho/${sessionId}`);
+                    const response = await axios.get(`http://localhost:3000/api/carrinho/${sessionId}`);
                     setCartItems(response.data); // Salva os itens do carrinho no estado
                 } catch (error) {
                     console.error("Erro ao buscar o carrinho:", error);
@@ -42,7 +42,7 @@ function PaginaPagamento() {
         setStatusMessage('Finalizando sua compra e enviando para produção...');
 
         try {
-            const response = await axios.post('http://localhost:3000/finalizar-compra', {
+            const response = await axios.post('http://localhost:3000/api/pedidos', {
                 session_id: sessionId
             });
             

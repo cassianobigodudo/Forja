@@ -123,12 +123,12 @@ export const useLogicaCustomizacao = () => {
             console.log("Enviando os seguintes dados para /personagens:", personagemCompleto);
 
             // 3. Salvar o personagem no banco (API Call 1)
-            const resposta = await axios.post('http://localhost:3000/personagens', personagemCompleto);
+            const resposta = await axios.post('http://localhost:3000/api/personagens', personagemCompleto);
             const novoPersonagemSalvo = resposta.data;
             console.log("Personagem salvo com sucesso:", novoPersonagemSalvo);
             
             // 4. Adicionar o personagem recém-salvo ao carrinho (API Call 2)
-            await axios.post('http://localhost:3000/carrinho', {
+            await axios.post('http://localhost:3000/api/carrinho', {
                 session_id: sessionId,
                 personagem_id: novoPersonagemSalvo.id
             });

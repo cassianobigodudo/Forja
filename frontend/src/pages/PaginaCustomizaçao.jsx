@@ -46,6 +46,7 @@ function PaginaCustomizaçao() {
                 setMessage('Personagem adicionado com sucesso! Redirecionando...');
                 
 
+                setIsAdding(false); // Libera o botão para nova tentativa
             } catch (error) {
                 // Como o hook lança o erro, podemos pegá-lo aqui
                 setMessage('Falha ao adicionar. Tente novamente.');

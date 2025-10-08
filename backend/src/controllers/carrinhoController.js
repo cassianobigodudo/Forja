@@ -4,7 +4,7 @@ const CarrinhoModel = require('../models/carrinhoModel');
 // Lida com a adição de um item
 const adicionarItem = async (req, res) => {
     const { session_id, personagem_id } = req.body;
-
+    console.log("Adicionando ao carrinho:", { session_id, personagem_id });
     if (!session_id || !personagem_id) {
         return res.status(400).json({ message: 'ID de sessão e ID do personagem são obrigatórios.' });
     }

@@ -64,6 +64,7 @@ const criarAPartirDoCarrinho = async (req, res) => {
                 if (novoPedidoId) {
                     await PedidoModel.atualizarStatus(client, novoPedidoId, 'falha_envio', null);
                 }
+                throw error;
             }
         }
 
