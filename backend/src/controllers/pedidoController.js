@@ -48,7 +48,7 @@ const criarAPartirDoCarrinho = async (req, res) => {
                         },
                         sku: "KIT-01"
                     },
-                    callbackUrl: "http://localhost:3333/callback"
+                    callbackUrl: `${process.env.BACKEND_URL}/api/pedidos/callback`
                 }
 
                 // 3. Envia para o serviço externo
@@ -83,6 +83,63 @@ const criarAPartirDoCarrinho = async (req, res) => {
     }
 };
 
+const receberCallback = async (req, res) => {
+
+    console.log('--- CALLBACK DO PROFESSOR RECEBIDO ---');
+    console.log('--- HEADERS (CABEÇALHOS) ---');
+    console.log(JSON.stringify(req.headers, null, 2));
+    
+    console.log('--- BODY (CORPO DA REQUISIÇÃO) ---');
+    console.log(JSON.stringify(req.body, null, 2));
+    
+    console.log('--- PARAMS (PARÂMETROS DA URL) ---');
+    console.log(JSON.stringify(req.params, null, 2));
+    
+    console.log('--- QUERY (QUERY STRING) ---');
+    console.log(JSON.stringify(req.query, null, 2));
+    
+    console.log('----------------------------------------');
+
+    // Responda OK (200) imediatamente para o professor não dar erro.
+    res.status(200).json({ 
+        message: "Dados recebidos e logados pelo modo espião." 
+    });
+    // try {
+    //     // Supondo que o professor envie um JSON como:
+    //     // { "orderId": "pedido-forja-123", "status": "concluido" }
+    //     // OBS: Você PRECISA confirmar com o professor ou logar para ver a estrutura real
+    //     const { orderId, status } = req.body; 
+
+    //     if (!orderId || !status) {
+    //         console.warn('Callback recebido com dados incompletos');
+    //         return res.status(400).json({ message: "Dados do callback incompletos." });
+    //     }
+
+    //     // 2. Determine o novo status interno
+    //     // (Ex: se ele mandar "concluido", você salva "concluido")
+    //     const novoStatus = status; // Ajuste conforme necessário
+
+    //     // 3. Atualize o pedido no seu banco de dados
+    //     const pedidoAtualizado = await PedidoModel.atualizarStatusPorOrderIdExterno(orderId, novoStatus);
+
+    //     if (!pedidoAtualizado) {
+    //         console.error(`Callback para orderId ${orderId} não encontrou pedido.`);
+    //         return res.status(404).json({ message: "Pedido não encontrado." });
+    //     }
+
+    //     console.log(`Pedido ${pedidoAtualizado.id} atualizado para status: ${novoStatus}`);
+
+    //     // 4. Envie uma resposta 200 OK para o servidor do professor
+    //     //    Isso é crucial para ele saber que você recebeu com sucesso.
+    //     res.status(200).json({ message: "Callback recebido com sucesso." });
+
+    // } catch (error) {
+    //     console.error('### ERRO NO PROCESSAMENTO DO CALLBACK ###', error);
+    //     res.status(500).json({ message: "Erro interno ao processar callback." });
+    // }
+};
+
 module.exports = {
     criarAPartirDoCarrinho,
+    receberCallback,
 };

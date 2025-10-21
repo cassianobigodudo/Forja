@@ -19,7 +19,17 @@ const atualizarStatus = async (client, pedidoId, status, orderIdExterno) => {
     );
 };
 
+const atualizarStatusPorOrderIdExterno = async (orderIdExterno, novoStatus) => {
+    // Aqui não usamos transação, pois é uma única operação
+    const result = await db.query(
+        "UPDATE pedidos SET status = $2 WHERE orderId_externo = $1 RETURNING *",
+        [orderIdExterno, novoStatus]
+    );
+    return result.rows[0];
+};
+
 module.exports = {
     criar,
     atualizarStatus,
+    atualizarStatusPorOrderIdExterno, // <-- Exporte a nova função
 };
