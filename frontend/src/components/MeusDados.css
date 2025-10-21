@@ -20,7 +20,7 @@
         justify-content: start;
         align-items: center;
         flex-direction: column;
-        gap: 20px;
+        gap: 2px;
         padding-left: 10px;
         padding-top: 20px;
         height: 90%;
@@ -42,11 +42,12 @@
                 align-items: start;
                 flex-direction: column;
                 padding-left: 5px;
-                gap: 10px;
+                gap: 2px;
                 height: 100%;
                 width: 70%;
                 background-color: transparent;
             }
+
                 .inputs-dados{
                     height: 40px;
                     width: 750px;
@@ -66,6 +67,7 @@
                 height: 100%;
                 width: 30%;
                 background-color: transparent;
+                gap: 10px;
             }
                 .botao-editar-dados{
                     height: 40px;
@@ -74,8 +76,181 @@
                     /* background-color: #5B5E1C; */
                     opacity: 80%;
                     cursor: pointer;
-                    margin-bottom: 3px;
+                    margin-bottom: 8px;
+                    box-shadow: 0px 0px 2px 1px #fff inset;
                 }
+
+        .parte-inputs-endereco{
+            display: flex;
+            justify-content: start;
+            align-items: start;
+            flex-direction: column;
+            height: 43%;
+            width: 95%;
+            background-color: transparent;
+        }
+            .input-partes-endereco-label{
+                display: flex;
+                justify-content: start;
+                align-items: center;
+                padding-left: 5px;
+                gap: 10px;
+                height: 16%;
+                width: 100%;
+                background-color: transparent;
+            }
+                .botao-adicionar-endereco{
+                    height: 20px;
+                    width: 20px;
+                    border: solid 1px #fff;
+                    opacity: 80%;
+                    cursor: pointer;
+                    box-shadow: 0px 0px 2px 1px #fff inset;
+                    font-size: 10px;
+                }
+
+            .input-partes-endereco{
+                display: flex;
+                height: 28%;
+                width: 100%;
+                background-color: rgb(99, 165, 165);
+            }
+                .parte-inputs-edicao{
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    padding-left: 5px;
+                    height: 100%;
+                    width: 70%;
+                    background-color: whitesmoke;
+                    gap: 10px;
+                }
+                    .input-rua-endereco{
+                        height: 40px;
+                        width: 510px;
+                        background-color: #5B5E1C;
+                        opacity: 80%;
+                        color: #fff;
+                        padding-left: 5px;
+                        font-family: "fonte-paragrafos";
+                        font-size: 18px;
+                    }
+                    .input-numero-endereco{
+                        height: 40px;
+                        width: 60px;
+                        background-color: #5B5E1C;
+                        opacity: 80%;
+                        color: #fff;
+                        padding-left: 5px;
+                        font-family: "fonte-paragrafos";
+                        font-size: 18px;
+                    }
+                    .parte-botao-edicao{
+                        height: 100%;
+                        width: 30%;
+                        background-color: rgb(131, 59, 59);
+                    }
+
+                .parte-inputs-edicao-2{
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    padding-left: 5px;
+                    height: 100%;
+                    width: 70%;
+                    background-color: whitesmoke;
+                    gap: 5px;
+                }
+                    .input-estado-endereco{
+                        height: 40px;
+                        width: 60px;
+                        background-color: #5B5E1C;
+                        opacity: 80%;
+                        color: #fff;
+                        padding-left: 5px;
+                        font-family: "fonte-paragrafos";
+                        font-size: 18px;
+                    }
+                    .inputs-cidade-endereco{
+                        height: 40px;
+                        width: 200px;
+                        background-color: #5B5E1C;
+                        opacity: 80%;
+                        color: #fff;
+                        padding-left: 5px;
+                        font-family: "fonte-paragrafos";
+                        font-size: 18px;
+                    }
+                    .inputs-bairro-endereco{
+                        height: 40px;
+                        width: 200px;
+                        background-color: #5B5E1C;
+                        opacity: 80%;
+                        color: #fff;
+                        padding-left: 5px;
+                        font-family: "fonte-paragrafos";
+                        font-size: 18px;
+                    }
+                
+                .parte-inputs-edicao-3{
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    padding-left: 5px;
+                    height: 100%;
+                    width: 70%;
+                    background-color: whitesmoke;
+                    gap: 10px;
+                }
+                    .input-complemento-endereco{
+                        height: 40px;
+                        width: 510px;
+                        background-color: #5B5E1C;
+                        opacity: 80%;
+                        color: #fff;
+                        padding-left: 5px;
+                        font-family: "fonte-paragrafos";
+                        font-size: 18px;
+                    }
+                    .input-cep-endereco{
+                        height: 40px;
+                        width: 60px;
+                        background-color: #5B5E1C;
+                        opacity: 80%;
+                        color: #fff;
+                        padding-left: 5px;
+                        font-family: "fonte-paragrafos";
+                        font-size: 18px;
+                    }
+                
+            /* .input-parte-dados-endereco{
+                display: flex;
+                height: 25%;
+                width: 100%;
+                background-color: whitesmoke;
+            }
+                .adicionar-endereco{
+                    display: flex;
+                    justify-content: start;
+                    align-items: start;
+                    gap: 10px;
+                }
+                    
+            .inputs-parte-editar-enderecos{
+                display: flex;
+                justify-content: start;
+                align-items: end;
+                padding-left: 5px;
+                height: 100%;
+                width: 30%;
+                background-color: transparent;
+                gap: 10px;
+            }
+                .inputs-partes-enderecos{
+                    height: 33%;
+                    width: 100%;
+                    background-color: whitesmoke;
+                } */
 
     .parte-salvar-dados{
         display: flex;
@@ -142,3 +317,180 @@
                 font-weight: bolder;
                 color: #fff;
             }
+
+.dialog-endereco{
+    height: 500px;
+    background-color: transparent;
+    border: none;
+    width: 36%;
+    position: fixed;
+    top: 56%;
+    left: 40%;
+    transform: translate(-10%, -50%);
+}
+    .container-dialog-endereco{
+        display: flex;
+        flex-direction: column;
+        height: 95%;
+        width: 95%;
+        background-color: darkcyan;
+    }
+        .parte-fechar-dialog{
+            display: flex;
+            justify-content: end;
+            align-items: center;
+            padding-right: 10px;
+            height: 10%;
+            width: 100%;
+            background-color: whitesmoke;
+        }
+
+        .parte-pegar-endereco{
+            display: flex;
+            flex-direction: column;
+            height: 90%;
+            width: 100%;
+            background-color: transparent;
+        }
+            .buscar-cep{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 10px;
+                height: 15%;
+                width: 100%;
+                background-color: transparent;
+            }
+                .input-buscar-cep{
+                    font-size: 10px;
+                    height: 35px;
+                    width: 200px;
+                    padding-left: 10px;
+                }
+                .botao-pesquisar-cep{
+                    height: 35px;
+                    width: 35px;
+                }
+
+            .dados-endereco{
+                display: flex;
+                flex-direction: column;
+                height: 85%;
+                width: 100%;
+                background-color: transparent;
+            }
+                .dados-endereco-usuario{
+                    display: flex;
+                    height: 25%;
+                    width: 100%;
+                    background-color: transparent;
+                }
+                    .endereco-casa{
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100%;
+                        width: 75%;
+                        background-color: transparent;
+                    }
+                        .input-endereco{
+                            height: 40px;
+                            width: 360px;
+                            padding-left: 5px;
+                            border: solid 1px #fff;
+                            font-size: 15px;
+                        }
+                        
+                    .numero-casa{
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100%;
+                        width: 25%;
+                        background-color: transparent;
+                    }
+                        .input-numero-casa{
+                            height: 40px;
+                            width: 100px;
+                            padding-left: 5px;
+                            border: solid 1px #fff;
+                            font-size: 15px;
+                        }
+
+                    .uf-endereco{
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100%;
+                        width: 20%;
+                        background-color: transparent;
+                    }
+                        .input-uf-endereco{
+                            height: 40px;
+                            width: 70px;
+                            border: solid 1px #fff;
+                            font-size: 15px;
+                            padding-left: 5px;
+                        }
+                    .cidade-endereco{
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100%;
+                        width: 40%;
+                        background-color: transparent;
+                    }
+                        .input-cidade-endereco{
+                            height: 40px;
+                            width: 200px;
+                            border: solid 1px #fff;
+                            font-size: 15px;
+                            padding-left: 5px;
+                        }
+                    .bairro-endereco{
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100%;
+                        width: 40%;
+                        background-color: transparent;
+                    }
+                        .input-bairro-endereco{
+                            height: 40px;
+                            width: 200px;
+                            border: solid 1px #fff;
+                            font-size: 15px;
+                            padding-left: 5px;
+                        }
+
+                    .complemento-casa{
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100%;
+                        width: 75%;
+                        background-color: transparent;
+                    }
+                        .input-complemento{
+                            height: 40px;
+                            width: 360px;
+                            border: solid 1px #fff;
+                            font-size: 15px;
+                            padding-left: 5px;
+                        }
+
+                    .cep-casa{
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100%;
+                        width: 25%;
+                        background-color: transparent;
+                    }
+                        .input-cep{
+                            height: 40px;
+                            width: 100px;
+                            border: solid 1px #fff;
+                            font-size: 15px;
+                            padding-left: 5px;
+                        }
