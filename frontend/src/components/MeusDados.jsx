@@ -174,7 +174,16 @@ function MeusDados() {
                                 }
                             />
                         </div>
-                        <div className="parte-botao-edicao"></div>
+                        <div className="parte-botao-edicao">
+                            {!editando.endereco ? (
+                                <button className="botao-editar-dados" onClick={() => habilitarEdicao("endereco")}>✏️</button>
+                                ) : (
+                                <>
+                                    <button className="botao-editar-dados" onClick={() => salvarCampo("endereco")}>✓</button>
+                                    <button className="botao-editar-dados" onClick={() => cancelarEdicao("endereco")}>✗</button>
+                                </>
+                            )}
+                        </div>
                     </div>
 
                     <div className="input-partes-endereco">
@@ -252,14 +261,7 @@ function MeusDados() {
 
                 <div className="inputs-parte-dados-endereco">
                     <div className="inputs-partes-enderecos">
-                        {/* {!editando.endereco ? (
-                            <button className="botao-editar-dados" onClick={() => habilitarEdicao("endereco")}>✏️</button>
-                        ) : (
-                            <>
-                            <button className="botao-editar-dados" onClick={() => salvarCampo("endereco")}>✓</button>
-                            <button className="botao-editar-dados" onClick={() => cancelarEdicao("endereco")}>✗</button>
-                            </>
-                        )} */}
+                        
                     </div>
                 </div>
                 
