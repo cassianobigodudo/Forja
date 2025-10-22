@@ -19,7 +19,18 @@ const atualizarStatus = async (client, pedidoId, status, orderIdExterno) => {
     );
 };
 
+const atualizarStatusPorCallback = async (orderIdExterno, novoStatus, producaoIdExterno) => {
+    const result = await db.query(
+        `UPDATE pedidos 
+         SET status = $2, producao_id_externo = $3 
+         WHERE orderId_externo = $1 RETURNING *`,
+        [orderIdExterno, novoStatus, producaoIdExterno]
+    );
+    return result.rows[0];
+};
+
 module.exports = {
     criar,
     atualizarStatus,
+    atualizarStatusPorCallback, // <-- Exporte a nova função
 };
