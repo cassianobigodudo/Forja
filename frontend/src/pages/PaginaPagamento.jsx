@@ -30,7 +30,7 @@ function PaginaPagamento() {
 
     if (!dadosDoPersonagem) {
         return (
-            <div className="container-pagina"> 
+            <div className="container-paginaz"> 
                 <Navbar/>
                 <div className="container">
                     <main className='conteudo'>
