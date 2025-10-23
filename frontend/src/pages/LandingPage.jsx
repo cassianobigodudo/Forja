@@ -1,7 +1,10 @@
-import React, {useRef} from 'react'
+import React, {useRef, useState} from 'react'
 import "./LandingPage.css"
 import Navbar from '../components/Navbar'
+import BoxLoginCadastro from '../components/BoxLoginCadastro'
 function LandingPage() {
+  const [isLoginVisible, setIsLoginVisible] = useState(false)
+
   const sectionBaixoRef = useRef(null)
   const sectionAltoRef = useRef(null)
   const SaberMais = () => {
@@ -17,10 +20,10 @@ function LandingPage() {
       <div className="container-landing-page-cima"  ref={sectionAltoRef}>
         <Navbar/>
 
-        <div className="container-centro">
-          <label className='titulo-central'>FORJA</label>
-          <label className='subtitulo-central'>CRIAÇÃO DE PERSONAGENS DE RPG</label>
-          <button className='btn-entrar'>ENTRAR</button>
+        <div className={`container-centro ${isLoginVisible ? 'login-ativo' : ''}`}>
+          <img src="./Forja Logo.png" className={`logo-forja ${isLoginVisible ? 'deslocado' : ''}`} />
+          {!isLoginVisible && <button className='btn-entrar' onClick={() => (setIsLoginVisible(true))} >Entrar</button>}
+          {isLoginVisible && <BoxLoginCadastro/>}
         </div>
 
         <div className="container-saberMais" onClick={SaberMais}>
