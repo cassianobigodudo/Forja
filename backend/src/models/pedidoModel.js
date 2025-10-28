@@ -29,8 +29,31 @@ const atualizarStatusPorCallback = async (orderIdExterno, novoStatus, producaoId
     return result.rows[0];
 };
 
+const buscarPorSessao = async (session_id) => {
+    const { rows } = await db.query(
+        `SELECT 
+            p.id as pedido_id, 
+            p.status, 
+            p.orderid_externo, 
+            p.producao_id_externo,
+            p.criado_em,  -- (Opcional, mas bom ter)
+            pers.genero,
+            pers.corPele,
+            pers.img
+         FROM pedidos p
+         JOIN personagens pers ON p.personagem_id = pers.id
+         WHERE p.session_id = $1
+         ORDER BY p.criado_em DESC; -- (Mostrar os mais novos primeiro)
+        `,
+        [session_id]
+    );
+    return rows;
+};
+
+// Adicione a nova função ao module.exports
 module.exports = {
     criar,
     atualizarStatus,
-    atualizarStatusPorCallback, // <-- Exporte a nova função
+    atualizarStatusPorCallback,
+    buscarPorSessao, // <-- ADICIONE AQUI
 };
