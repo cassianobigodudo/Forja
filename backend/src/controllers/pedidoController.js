@@ -102,10 +102,14 @@ const receberCallback = async (req, res) => {
             
             const nossoStatus = 'forjado'; 
 
+            const slotAleatorio = Math.floor(Math.random() * 100) + 1;
+            console.log(`Pedido ${orderId} concluído. Atribuindo slot aleatório: ${slotAleatorio}`);
+
             const pedidoAtualizado = await PedidoModel.atualizarStatusPorCallback(
                 orderId, 
                 nossoStatus, 
-                producaoId
+                producaoId,
+                slotAleatorio
             );
 
             if (!pedidoAtualizado) {
