@@ -42,7 +42,7 @@ const buscarPorSessao = async (session_id) => {
          FROM pedidos p
          JOIN personagens pers ON p.personagem_id = pers.id
          WHERE p.session_id = $1
-         ORDER BY p.criado_em DESC; -- (Mostrar os mais novos primeiro)
+         ORDER BY p.id DESC; -- Alterado para ordenar pelo ID
         `,
         [session_id]
     );
