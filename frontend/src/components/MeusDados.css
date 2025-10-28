@@ -113,7 +113,7 @@
                 display: flex;
                 height: 28%;
                 width: 100%;
-                background-color: rgb(99, 165, 165);
+                background-color: transparent;
             }
                 .parte-inputs-edicao{
                     display: flex;

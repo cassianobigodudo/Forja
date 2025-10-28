@@ -3,18 +3,23 @@ import './BoxItem.css'
 
 function BoxItem() {
   const [verDetalhes, setVerDetalhes] = useState(false);
+
   return (
+
     <div className='container-box-item'>
 
       <div className="box-parte-dados-item">
         <label htmlFor="" className="label-dados-item">ID:</label>
       </div>
+
       <div className="box-parte-dados-item">
         <label htmlFor="" className="label-dados-item">TÍTULO:</label>
       </div>
+
       <div className="box-parte-dados-item">
         <label htmlFor="" className="label-dados-item">HORÁRIO:</label>
       </div>
+      
       <div className="box-parte-detalhes">
         <button onClick={() => setVerDetalhes(true)} className="botao-detalhes-item">Detalhes</button>
       </div>
@@ -61,12 +66,13 @@ function BoxItem() {
                 </div>
 
               </div>
+
             </div>
 
           </div>
 
           <div className="dialog-detalhes-progresso">
-            <label htmlFor="">Barra de Progresso aqui...</label>
+            <label htmlFor="">Status: </label>
           </div>
 
 
