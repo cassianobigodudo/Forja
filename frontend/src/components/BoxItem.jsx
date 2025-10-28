@@ -15,7 +15,7 @@ function BoxItem({ pedido }) {
     <div className='container-box-item'>
       {/* 4. Usar os dados das props */}
       <div className="box-parte-dados-item">
-        <label className="label-dados-item">ID: {pedido.pedido_id}</label>
+        <label className="label-dados-item">ID: {pedido.pedido_id}</label> <label className="label-dados-item" htmlFor="">STATUS: {pedido.status}</label>
       </div>
 
       <div className="box-parte-dados-item">
@@ -77,7 +77,7 @@ function BoxItem({ pedido }) {
 
           <div className="dialog-detalhes-progresso">
             {/* 7. Exibir o status vindo da API */}
-            <label htmlFor="">Status: {pedido.status}</label>
+            {/* <label htmlFor="">Status: {pedido.status}</label> */}
             {/* Você pode adicionar uma barra de progresso aqui depois */}
           </div>
         </div>
