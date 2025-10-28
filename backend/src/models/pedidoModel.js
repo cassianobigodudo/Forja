@@ -36,7 +36,6 @@ const buscarPorSessao = async (session_id) => {
             p.status, 
             p.orderid_externo, 
             p.producao_id_externo,
-            p.criado_em,  -- (Opcional, mas bom ter)
             pers.genero,
             pers.corPele,
             pers.img
