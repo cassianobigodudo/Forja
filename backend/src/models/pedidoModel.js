@@ -36,13 +36,14 @@ const buscarPorSessao = async (session_id) => {
             p.status, 
             p.orderid_externo, 
             p.producao_id_externo,
+            p.data_pedido,  -- (Opcional, mas bom ter)
             pers.genero,
             pers.corPele,
             pers.img
          FROM pedidos p
          JOIN personagens pers ON p.personagem_id = pers.id
          WHERE p.session_id = $1
-         ORDER BY p.id DESC; -- Alterado para ordenar pelo ID
+         ORDER BY p.data_pedido DESC; -- (Mostrar os mais novos primeiro)
         `,
         [session_id]
     );

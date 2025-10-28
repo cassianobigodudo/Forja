@@ -8,6 +8,8 @@ function BoxItem({ pedido }) {
   // 2. Criar um "título" (já que sua API não tem um)
   const titulo = `Personagem: ${pedido.genero} ${pedido.corPele}`;
 
+  // 3. Formatar a data (a do banco vem como timestamp)
+  const horario = new Date(pedido.data_pedido).toLocaleString('pt-BR');
 
   return (
     <div className='container-box-item'>
@@ -19,10 +21,10 @@ function BoxItem({ pedido }) {
       <div className="box-parte-dados-item">
         <label className="label-dados-item">TÍTULO: {titulo}</label>
       </div>
-{/* 
+
       <div className="box-parte-dados-item">
         <label className="label-dados-item">HORÁRIO: {horario}</label>
-      </div> */}
+      </div>
       
       <div className="box-parte-detalhes">
         <button onClick={() => setVerDetalhes(true)} className="botao-detalhes-item">Detalhes</button>
