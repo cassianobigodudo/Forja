@@ -57,7 +57,10 @@ function UserAccount() {
                     </div>
 
                     <div className="menu-parte-sair">
-                        <button className="botao-deslogar" onClick={() => alert('Botão para deslogar!')}>Sair</button>
+                         
+                        <button className="botao-deslogar" onClick={() => alert('Tem certeza que deseja deslogar de sua conta?')}>Sair</button>
+                        
+
                     </div>
 
                 </div>

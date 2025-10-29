@@ -7,6 +7,7 @@
     width: 100vw;
     background-image: url(/public/fundo/tim-mcburnie-illustrationtutorial-theentrance2.jpg);
     background-size: cover;
+    font-family: "fonte-titulos";
     
 }
 
@@ -15,20 +16,18 @@
         justify-content: center;
         align-items: center;
         text-align: center;
-        height: 98vh;
+        height: 85%;
         width: 99vw;
         background-color: rgba(0, 0, 0, 0.1);
-        border-radius: 1%;
-        border: 50px solid #fff;
-        border-image: url(/public/fundo/arestas-do-fundo.svg) 30 round;
     }
         .container-principal-menu{
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100%;
+            height: 87.5%;
             width: 30%;
             background-color: transparent;
+            margin-top: -53px;
             
         }
             .parte-menu{
@@ -47,21 +46,22 @@
                     align-items: center;
                     flex-direction: column;
                     gap: 15px;
-                    height: 35%;
+                    height: 42%;
                     width: 100%;
                     background-color: transparent;
                 }
                     .parte-foto{
-                        height: 120px;
-                        width: 120px;
+                        margin-top: 15px;
+                        height: 110px;
+                        width: 110px;
                         border-radius: 50%;
                         background-color: whitesmoke;
                     }
                     .label-nome-usuario{
                         color: #fff;
-                        font-size: 25px;
+                        font-size: 26px;
                         text-decoration: underline;
-                        font-family: "fonte-subtitulos";
+                        margin-bottom: 10px;
                     }
 
                 .menu-parte-botoes{
@@ -77,67 +77,80 @@
                     
                     .botoes-menu {
                         display: block;
-                        width: 300px;
+                        width: 320px;
                         height: 60px;
                         border: none;
-                        border-radius: 20px;
-                        background-color: #e0e0e0;
+                        background-color: rgba(0, 0, 0, 0.7);
                         font-size: 25px;
-                        padding: 10px 16px;
                         cursor: pointer;
                         font-weight: bolder;
-                        font-family: "fonte-subtitulos";
-                        margin-bottom: 8px;
+                        font-family: "fonte-titulos";
+                        margin-bottom: 4px;
                         transition: 0.3s;
-                        color: #5B5E1C;
+                        color: #8e9d41;
                     }
 
                         .botoes-menu:hover {
-                            background-color: #fff;
-                            font-family: "fonte-subtitulos";
+                            font-size: 30px;
+                            transition: 0.3s;
+                            
+                        }
+
+                        .botoes-menu:active {
+                            font-size: 31px;
+                            transition: 0.1s;
                         }
 
                         .botoes-menu.ativo {
+                            
+                            
+                            font-size: 30px;
+
                             background-color: #5B5E1C;
                             color: white;
-                            font-weight: bold;
                             box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-                            font-family: "fonte-subtitulos";
                         }
 
                 .menu-parte-sair{
                     display: flex;
-                    justify-content: end;
+                    justify-content: center;
                     align-items: center;
-                    padding-right: 70px;
-                    height: 15%;
+                    height: 10%;
                     width: 100%;
-                    background-color: transparent;
+                    padding-left: 210px;
+                    transition: 1s;
                 }
                     .botao-deslogar{
-                        height: 40px;
-                        width: 200px;
-                        background-color: red;
+                        height: 27px;
+                        width: 50px;
+                        background-color: rgba(0, 0, 0, 0.7);
                         border: none;
-                        border-radius: 10px;
+                        border-radius: 3px;
                         cursor: pointer;
-                        color: #fff;
-                        font-family: "fonte-subtitulos";
-                        font-size: 30px;
+                        color: rgba(255, 255, 255, 0.4);
+                        font-family: "fonte-paragrafos";
+                        font-size: 20px;
                         font-weight: bolder;
+                        transition: 0.5s;
+                    }
+                    .botao-deslogar:hover{
+
+                        color: rgba(255, 255, 255, 0.9);
+                        transition: 1s;
                     }
 
         .container-principal-componente{
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100%;
+            height: 96.1%;
             width: 70%;
             background-color: transparent;
         }
             .parte-componente{
-                height: 100%;
+                height: 91%;
                 width: 95%;
+            margin-top: -49px;
                 border: solid 2px #fff;
                 background-color: var(--Fundo);
             }
