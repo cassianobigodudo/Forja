@@ -272,11 +272,12 @@ function MeusDados() {
         <div className="parte-salvar-dados">
 
             <div className="parte-deletar-conta">
-                <button className="botao-deletar-conta" onClick={() => alert('Botão para excluir a conta')}>Excluir Conta🚮</button>
+                <button className="botao-salvar-edicao">Salvar</button>
+                
             </div>
 
             <div className="parte-salvar-edicao">
-                <button className="botao-salvar-edicao" onClick={() => alert('Botão para salvar os dados editados')}>Salvar✅</button>
+                <button className="botao-deletar-conta">Excluir Conta</button>
             </div>
 
         </div>
