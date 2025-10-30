@@ -1,19 +1,47 @@
+/* Animação de fade-in para a página */
+@keyframes fadeInPage {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Animação de fade-in e slide para o diálogo */
+@keyframes fadeInDialog {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -45%); /* Começa um pouco acima */
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%); /* Termina no centro */
+  }
+}
+
+
 .container-meus-dados{
     height: 100%;
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
+    flex-direction: row;
     gap: 10px;
     background-color: transparent;
         font-family: "fonte-titulos";
+    /* Aplica a animação de fade-in da página */
+    animation: fadeInPage 1s ease-out;
 }
+
     .label-dados{
         font-size: 22px;
+        margin-left: 20px;
         letter-spacing: 2px;
         font-family: "fonte-titulos";
         color: #fff;
+        transition: 1s;
     }
 
     .parte-inputs{
@@ -25,52 +53,57 @@
         padding-left: 10px;
         padding-top: 20px;
         height: 90%;
-        width: 98%;
-        background-color: transparent;  
+        width: 100%;
+        background-color: transparent;   
     }
         .inputs{
             display: flex;
             justify-content: center;
             align-items: center;
             height: 19%;
-            width: 95%;
-            gap: 20px;
+            width: 100%;
             background-color: transparent;
+            
         }
             .inputs-parte-dados{
                 display: flex;
                 justify-content: center;
                 align-items: start;
                 flex-direction: column;
-                padding-left: 5px;
-                gap: 2px;
                 height: 100%;
-                width: 70%;
+                width: 90%;
                 background-color: transparent;
             }
 
                 .inputs-dados{
                     height: 40px;
-                    width: 750px;
-                    background-color: #5B5E1C;
+                    width: 605px;
+                    background-color: rgb(91, 94, 28, 0.8);
                     opacity: 80%;
                     color: #fff;
-                    padding-left: 5px;
                     font-family: "fonte-paragrafos";
-                    font-size: 18px;
-                    border-radius: 1px;
-                    border: none;
+                    font-size: 25px;
+                    border-style: solid;
+                    border-width: 2px;
+                    border-color: rgb(255, 255, 255, 0.4);
+                    outline: none;
+                    transition: 1s;
+                    margin-left: 20px;
                 }
+              .inputs-dados:hover{
+                    background-color: rgb(39, 41, 10);
+                    transition: 1s;
+              }
+
+                
 
             .inputs-parte-botao-editar{
                 display: flex;
                 justify-content: start;
                 align-items: center;
-                padding-left: 5px;
                 height: 100%;
-                width: 30%;
+                width: 10%;
                 background-color: transparent;
-                gap: 10px;
                 padding-top: 25px;
             }
                 .botao-editar-dados{
@@ -87,17 +120,17 @@
             justify-content: start;
             align-items: start;
             flex-direction: column;
-            height: 43%;
-            width: 95%;
+            height: 42%;
+            width: 100%;
             background-color: transparent;
         }
             .input-partes-endereco-label{
                 display: flex;
                 justify-content: start;
                 align-items: center;
-                padding-left: 5px;
+                padding-right: 20px;
                 gap: 10px;
-                height: 16%;
+                height: 21%;
                 width: 100%;
                 background-color: transparent;
             }
@@ -130,7 +163,11 @@
                     .input-rua-endereco{
                         height: 40px;
                         width: 630px;
-                        background-color: #5B5E1C;
+                    background-color: rgb(91, 94, 28, 0.8);
+                       border-style: solid;
+                    border-width: 2px;
+                    border-color: rgb(255, 255, 255, 0.4);
+                    outline: none;
                         opacity: 80%;
                         color: #fff;
                         padding-left: 5px;
@@ -140,7 +177,10 @@
                     .input-numero-endereco{
                         height: 40px;
                         width: 90px;
-                        background-color: #5B5E1C;
+                    background-color: rgb(91, 94, 28, 0.8); border-style: solid;
+                    border-width: 2px;
+                    border-color: rgb(255, 255, 255, 0.4);
+                    outline: none;
                         opacity: 80%;
                         color: #fff;
                         padding-left: 5px;
@@ -172,7 +212,10 @@
                     .input-estado-endereco{
                         height: 40px;
                         width: 100px;
-                        background-color: #5B5E1C;
+                    background-color: rgb(91, 94, 28, 0.8); border-style: solid;
+                    border-width: 2px;
+                    border-color: rgb(255, 255, 255, 0.4);
+                    outline: none;
                         opacity: 80%;
                         color: #fff;
                         padding-left: 5px;
@@ -182,7 +225,10 @@
                     .inputs-cidade-endereco{
                         height: 40px;
                         width: 300px;
-                        background-color: #5B5E1C;
+                    background-color: rgb(91, 94, 28, 0.8); border-style: solid;
+                    border-width: 2px;
+                    border-color: rgb(255, 255, 255, 0.4);
+                    outline: none;
                         opacity: 80%;
                         color: #fff;
                         padding-left: 5px;
@@ -192,7 +238,10 @@
                     .inputs-bairro-endereco{
                         height: 40px;
                         width: 310px;
-                        background-color: #5B5E1C;
+                    background-color: rgb(91, 94, 28, 0.8); border-style: solid;
+                    border-width: 2px;
+                    border-color: rgb(255, 255, 255, 0.4);
+                    outline: none;
                         opacity: 80%;
                         color: #fff;
                         padding-left: 5px;
@@ -213,7 +262,10 @@
                     .input-complemento-endereco{
                         height: 40px;
                         width: 580px;
-                        background-color: #5B5E1C;
+                    background-color: rgb(91, 94, 28, 0.8); border-style: solid;
+                    border-width: 2px;
+                    border-color: rgb(255, 255, 255, 0.4);
+                    outline: none;
                         opacity: 80%;
                         color: #fff;
                         padding-left: 5px;
@@ -223,42 +275,26 @@
                     .input-cep-endereco{
                         height: 40px;
                         width: 140px;
-                        background-color: #5B5E1C;
+                    background-color: rgb(91, 94, 28, 0.8); border-style: solid;
+                    border-width: 2px;
+                    border-color: rgb(255, 255, 255, 0.4);
+                    outline: none;
                         opacity: 80%;
                         color: #fff;
                         padding-left: 5px;
                         font-family: "fonte-paragrafos";
                         font-size: 18px;
                     }
+.label-endereço{
+        font-size: 22px;
+        margin-left: 20px;
+        letter-spacing: 2px;
+        font-family: "fonte-titulos";
+        color: #fff;
+        transition: 1s;
+    
+    }
                 
-            /* .input-parte-dados-endereco{
-                display: flex;
-                height: 25%;
-                width: 100%;
-                background-color: whitesmoke;
-            }
-                .adicionar-endereco{
-                    display: flex;
-                    justify-content: start;
-                    align-items: start;
-                    gap: 10px;
-                }
-                    
-            .inputs-parte-editar-enderecos{
-                display: flex;
-                justify-content: start;
-                align-items: end;
-                padding-left: 5px;
-                height: 100%;
-                width: 30%;
-                background-color: transparent;
-                gap: 10px;
-            }
-                .inputs-partes-enderecos{
-                    height: 33%;
-                    width: 100%;
-                    background-color: whitesmoke;
-                } */
 
     .parte-salvar-dados{
         display: flex;
@@ -279,6 +315,7 @@
             margin-bottom: 2%;
         }
             .botao-deletar-conta{
+                margin-bottom: 3px;
                 opacity: 70%;
                 display: flex;
                 justify-content: center;
@@ -293,8 +330,6 @@
                 letter-spacing: 1px;
                 color: rgb(255, 255, 255, 0.7);
                 transition: 1s;
-                margin-bottom: 10px;
-                margin-left: 220px;
                 border-style: solid;
                 border-color: white;
                 border-width: 2px;
@@ -308,7 +343,7 @@
                     transition: 1s;
                 }
                 .botao-deletar-conta:active{
-                    background-color: rgb(119, 0, 0);
+                    background-color: rgb(104, 0, 0);
                     transition: 0.01s;
                 }
 
@@ -331,7 +366,8 @@
         font-family: "fonte-titulos";
                 font-weight: bolder;
                 color: #fff;
-                margin-right: 240px;
+                margin-right: 250px;
+                margin-top: 115px;
                 transition: 1s;
             }
             .botao-salvar-edicao:hover{
@@ -344,179 +380,309 @@
                 transition: 0.001s;
             }
 
-.dialog-endereco{
-    height: 500px;
-    background-color: transparent;
-    border: none;
-    width: 36%;
-    position: fixed;
-    top: 56%;
-    left: 40%;
-    transform: translate(-10%, -50%);
+.dialog-endereco {
+  height: auto; /* Ajustado para auto */
+  background-color: transparent;
+  border: none;
+  width: 650px; /* Largura fixa para melhor controle */
+  position: fixed;
+  top: 50%; /* Centralizado */
+  left: 50%;
+  transform: translate(-50%, -50%); /* Centralizado */
+  padding: 0; /* Remover padding do dialog wrapper */
+  /* Aplica a animação de fade-in do diálogo */
+  animation: fadeInDialog 0.4s ease-out;
 }
-    .container-dialog-endereco{
+
+.container-dialog-endereco {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Ocupa todo o dialog */
+  width: 100%; /* Ocupa todo o dialog */
+  /* Estilo principal: fundo escuro e borda clara, como os inputs */
+  background-color: rgba(20, 15, 15, 0.8); /* Um cinza escuro neutro */
+  border: 2px solid rgb(255, 255, 255, 0.4);
+  border-radius: 3px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.7);
+  overflow: hidden; /* Para conter os cantos arredondados */
+}
+
+.parte-fechar-dialog {
+  display: flex;
+  justify-content: space-between; /* Alinha título e botão */
+  align-items: center;
+  padding: 15px 20px;
+  height: auto; /* Altura automática */
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.3); /* Fundo sutil para o header */
+  border-bottom: 1px solid rgb(255, 255, 255, 0.2);
+  box-sizing: border-box;
+}
+
+/* Título adicionado ao JSX */
+.dialog-titulo {
+  font-family: "fonte-titulos";
+  color: #fff;
+  font-size: 24px;
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+/* Botão de fechar estilizado (era ❌) */
+.dialog-botao-fechar {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 30px; /* Tamanho maior para '×' */
+  cursor: pointer;
+  transition: color 0.3s;
+  line-height: 1;
+  padding: 0;
+  opacity: 0.7;
+}
+
+.dialog-botao-fechar:hover {
+  color: #ff6b6b; /* Vermelho para ação de fechar */
+  opacity: 1;
+}
+
+.parte-pegar-endereco {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: transparent;
+  padding: 20px; /* Espaçamento interno */
+  gap: 20px; /* Espaço entre a busca e os dados */
+  box-sizing: border-box;
+}
+
+.buscar-cep {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  background-color: transparent;
+}
+
+/* Botão de pesquisa estilizado (era 🔍) */
+.botao-pesquisar-cep {
+  height: 40px;
+  width: 40px;
+  flex-shrink: 0; /* Impede que o botão encolha */
+  border: solid 1px #fff;
+  opacity: 0.8;
+  cursor: pointer;
+  box-shadow: 0px 0px 2px 1px #fff inset;
+  background-color: rgb(91, 94, 28, 0.8);
+  color: #fff;
+  font-size: 20px;
+  transition: background-color 0.3s, opacity 0.3s;
+  padding: 0;
+}
+
+.botao-pesquisar-cep:hover {
+  background-color: rgb(39, 41, 10);
+  opacity: 1;
+}
+
+.dados-endereco {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: transparent;
+  gap: 15px; /* Espaço entre as linhas de inputs */
+}
+
+.dados-endereco-usuario {
+  display: flex;
+  height: auto; /* Altura automática */
+  width: 100%;
+  background-color: transparent;
+  gap: 10px; /* Espaço entre inputs na mesma linha */
+}
+
+/* Regra unificada para todos os inputs do dialog
+  Substitui todos os blocos .input-endereco, .input-numero-casa, etc.
+*/
+.input-buscar-cep,
+.input-endereco,
+.input-numero-casa,
+.input-uf-endereco,
+.input-cidade-endereco,
+.input-bairro-endereco,
+.input-complemento,
+.input-cep {
+  height: 40px;
+  width: 100%; /* Ocupa o espaço do container pai */
+  background-color: rgb(91, 94, 28, 0.8);
+  border: 2px solid rgb(255, 255, 255, 0.4);
+  outline: none;
+  color: #fff;
+  padding-left: 10px;
+  font-family: "fonte-paragrafos";
+  font-size: 16px;
+  box-sizing: border-box;
+  transition: background-color 0.3s, border-color 0.3s;
+  border-radius: 4px; /* Leve arredondamento */
+}
+
+/* Estilo para placeholders */
+.input-buscar-cep::placeholder,
+.input-endereco::placeholder,
+.input-numero-casa::placeholder,
+.input-uf-endereco::placeholder,
+.input-cidade-endereco::placeholder,
+.input-bairro-endereco::placeholder,
+.input-complemento::placeholder,
+.input-cep::placeholder {
+  color: #bbb;
+  font-style: italic;
+  opacity: 0.7;
+}
+
+/* Efeito de hover para inputs habilitados */
+.input-buscar-cep:hover:not(:disabled),
+.input-endereco:hover:not(:disabled),
+.input-numero-casa:hover:not(:disabled),
+.input-uf-endereco:hover:not(:disabled),
+.input-cidade-endereco:hover:not(:disabled),
+.input-bairro-endereco:hover:not(:disabled),
+.input-complemento:hover:not(:disabled),
+.input-cep:hover:not(:disabled) {
+  background-color: rgb(39, 41, 10); /* Cor de hover dos inputs principais */
+}
+
+/* Efeito de foco */
+.input-buscar-cep:focus,
+.input-endereco:focus,
+.input-numero-casa:focus,
+.input-uf-endereco:focus,
+.input-cidade-endereco:focus,
+.input-bairro-endereco:focus,
+.input-complemento:focus,
+.input-cep:focus {
+  border-color: rgb(255, 255, 255, 0.8); /* Borda mais clara no foco */
+}
+
+/* Estilo para inputs desabilitados */
+.input-endereco:disabled,
+.input-numero-casa:disabled,
+.input-uf-endereco:disabled,
+.input-cidade-endereco:disabled,
+.input-bairro-endereco:disabled,
+.input-complemento:disabled,
+.input-cep:disabled {
+  background-color: rgb(50, 52, 15, 0.7); /* Verde mais escuro e opaco */
+  color: #aaa;
+  cursor: not-allowed;
+}
+
+/* Containers de largura flexível para os inputs */
+.endereco-casa {
+  width: 75%;
+}
+.numero-casa {
+  width: 25%;
+}
+.uf-endereco {
+  width: 20%;
+}
+.cidade-endereco {
+  width: 40%;
+}
+.bairro-endereco {
+  width: 40%;
+}
+.complemento-casa {
+  width: 70%;
+}
+.cep-casa {
+  width: 30%;
+}
+
+/* Footer do Dialog com o botão Salvar */
+.parte-salvar-endereco {
+  display: flex;
+  justify-content: flex-end; /* Alinha botão à direita */
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-top: 1px solid rgb(255, 255, 255, 0.2);
+}
+
+/* Botão Salvar (estilo baseado no .botao-salvar-edicao) */
+.botao-salvar-endereco {
+  height: 40px;
+  width: auto; /* Largura automática baseada no texto */
+  padding: 0 30px;
+  border: solid 2px #fff;
+  font-size: 20px;
+  cursor: pointer;
+  background-color: rgb(15, 15, 10, 0.8); /* Cor verde/oliva do tema */
+  font-family: "fonte-titulos";
+  font-weight: bolder;
+  color: #fff;
+  transition: 1s;
+}
+
+.botao-salvar-endereco:hover {
+  letter-spacing: 1px;
+  background-color: rgb(39, 41, 10);
+}
+
+.botao-salvar-endereco:active {
+  background-color: #8f8a40;
+  transition: 0.001s;
+}
+
+
+ .editar-imagem{
         display: flex;
         flex-direction: column;
-        height: 95%;
-        width: 95%;
-        background-color: darkcyan;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        height: 90%;
+        width: 40%;
     }
-        .parte-fechar-dialog{
-            display: flex;
-            justify-content: end;
-            align-items: center;
-            padding-right: 10px;
-            height: 10%;
-            width: 100%;
-            background-color: whitesmoke;
-        }
-
-        .parte-pegar-endereco{
-            display: flex;
-            flex-direction: column;
-            height: 90%;
-            width: 100%;
-            background-color: transparent;
-        }
-            .buscar-cep{
+    .parte-foto {
+        margin-top: 15px;
+        height: 110px;
+        width: 110px;
+        border-radius: 50%;
+        background-color: whitesmoke;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        margin-bottom: 10px;
+                        }
+        .parte-foto:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.6); }
+            
+   .input-arquivo-perfil{
+                margin-top: 15px;
+                margin-bottom: 210px;
+                opacity: 70%;
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                gap: 10px;
-                height: 15%;
-                width: 100%;
+                height: 35px;
+                width: 280px;
+                border: none;
                 background-color: transparent;
+                cursor: pointer;
+                font-size: 20px;
+                font-family: "fonte-titulos";
+                color: rgb(255, 255, 255, 0.7);
+                transition: 1s;
+                border-style: solid;
+                border-color: white;
+                border-width: 2px;
+                background-color: var(--Fundo);
             }
-                .input-buscar-cep{
-                    font-size: 10px;
-                    height: 35px;
-                    width: 200px;
-                    padding-left: 10px;
-                }
-                .botao-pesquisar-cep{
-                    height: 35px;
-                    width: 35px;
-                }
 
-            .dados-endereco{
-                display: flex;
-                flex-direction: column;
-                height: 85%;
-                width: 100%;
-                background-color: transparent;
-            }
-                .dados-endereco-usuario{
-                    display: flex;
-                    height: 25%;
-                    width: 100%;
-                    background-color: transparent;
-                }
-                    .endereco-casa{
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        height: 100%;
-                        width: 75%;
-                        background-color: transparent;
-                    }
-                        .input-endereco{
-                            height: 40px;
-                            width: 360px;
-                            padding-left: 5px;
-                            border: solid 1px #fff;
-                            font-size: 15px;
-                        }
-                        
-                    .numero-casa{
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        height: 100%;
-                        width: 25%;
-                        background-color: transparent;
-                    }
-                        .input-numero-casa{
-                            height: 40px;
-                            width: 100px;
-                            padding-left: 5px;
-                            border: solid 1px #fff;
-                            font-size: 15px;
-                        }
 
-                    .uf-endereco{
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        height: 100%;
-                        width: 20%;
-                        background-color: transparent;
-                    }
-                        .input-uf-endereco{
-                            height: 40px;
-                            width: 70px;
-                            border: solid 1px #fff;
-                            font-size: 15px;
-                            padding-left: 5px;
-                        }
-                    .cidade-endereco{
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        height: 100%;
-                        width: 40%;
-                        background-color: transparent;
-                    }
-                        .input-cidade-endereco{
-                            height: 40px;
-                            width: 200px;
-                            border: solid 1px #fff;
-                            font-size: 15px;
-                            padding-left: 5px;
-                        }
-                    .bairro-endereco{
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        height: 100%;
-                        width: 40%;
-                        background-color: transparent;
-                    }
-                        .input-bairro-endereco{
-                            height: 40px;
-                            width: 200px;
-                            border: solid 1px #fff;
-                            font-size: 15px;
-                            padding-left: 5px;
-                        }
+h1{
 
-                    .complemento-casa{
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        height: 100%;
-                        width: 75%;
-                        background-color: transparent;
-                    }
-                        .input-complemento{
-                            height: 40px;
-                            width: 360px;
-                            border: solid 1px #fff;
-                            font-size: 15px;
-                            padding-left: 5px;
-                        }
-
-                    .cep-casa{
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        height: 100%;
-                        width: 25%;
-                        background-color: transparent;
-                    }
-                        .input-cep{
-                            height: 40px;
-                            width: 100px;
-                            border: solid 1px #fff;
-                            font-size: 15px;
-                            padding-left: 5px;
-                        }
+    font-family: "fonte-titulo";
+    color: white;
+}
