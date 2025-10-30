@@ -26,33 +26,51 @@ function MenuSecHistoria() {
             <label htmlFor="" className="label-menus-superior">ELEMENTO DE INSPIRAÇÃO I: </label>
             <input 
               type="text" 
+              list='inspiracaoum'
               className="inputs-menus-superior" 
               placeholder='ex.: abandonado(a) pela família'
               value={enredoHistoria}
               onChange={(e) => setEnredoHistoria(e.target.value)}
             />
+            <datalist id='inspiracaoum'>
+              <option value="Perdeu o melhor amigo"></option>
+              <option value="Perdeu os pais"></option>
+              <option value="Nasceu prematuro"></option>
+            </datalist>
           </div>
 
           <div className="parte-menus-superior">
             <label htmlFor="" className="label-menus-superior">ELEMENTO DE INSPIRAÇÃO II: </label>
             <input 
               type="text" 
+              list='inspiracaodois'
               className="inputs-menus-superior" 
               placeholder='ex.: viveu isolado da sociedade'
               value={enredoHistoria}
               onChange={(e) => setEnredoHistoria(e.target.value)}
             />
+            <datalist id='inspiracaodois'>
+              <option value="Foi abandonado(a)"></option>
+              <option value="Foi condenado(a)"></option>
+              <option value="Foi excluído(a)"></option>
+            </datalist>
           </div>
 
           <div className="parte-menus-superior">
             <label htmlFor="" className="label-menus-superior">ESCOLHA O TIPO DE ENREDO: </label>
             <input 
               type="text" 
+              list='enredos'
               className="inputs-menus-superior" 
               placeholder='ex.: triste'
               value={enredoHistoria}
               onChange={(e) => setEnredoHistoria(e.target.value)}
             />
+            <datalist id='enredos'>
+              <option value="Triste"></option>
+              <option value="Alegre"></option>
+              <option value="Sombrio"></option>
+            </datalist>
           </div>
 
           <div className="parte-gerar-historia">
