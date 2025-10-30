@@ -31,6 +31,55 @@
     border-style: solid;
     background-color: rgba(51, 37, 31, 0.8);
 }
+  .container-top-menuSec{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    background-color: transparent;
+  }
+    .parte-menus-superior{
+      display: flex;
+      justify-content: start;
+      align-items: center;
+      padding: 10px;
+      gap: 10px;
+      height: 20%;
+      width: 100%;
+      background-color: transparent;
+    }
+    .parte-gerar-historia{
+      display: flex;
+      justify-content: start;
+      align-items: center;
+      padding: 10px;
+      height: 20%;
+      width: 100%;
+      background-color: transparent;
+    }
+      .label-menus-superior{
+        font-size: 15px;
+      }
+      .inputs-menus-superior{
+        border: solid 1px #fff;
+        padding-left: 5px;
+        height: 30px;
+        width: 300px;
+        font-size: 15px;
+      }
+      .botao-gerar-historia{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 14px;
+        color: #fff;
+        height: 25px;
+        width: 150px;
+        border: solid 1px #fff;
+        cursor: pointer;
+      }
 
 .lbl {
     margin-top: 2.5%;
@@ -49,4 +98,34 @@
     background-color: rgba(51, 37, 31, 0.8);
     border-width: 2px;
     border-style: solid;
+    gap: 10px;
 }
+  .container-bottom{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    background-color: transparent;
+    gap: 10px;
+  }
+    .campo-historia-personagem{
+      min-height: 80%;
+      min-width: 90%;
+      max-height: 80%;
+      max-width: 90%;
+      min-height: 80%;
+      min-width: 90%;
+      background-color: whitesmoke;
+      padding: 5px;
+    }
+    
+    .botao-salvar-historia-personagem{
+      height: 50px;
+      width: 250px;
+      cursor: pointer;
+      color: #fff;
+      border: solid 2px #fff;
+      font-family: --Texto;
+    }

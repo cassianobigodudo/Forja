@@ -79,6 +79,9 @@ function PaginaCustomizaçao() {
                              <button className={btnAtivo === 'CABEÇA' ? 'btn-corpo-follow-ativado' : 'btn-corpo-follow'} onClick={() => handleButtonClick('CABEÇA')}>
                                  <label className='botaoLbl'>CABEÇA</label> <img className='img-btn-icon' src="./icones/Cabeça.svg" alt="" />
                              </button>
+                             <button className={btnAtivo === 'HISTÓRIA' ? 'btn-corpo-follow-ativado' : 'btn-corpo-follow'} onClick={() => handleButtonClick('HISTÓRIA')}>
+                                 <label className='botaoLbl'>HISTÓRIA</label> <img className='img-btn-icon' src="./icones/Cabeça.svg" alt="" />
+                             </button>
                          </div>
                          <div className="menu-primario-custom-bottom">
                              <button onClick={() => setZoomAtivo(true)} className='btn-zoom'></button>
