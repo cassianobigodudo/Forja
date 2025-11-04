@@ -1,10 +1,15 @@
 import React, { useState } from 'react'
 import "./MenuSecHistoria.css"
 
-function MenuSecHistoria() {
-  const [nomePersonagem, setNomePersonagem] = useState();
-  const [enredoHistoria, setEnredoHistoria] = useState();
-  const [historiaGerada, setHistoriaGerada] = useState()
+function MenuSecHistoria({
+  nomePersonagem, setNomePersonagem,
+  inspiracaoUm, setInspiracaoUm,
+  inspiracaoDois, setInspiracaoDois,
+  enredoHistoria, setEnredoHistoria,
+  historiaGerada, setHistoriaGerada,
+  loading, error,
+  onGerarHistoria // Esta é a função handleGerarHistoria do Pai
+}) {
 
   return (
     <div className="container-menuSec-corpo">
@@ -19,6 +24,7 @@ function MenuSecHistoria() {
               placeholder='ex.: Jaime'
               value={nomePersonagem}
               onChange={(e) => setNomePersonagem(e.target.value)}
+              disabled={loading}
             />
           </div>
 
@@ -29,13 +35,21 @@ function MenuSecHistoria() {
               list='inspiracaoum'
               className="inputs-menus-superior" 
               placeholder='ex.: abandonado(a) pela família'
-              value={enredoHistoria}
-              onChange={(e) => setEnredoHistoria(e.target.value)}
+              value={inspiracaoUm}
+              onChange={(e) => setInspiracaoUm(e.target.value)}
+              disabled={loading}
             />
             <datalist id='inspiracaoum'>
-              <option value="Perdeu o melhor amigo"></option>
-              <option value="Perdeu os pais"></option>
-              <option value="Nasceu prematuro"></option>
+              <option value="Cresceu nas ruas sozinho(a)"></option>
+              <option value="Foi criado(a) por animais na floresta"></option>
+              <option value="Vem de uma linhagem nobre caída"></option>
+              <option value="Era um(a) escravo(a) que fugiu"></option>
+              <option value="Foi treinado(a) em um monastério isolado"></option>
+              <option value="Sofreu um acidente que mudou sua vida"></option>
+              <option value="Tem um(a) irmão(ã) gêmeo(a) desaparecido(a)"></option>
+              <option value="Descende de um herói lendário"></option>
+              <option value="Fez um pacto com uma entidade misteriosa"></option>
+              <option value="Sobreviveu a uma praga mortal"></option>
             </datalist>
           </div>
 
@@ -46,13 +60,21 @@ function MenuSecHistoria() {
               list='inspiracaodois'
               className="inputs-menus-superior" 
               placeholder='ex.: viveu isolado da sociedade'
-              value={enredoHistoria}
-              onChange={(e) => setEnredoHistoria(e.target.value)}
+              value={inspiracaoDois}
+              onChange={(e) => setInspiracaoDois(e.target.value)}
+              disabled={loading}
             />
             <datalist id='inspiracaodois'>
-              <option value="Foi abandonado(a)"></option>
-              <option value="Foi condenado(a)"></option>
-              <option value="Foi excluído(a)"></option>
+              <option value="Busca vingança por um ente querido"></option>
+              <option value="Acordou sem nenhuma memória"></option>
+              <option value="Carrega uma maldição misteriosa"></option>
+              <option value="É o(a) último(a) de sua linhagem"></option>
+              <option value="Está fugindo de um antigo mestre"></option>
+              <option value="Precisa pagar uma dívida de vida"></option>
+              <option value="Busca um artefato lendário perdido"></option>
+              <option value="Testemunhou um crime terrível"></option>
+              <option value="Nasceu com um poder que teme"></option>
+              <option value="Viu sua vila natal ser destruída"></option>
             </datalist>
           </div>
 
@@ -65,16 +87,27 @@ function MenuSecHistoria() {
               placeholder='ex.: triste'
               value={enredoHistoria}
               onChange={(e) => setEnredoHistoria(e.target.value)}
+              disabled={loading}
             />
             <datalist id='enredos'>
-              <option value="Triste"></option>
-              <option value="Alegre"></option>
-              <option value="Sombrio"></option>
+              <option value="Heróico e Otimista"></option>
+              <option value="Misterioso e Investigativo"></option>
+              <option value="Cômico e Leve"></option>
+              <option value="Melancólico e Reflexivo"></option>
+              <option value="Vingança e Raiva"></option>
+              <option value="Esperançoso e Inspirador"></option>
+              <option value="Ação e Aventura"></option>
+              <option value="Pesado e Intenso"></option>
+              <option value="Triste e Sombrio"></option>
+              <option value="Épico e Grandioso"></option>
             </datalist>
           </div>
 
           <div className="parte-gerar-historia">
-            <button className="botao-gerar-historia" onClick={() => alert("Botão para gerar uma história para o personagem")}>GERAR HISTÓRIA</button>
+            <button 
+              className="botao-gerar-historia" 
+              onClick={onGerarHistoria}>{loading ? "Gerando..." : "GERAR HISTÓRIA"}</button>
+              {/* disabled={loading} */}
           </div>
 
         </div>
@@ -83,11 +116,21 @@ function MenuSecHistoria() {
       <div className="bottom">
 
         <div className="container-bottom">
+
+          {/* 5. Exibição de Erro */}
+          {error && (
+            <div style={{ color: 'red', marginBottom: '10px', textAlign: 'center', fontSize: '14px' }}>
+              Erro: {error}
+            </div>
+          )}
           <textarea 
-            name="" 
-            id="" 
+            name="historia" 
+            id="historiaResultado" 
             className='campo-historia-personagem'
-            // value={nomePersonagem}
+            placeholder={loading ? "Aguarde, a IA está escrevendo..." : "A história gerada pela IA aparecerá aqui..."}
+            value={historiaGerada}
+            onChange={(e) => setHistoriaGerada(e.target.value)}
+            readOnly={loading}
           ></textarea>
 
           <button className="botao-salvar-historia-personagem" onClick={() => alert("Botão para salvar a história gerada")}>SALVAR HISTÓRIA</button>

@@ -11,11 +11,11 @@ const mainRoutes = require('./src/routes');
 
 const app = express();
 // 3. Usa a porta definida no .env ou 3000 como padrão
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 // 4. Configura os middlewares
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 
 // 5. Linha Mágica: Diz ao Express para usar nosso gerenciador de rotas
 //    para qualquer requisição que chegue no prefixo /api
