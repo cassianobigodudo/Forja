@@ -110,9 +110,27 @@
 
 .item{
     display: flex;
-    position: center;
-    padding: 19px;
+    gap: 24px;
     font-family: 'fonte-subtitulo';
+}
+
+.item-imagem-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.item-detalhes {
+    font-family: 'fonte-subtitulos';
+}
+
+.detalhe-item {
+    margin: 8px 0;
+    font-size: 16px;
+}
+
+.detalhe-item strong {
+    color: #f0e6d2;
 }
 
 .thumb{
@@ -135,19 +153,8 @@
     display: flex;
     gap: 14px;
     margin-top: 10px;
+    background-image: ("/fundo/fundo-voltar.png");
 }
-
-/* .metodo-ico{ 
-    background-size: contain;
-    background-repeat: no-repeat;
-    background: var(--Fundo) url("/fundo/fundo-voltar.png") center/103% no-repeat;
-    font-family: "fonte-subtitulos"; cursor: pointer;
-    margin: 0 13px 13px; font-family: "fonte-subtitulos"; font-size: 22px; 
-    border: 1px solid rgba(0, 0, 0, 0.25); color: var(--Texto);
-    align-items: center;
-    display: flex; flex-direction: column; align-items: center; gap: 8px;
-    width: 168px; height: 118px; padding-top: 8px
-} */
 
 .metodo-pix{ 
     width: 118px;
