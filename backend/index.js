@@ -12,36 +12,60 @@ const mainRoutes = require('./src/routes');
 const app = express();
 // 3. Usa a porta definida no .env ou 3000 como padrão
 const PORT = process.env.PORT || 3001;
+const HOST = '0.0.0.0'; // Necessário para o Render
+
+// 1. Defina QUEM pode acessar sua API
+const whitelist = [
+  'http://localhost:3000', // Seu frontend em desenvolvimento
+  // 'https://SEU-FRONTEND-NO-VERCEL-OU-NETLIFY.com' // ADICIONE QUANDO FOR HOSPEDAR
+];
 
 // 4. Configura os middlewares
 const corsOptions = {
-  origin: 'http://localhost:3000',
-  methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}
+  origin: function (origin, callback) {
+    if (!origin || whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Não permitido pela política de CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+};
+app.options('*', cors(corsOptions));
 app.use(cors(corsOptions));
 app.use(express.json({ limit: '10mb' }));
 
-// 🔥 IMPORTANTE: Importar as rotas
-const personagemRoutes = require('./src/routes/personagemRoutes');
-
-// 🔥 IMPORTANTE: Registrar as rotas
-app.use('/api/personagem', personagemRoutes);
-
-// Rota de teste
-app.get('/', (req, res) => {
-  res.send('Servidor MVC rodando!');
-});
-
-
-// 5. Linha Mágica: Diz ao Express para usar nosso gerenciador de rotas
-//    para qualquer requisição que chegue no prefixo /api
+// 5. Registra APENAS o gerenciador central de rotas
 app.use('/api', mainRoutes);
 
+// Rota de teste para ver se o servidor está vivo
+app.get('/', (req, res) => {
+  res.send('Servidor Forja está VIVO!');
+});
+
 // 6. Inicia o servidor
-app.listen(PORT, () => {
+app.listen(PORT, HOST, () => {
     console.log(`Servidor MVC rodando na porta ${PORT} =)`);
 });
+
+// // 🔥 IMPORTANTE: Registrar as rotas
+// app.use('/api/personagem', personagemRoutes);
+
+// // Rota de teste
+// app.get('/', (req, res) => {
+//   res.send('Servidor MVC rodando!');
+// });
+
+
+// // 5. Linha Mágica: Diz ao Express para usar nosso gerenciador de rotas
+// //    para qualquer requisição que chegue no prefixo /api
+// app.use('/api', mainRoutes);
+
+// // 6. Inicia o servidor
+// app.listen(PORT, () => {
+//     console.log(`Servidor MVC rodando na porta ${PORT} =)`);
+// });
 
 // backend/index.js
 

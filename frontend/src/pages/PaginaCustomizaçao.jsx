@@ -94,7 +94,7 @@ function PaginaCustomizaçao() {
           }
 
           // B. Chamar sua API do Backend
-          const API_URL = 'http://forja-qvex.onrender.com/api/personagem/gerar-historia';
+          const API_URL = 'https://forja-qvex.onrender.com/api/personagem/gerar-historia';
           const response = await fetch(API_URL, {
             method: 'POST',
             headers: {
