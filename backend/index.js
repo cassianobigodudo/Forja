@@ -37,7 +37,7 @@ const corsOptions = {
 app.options('*', cors(corsOptions)); 
 
 // 3. Aplica a configuração de CORS a todas as outras rotas
-// app.use(cors(corsOptions));
+app.use(cors(corsOptions));
 
 // --------------------------------------------------
 
