@@ -1,0 +1,15 @@
+.container-caixa-cadastrologin{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 400px;
+    width: 550px;
+    border: none;
+    background-color: var(--FundoAlternativo);
+    transition: all 0.5s ease-in-out;
+    opacity: 0; 
+    animation-name: fadeIn;
+    animation-duration: 0.5s;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
+}

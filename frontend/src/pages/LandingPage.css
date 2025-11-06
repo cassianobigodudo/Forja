@@ -1,3 +1,12 @@
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .container-landing-page-cima{ 
     height: 100vh;
     width: 100vw;
@@ -17,6 +26,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     background-position: 50% 9%;
     background-size: 350px;
     background-repeat: no-repeat;
@@ -29,34 +39,56 @@
 }
 
 .logo-forja{
-    width: 350px;
+    width: 600px;
     height: auto;
-    margin-top: 100px;
+    /* margin-top: 100px; */
     transition: all 0.5s ease-in-out;
-    margin-right: 0;
+    /* margin-right: 0; */
 }
 
 .logo-forja.deslocado {
   /* Exemplo: você pode diminuir o tamanho ou mover */
   /* width: 200px; */
   /* Você pode usar transform ou margin. Margin é mais simples */
+  animation-name: fadeIn; 
+  animation-duration: 0.5s;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
   margin-right: 50px; 
+  transition: all 0.5s ease-in-out ;
   /* transform: translateX(-50px); */
 }
-.btn-entrar{
+.btn-entrar {
     color: white;
     font-family: 'fonte-logo';
-    font-size: 30px;
+    font-size: 50px;
+    background-image: url(/fundo/fundo-botaoplus.svg);
     background-size: contain;
     background-repeat: no-repeat;
-    width: 15%;
-    height: 15%;
+    background-position: center; /* Adicionado para centralizar o fundo */
+
+    /* --- A MÁGICA ESTÁ AQUI --- */
+    /* 1. Use display: flex para controlar o interior do botão */
+    display: flex;
+    /* 2. Centraliza o texto verticalmente */
+    align-items: center;
+    /* 3. Centraliza o texto horizontalmente */
+    justify-content: center;
+    /* ----------------------------- */
+
+    /* --- MELHORIA DE TAMANHO --- */
+    /* Remova o width e height percentuais */
+    /* width: 15%;  (Muito problemático) */
+    /* height: 15%; (Causa do seu problema) */
+
+    /* Deixe o padding criar o tamanho do botão */
+    padding: 20px 100px; /* Ajuste (cima/baixo) (lados) como precisar */
+    
+    /* (Seu código restante) */
     margin-top: 50px;
     border: none;
     cursor: pointer;
-    background-image: url(/fundo/fundo-botaoplus.svg);
     transition: all 0.5s ease-in-out;
-    
 }
 
 

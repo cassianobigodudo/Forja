@@ -2,6 +2,7 @@ import React, {useRef, useState} from 'react'
 import "./LandingPage.css"
 import Navbar from '../components/Navbar'
 import BoxLoginCadastro from '../components/BoxLoginCadastro'
+import CaixaCadastroLogin from '../components/CaixaCadastroLogin'
 function LandingPage() {
   const [isLoginVisible, setIsLoginVisible] = useState(false)
 
@@ -23,7 +24,7 @@ function LandingPage() {
         <div className={`container-centro ${isLoginVisible ? 'login-ativo' : ''}`}>
           <img src="./Forja Logo.png" className={`logo-forja ${isLoginVisible ? 'deslocado' : ''}`} />
           {!isLoginVisible && <button className='btn-entrar' onClick={() => (setIsLoginVisible(true))} >Entrar</button>}
-          {isLoginVisible && <BoxLoginCadastro/>}
+          {isLoginVisible && <CaixaCadastroLogin/>}
         </div>
 
         <div className="container-saberMais" onClick={SaberMais}>
