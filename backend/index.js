@@ -16,8 +16,7 @@ const HOST = '0.0.0.0'; // Necessário para o Render
 
 // 1. Defina QUEM pode acessar sua API
 const whitelist = [
-  'http://localhost:3000', // Seu frontend em desenvolvimento
-  // 'https://SEU-FRONTEND-NO-VERCEL-OU-NETLIFY.com' // ADICIONE QUANDO FOR HOSPEDAR
+  'http://localhost:3000'
 ];
 
 const corsOptions = {
@@ -38,7 +37,7 @@ const corsOptions = {
 app.options('*', cors(corsOptions)); 
 
 // 3. Aplica a configuração de CORS a todas as outras rotas
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 
 // --------------------------------------------------
 
