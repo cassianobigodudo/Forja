@@ -1,15 +1,95 @@
-.container-caixa-cadastrologin{
+ .container-avo{
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 400px;
-    width: 550px;
-    border: none;
-    background-color: var(--FundoAlternativo);
-    transition: all 0.5s ease-in-out;
-    opacity: 0; 
-    animation-name: fadeIn;
-    animation-duration: 0.5s;
-    animation-timing-function: ease-in-out;
-    animation-fill-mode: forwards;
-}
+    flex-direction: column;
+    height: 100%;
+    /* background-color: red; */
+    width: 30%;
+
+ }
+ 
+ .container-caixa-cadastrologin{
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        height: 51.2%;
+        width: 100%;
+        border: none;
+        background-image: url(/fundo/background-login.png);
+        background-size: cover;
+        background-position: center;
+        transition: all 0.5s ease-in-out;
+        opacity: 0; 
+        animation-name: fadeIn;
+        animation-duration: 0.5s;
+        animation-timing-function: ease-in-out;
+        animation-fill-mode: forwards;
+
+    }
+
+        .container-entrarcadastrar{
+            /* background-color: blue; */
+            display: flex;
+            align-items: center;
+            margin-top: 16px;
+            height: 22%;
+            width: 95%;
+        }
+
+            .lbl-selecionada{
+                color: white;
+                font-size: 40px;
+                font-family: 'fonte-titulos';
+                cursor: pointer;
+                transition: all 0.3s ease-in-out;
+                padding-left: 30px;
+            }
+            .lbl-nao-selecionada{
+                color: gray;
+                font-size: 30px;
+                padding-top: 10px;
+                font-family: 'fonte-titulos';
+                cursor: pointer;
+                transition: all 0.3s ease-in-out;
+                padding-left: 30px;
+            }
+
+        .container-inputs-cadastrologin{
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            /* background-color: yellow; */
+            height: 68%;
+            width: 95%;
+        }
+
+            .lbl-inputs{
+                color: white;
+                font-size: 30px;
+                font-family: 'fonte-titulos';
+                align-self: flex-start;
+                margin-left: 30px;
+                margin-top: 10px;
+
+            }
+
+            .input-cadastrologin{
+                height: 15%;
+                width: 90%;
+                font-family: 'fonte-titulos';
+                color: white;
+                background-color: var(--Fundo);
+                border-radius: 8px;
+                border: solid 2px gray;
+                margin-top: 10px;
+                padding-left: 10px;
+                font-size: 20px;
+            }
+/* 
+    .btn-confirmar{
+
+    }
+
+    .btn-confirmar:hover {
+      } */
