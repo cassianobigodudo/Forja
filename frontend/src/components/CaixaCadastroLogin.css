@@ -1,3 +1,8 @@
+@keyframes pizzaGuarana{
+    0% {opacity: 0%;}
+    100% {opacity: 100%;}
+}
+
  .container-avo{
     display: flex;
     justify-content: center;
@@ -6,20 +11,23 @@
     height: 100%;
     /* background-color: red; */
     width: 30%;
-
+    gap: 30px;
+    animation: pizzaGuarana 1s ease-in;
  }
  
- .container-caixa-cadastrologin{
+ .container-caixa-login{
         display: flex;
         align-items: center;
         flex-direction: column;
-        height: 51.2%;
-        width: 100%;
+        /* height: 51.2%;
+        width: 100%; */
+        height: 326px;
+        aspect-ratio: 2323 / 1316;
         border: none;
         background-image: url(/fundo/background-login.png);
         background-size: cover;
         background-position: center;
-        transition: all 0.5s ease-in-out;
+        /* transition: all 0.5s ease-in-out; */
         opacity: 0; 
         animation-name: fadeIn;
         animation-duration: 0.5s;
@@ -28,12 +36,33 @@
 
     }
 
+.container-caixa-cadastro{
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        /* height: 70%;
+        width: 100%; */
+        height: 475px;
+        aspect-ratio: 2323 / 1906;
+        border: none;
+        background-image: url(/fundo/background-cadastro.png);
+        background-size: cover;
+        background-position: center;
+        /* transition: all 0.5s ease-in-out; */
+        opacity: 0; 
+        animation-name: fadeIn;
+        animation-duration: 0.5s;
+        animation-timing-function: ease-in-out;
+        animation-fill-mode: forwards;
+}
+
         .container-entrarcadastrar{
             /* background-color: blue; */
             display: flex;
             align-items: center;
-            margin-top: 16px;
-            height: 22%;
+            justify-content: center;
+            margin-top: 30px;
+            height: 18%;
             width: 95%;
         }
 
@@ -43,16 +72,22 @@
                 font-family: 'fonte-titulos';
                 cursor: pointer;
                 transition: all 0.3s ease-in-out;
-                padding-left: 30px;
+                /* padding-left: 30px; */
             }
             .lbl-nao-selecionada{
                 color: gray;
                 font-size: 30px;
-                padding-top: 10px;
+                padding-top: 5px;
                 font-family: 'fonte-titulos';
                 cursor: pointer;
                 transition: all 0.3s ease-in-out;
                 padding-left: 30px;
+            }
+
+            .lbl-nao-selecionada:hover{
+                color: rgb(187, 187, 187);
+                font-size: 35px;
+                transition: all 0.3s ease-in-out;
             }
 
         .container-inputs-cadastrologin{
@@ -66,12 +101,11 @@
 
             .lbl-inputs{
                 color: white;
-                font-size: 30px;
+                font-size: 28px;
                 font-family: 'fonte-titulos';
                 align-self: flex-start;
                 margin-left: 30px;
                 margin-top: 10px;
-
             }
 
             .input-cadastrologin{
@@ -85,11 +119,33 @@
                 margin-top: 10px;
                 padding-left: 10px;
                 font-size: 20px;
+                user-select: none;
             }
-/* 
+input:focus-visible{
+    outline: none;
+}
     .btn-confirmar{
-
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        aspect-ratio: 981 / 344; 
+        width: 230px;
+        background-size: cover;
+        background-position: center;
+        border: none;
+        cursor: pointer;
+        color: white;
+        background-image: url(/fundo/fundo-botao-confirmar.png);
+        font-family: var(--fonte-titulos);
+        font-size: 28px;
+        letter-spacing: 1.5px;
+        margin-bottom: -45px;
+        transition: all 0.3s ease-in-out;
     }
 
-    .btn-confirmar:hover {
-      } */
+    .btn-confirmar:hover{
+        transform: scale(1.05);
+        transition: all 0.3s ease-in-out;
+    }
+
+    
