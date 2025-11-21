@@ -22,7 +22,7 @@ const cadastrar = async (req, res) => {
         }
 
         console.log("5. Usuário não existe. Tentando criar...");
-        const novoUsuario = await UsuarioModel.criar(nome, email, senha);
+        const novoUsuario = await UsuarioModel.criarUsuario(nome, email, senha);
         
         console.log("6. Usuário criado com sucesso:", novoUsuario);
         res.status(201).json(novoUsuario);
