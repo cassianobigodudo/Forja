@@ -1,66 +1,75 @@
 // seu-projeto/src/pages/PaginaPagamento.jsx - VERSÃO COMPLETA E ATUALIZADA
 
 import React, { useState, useEffect } from 'react';
+import { useGlobalContext } from '../context/GlobalContext';
 import "./PaginaPagamento.css";
 import Navbar from '../components/Navbar';
 import axios from 'axios';
-import { useGlobalContext } from '../context/GlobalContext'; // Para pegar o sessionId
+const { usuarioId, isLoadingAuth } = useGlobalContext();
 
 function PaginaPagamento() {
-    // 1. Pegar o sessionId do contexto global.
-    const { sessionId } = useGlobalContext();
+    // 1. MUDANÇA: Pegar o usuario_id do localStorage em vez do con
 
     // 2. Estados para gerenciar a página.
-    const [cartItems, setCartItems] = useState([]); // Armazena os itens do carrinho vindos da API
-    const [isLoading, setIsLoading] = useState(true); // Controla o feedback de "Carregando..." inicial
-    const [isProcessing, setIsProcessing] = useState(false); // Controla o feedback do botão "Prosseguir"
-    const [statusMessage, setStatusMessage] = useState(''); // Mensagens para o usuário (sucesso, erro, etc.)
+    const [cartItems, setCartItems] = useState([]); 
+    const [isLoading, setIsLoading] = useState(true); 
+    const [isProcessing, setIsProcessing] = useState(false); 
+    const [statusMessage, setStatusMessage] = useState(''); 
 
-    // 3. useEffect para buscar os itens do carrinho assim que a página carregar.
+    // 3. useEffect para buscar os itens do carrinho.
     useEffect(() => {
-        // Só executa se o sessionId já estiver disponível.
-        if (sessionId) {
+        if (isLoadingAuth) return;
+        if (usuarioId) {
             const fetchCartItems = async () => {
                 try {
-                    const response = await axios.get(`https://forja-qvex.onrender.com/api/carrinho/${sessionId}`);
-                    setCartItems(response.data); // Salva os itens do carrinho no estado
+                    const response = await axios.get(`https://forja-qvex.onrender.com/api/carrinho/${usuarioId}`);
+                    setCartItems(response.data); 
                 } catch (error) {
                     console.error("Erro ao buscar o carrinho:", error);
                     setStatusMessage("Não foi possível carregar seu carrinho. Tente recarregar a página.");
                 } finally {
-                    setIsLoading(false); // Termina o carregamento, mesmo que tenha dado erro
+                    setIsLoading(false); 
                 }
             };
 
             fetchCartItems();
+        } else {
+            // Se não tiver usuario_id, para de carregar e avisa
+            setIsLoading(false);
+            setStatusMessage("Você precisa estar logado para ver o carrinho.");
         }
-    }, [sessionId]); // Depende do sessionId para ser executado.
+    }, [usuarioId, isLoadingAuth]); 
 
     // 4. Função chamada pelo botão "PROSSEGUIR".
     const handleFinalizarCompra = async () => {
+        if (!usuarioId) {
+            alert("Erro de autenticação. Faça login novamente.");
+            return;
+        }
+
         setIsProcessing(true);
         setStatusMessage('Finalizando sua compra e enviando para produção...');
 
         try {
+            // MUDANÇA: Envia usuario_id no corpo da requisição
             const response = await axios.post('https://forja-qvex.onrender.com/api/pedidos', {
-                session_id: sessionId
+                usuario_id: usuarioId 
             });
             
             const { sucessos, falhas } = response.data;
             setStatusMessage(`Compra finalizada! ${sucessos?.length || 0} item(ns) enviado(s) com sucesso.`);
             
-            // Limpa o carrinho na tela após o sucesso, pois ele já foi processado.
+            // Limpa o carrinho na tela
             setCartItems([]); 
 
         } catch (error) {
             console.error("Erro ao finalizar a compra:", error);
             setStatusMessage('Ocorreu um erro no checkout. Por favor, tente novamente.');
         } finally {
-            setIsProcessing(false); // Libera o botão
+            setIsProcessing(false); 
         }
     };
 
-    // Feedback visual enquanto busca os dados do carrinho pela primeira vez.
     if (isLoading) {
         return (
             <div className="container-pagina">

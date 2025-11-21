@@ -7,27 +7,42 @@ export const GlobalContext = createContext();
 export const GlobalContextProvider = ({ children }) => {
   const [dadosDoPersonagem, setDadosDoPersonagem] = useState(null);
   const [imagemPersonagem, setImagemPersonagem] = useState('');
-  const [sessionId, setSessionId] = useState(null);
+  const [usuarioId, setUsuarioId] = useState(null);
+  const [usuarioNome, setUsuarioNome] = useState(null);
+  const [isLoadingAuth, setIsLoadingAuth] = useState(true);
+
   useEffect(() => {
-    // Acessamos o localStorage para ver se já existe um ID.
-    let currentSessionId = localStorage.getItem('sessionId');
-    
-    // Se não existir, criamos um novo.
-    if (!currentSessionId) {
-      currentSessionId = `sess_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`;
-      localStorage.setItem('sessionId', currentSessionId);
-    }
-    
-    // Salvamos o ID (existente ou novo) no nosso estado do React.
-    setSessionId(currentSessionId);
+        // 1. Ao carregar o site, verifica o HD (LocalStorage)
+        const idSalvo = localStorage.getItem('usuario_id');
+        const nomeSalvo = localStorage.getItem('usuario_nome');
 
-  }, []);
+        if (idSalvo) {
+            setUsuarioId(idSalvo);
+            setUsuarioNome(nomeSalvo);
+        }
+        
+        setIsLoadingAuth(false); // Terminou de verificar
+    }, []);
 
-  // 5. (Opcional, mas recomendado) Evita que o app tente renderizar algo 
-  // antes do sessionId estar pronto, o que poderia causar erros em chamadas de API.
-  if (!sessionId) {
-    return <div>Carregando sessão...</div>;
-  }
+    // 2. Função de Login (Centralizada)
+    const loginUsuario = (dadosUsuario) => {
+        // Atualiza a memória RAM (React reage na hora)
+        setUsuarioId(dadosUsuario.id_usuario);
+        setUsuarioNome(dadosUsuario.nome_usuario);
+
+        // Atualiza o HD (Persistência)
+        localStorage.setItem('usuario_id', dadosUsuario.id_usuario);
+        localStorage.setItem('usuario_nome', dadosUsuario.nome_usuario);
+    };
+
+    // 3. Função de Logout (Centralizada)
+    const logoutUsuario = () => {
+        setUsuarioId(null);
+        setUsuarioNome(null);
+        localStorage.removeItem('usuario_id');
+        localStorage.removeItem('usuario_nome');
+        // Opcional: window.location.href = '/'; 
+    };
 
   return (
     <GlobalContext.Provider value={{
@@ -35,7 +50,11 @@ export const GlobalContextProvider = ({ children }) => {
       setDadosDoPersonagem,
       imagemPersonagem,
       setImagemPersonagem,
-      sessionId // 4. Adicionar o sessionId ao objeto de valor para que ele seja compartilhado
+      usuarioId, 
+      usuarioNome, 
+      loginUsuario, 
+      logoutUsuario,
+      isLoadingAuth
     }}>
       {children}
     </GlobalContext.Provider>

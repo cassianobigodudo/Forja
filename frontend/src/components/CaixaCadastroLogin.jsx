@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useGlobalContext } from '../context/GlobalContext';
 import './CaixaCadastroLogin.css'
 import axios from 'axios'
 
@@ -10,6 +11,7 @@ function CaixaCadastroLogin() {
   const [inputSenha, setInputSenha] = useState('')
   const [inputConfirmarSenha, setInputConfirmarSenha] = useState('')
 
+  const { loginUsuario } = useGlobalContext();
   const API_URL = "https://forja-qvex.onrender.com/api"
 
   async function AutenticacaoConta(){
@@ -26,10 +28,7 @@ function CaixaCadastroLogin() {
             senha: inputSenha
           });
 
-          // Se chegou aqui, o login deu certo!
-          // 2. O "Pulo do Gato": Salvar o ID que o backend mandou
-          localStorage.setItem('usuario_id', response.data.id_usuario);
-          localStorage.setItem('usuario_nome', response.data.nome_usuario);
+          loginUsuario(response.data);
 
           alert(`Bem-vindo de volta, ${response.data.nome_usuario}!`);
 
