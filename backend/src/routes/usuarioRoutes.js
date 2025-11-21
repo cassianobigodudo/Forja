@@ -1,11 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
-// 1. Importamos o controller
-const usuarioController = require('../controllers/usuarioController');
+// Rota para CADASTRO (POST /api/usuarios/cadastro)
+router.post('/cadastro', usuarioController.cadastrar);
 
-// 2. Definimos que a rota POST para a raiz ('/') vai chamar a função do controller
-router.post('/', usuarioController.criarUsuario);
+// Rota para LOGIN (POST /api/usuarios/login)
+router.post('/login', usuarioController.login);
 
-// 3. Exportamos o router
 module.exports = router;

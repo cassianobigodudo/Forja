@@ -1,7 +1,6 @@
 import React, {useRef, useState} from 'react'
 import "./LandingPage.css"
 import Navbar from '../components/Navbar'
-import BoxLoginCadastro from '../components/BoxLoginCadastro'
 import CaixaCadastroLogin from '../components/CaixaCadastroLogin'
 function LandingPage() {
   const [isLoginVisible, setIsLoginVisible] = useState(false)
