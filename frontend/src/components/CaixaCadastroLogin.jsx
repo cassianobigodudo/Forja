@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import './CaixaCadastroLogin.css'
+import axios from 'axios'
 
 function CaixaCadastroLogin() {
 
@@ -9,9 +10,55 @@ function CaixaCadastroLogin() {
   const [inputSenha, setInputSenha] = useState('')
   const [inputConfirmarSenha, setInputConfirmarSenha] = useState('')
 
-  async function AutenticacaoConta(){
+  const API_URL = "https://forja-qvex.onrender.com/api"
 
-  }
+  async function AutenticacaoConta(){
+  if (!inputEmail || !inputSenha) {
+        alert("Por favor, preencha email e senha.");
+        return;
+      }
+
+      try {
+        if (isLogin) {
+          // ================= LOGICA DE LOGIN =================
+          const response = await axios.post(`${API_URL}/usuarios/login`, {
+            email: inputEmail,
+            senha: inputSenha
+          });
+
+          // Se chegou aqui, o login deu certo!
+          // 2. O "Pulo do Gato": Salvar o ID que o backend mandou
+          localStorage.setItem('usuario_id', response.data.id_usuario);
+          localStorage.setItem('usuario_nome', response.data.nome_usuario);
+
+          alert(`Bem-vindo de volta, ${response.data.nome_usuario}!`);
+
+        } else {
+          // ================= LOGICA DE CADASTRO =================
+          
+          if (inputSenha !== inputConfirmarSenha) {
+            alert("As senhas não coincidem!");
+            return;
+          }
+
+          const response = await axios.post(`${API_URL}/usuarios/cadastro`, {
+            nome: inputNome,   // Mapeia inputNome -> nome
+            email: inputEmail, // Mapeia inputEmail -> email
+            senha: inputSenha  // Mapeia inputSenha -> senha
+          });
+          
+          alert("Cadastro realizado com sucesso! Agora faça login.");
+          setIsLogin(true); // Muda para a tela de login automaticamente
+        }
+
+      } catch (error) {
+        console.error("Erro na autenticação:", error);
+        // Mostra a mensagem de erro que veio do backend (ex: "Senha incorreta")
+        const mensagemErro = error.response?.data?.message || "Erro ao conectar.";
+        alert(mensagemErro);
+      }
+    }
+  
   
 
   return (
@@ -46,14 +93,14 @@ function CaixaCadastroLogin() {
 
           {!isLogin && <label className='lbl-inputs'>Confirmar Senha</label>}
           {!isLogin && <input className='input-cadastrologin' 
-          type="text" 
+          type="password" 
           placeholder='Confirmar Senha'
           onChange={(event) => setInputConfirmarSenha(event.target.value)}
           value={inputConfirmarSenha} />}
         </div>
       </div>
 
-      <button className='btn-confirmar' onClick={}>CONFIRMAR</button>
+      <button className='btn-confirmar' onClick={AutenticacaoConta}>CONFIRMAR</button>
 
     </div>
   )

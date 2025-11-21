@@ -1,19 +1,35 @@
 const UsuarioModel = require('../models/usuarioModel');
 
 const cadastrar = async (req, res) => {
+    console.log("--- [DEBUG] INICIO DO CADASTRO ---");
+    console.log("1. Dados recebidos:", req.body);
+
     const { nome, email, senha } = req.body;
+
     try {
-        const usuarioExistente = await UsuarioModel.buscarEmail(email)
-        if (usuarioExistente){
-            return res.status(409).json({
-                message: "Esse email já está cadastrado."
-            })
-        }
-        const novoUsuario = await UsuarioModel.criarUsuario(nome, email, senha)
-        res.status(201).json(novoUsuario)
+        console.log("2. Chamando UsuarioModel.buscarPorEmail...");
         
+        // O código provavelmente vai travar AQUI 👇
+        const usuarioExistente = await UsuarioModel.buscarPorEmail(email);
+        
+        console.log("3. Busca retornou:", usuarioExistente);
+
+        if (usuarioExistente) {
+            console.log("4. Usuário já existe. Retornando 409.");
+            return res.status(409).json({ 
+                message: "Este email já está cadastrado no sistema." 
+            });
+        }
+
+        console.log("5. Usuário não existe. Tentando criar...");
+        const novoUsuario = await UsuarioModel.criar(nome, email, senha);
+        
+        console.log("6. Usuário criado com sucesso:", novoUsuario);
+        res.status(201).json(novoUsuario);
+
     } catch (error) {
-        console.error(error);
+        console.error("--- [ERRO] NO CONTROLLER ---");
+        console.error(error); // Isso VAI aparecer no log se der erro
         res.status(500).json({ message: "Erro ao cadastrar usuário." });
     }
 };
