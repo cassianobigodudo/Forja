@@ -10,7 +10,7 @@ const cadastrar = async (req, res) => {
         console.log("2. Chamando UsuarioModel.buscarPorEmail...");
         
         // O código provavelmente vai travar AQUI 👇
-        const usuarioExistente = await UsuarioModel.buscarPorEmail(email);
+        const usuarioExistente = await UsuarioModel.buscarEmail(email);
         
         console.log("3. Busca retornou:", usuarioExistente);
 
