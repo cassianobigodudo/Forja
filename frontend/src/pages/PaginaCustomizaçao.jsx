@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import "./PaginaCustomizaçao.css";
+import html2canvas from 'html2canvas';
 
 import Navbar from '../components/Navbar';
 import MenuSecCabeca from '../components/MenuSecCabeca';
@@ -27,6 +28,17 @@ function PaginaCustomizaçao() {
     
     const [isAdding, setIsAdding] = useState(false);
     const [message, setMessage] = useState('');
+
+    // --- 2. ADICIONAR ESTADOS DA HISTÓRIA AQUI NO PAI ---
+    const [nomePersonagem, setNomePersonagem] = useState("");
+    const [inspiracaoUm, setInspiracaoUm] = useState("");
+    const [inspiracaoDois, setInspiracaoDois] = useState("");
+    const [enredoHistoria, setEnredoHistoria] = useState("");
+
+    // Estados de controle da API da HISTÓRIA
+    const [historiaGerada, setHistoriaGerada] = useState("");
+    const [loadingHistoria, setLoadingHistoria] = useState(false);
+    const [errorHistoria, setErrorHistoria] = useState(null);
 
     const handleAdicionarClick = async () => {
         // 1. MUDANÇA: Verifica o usuario_id no localStorage
@@ -56,7 +68,64 @@ function PaginaCustomizaçao() {
         }, 200);
     };
 
+    // --- 3. CRIAR A FUNÇÃO DE GERAR HISTÓRIA AQUI NO PAI ---
+    const handleGerarHistoria = async () => {
+        if (!nomePersonagem || !inspiracaoUm || !inspiracaoDois || !enredoHistoria) {
+          setErrorHistoria("Por favor, preencha todos os campos da história.");
+          return;
+        }
     
+        if (!characterRef.current) {
+          setErrorHistoria("Erro: Não foi possível encontrar a referência do personagem.");
+          return;
+        }
+
+        setLoadingHistoria(true);
+        setErrorHistoria(null);
+        setHistoriaGerada("");
+    
+        try {
+          // A. Capturar a Imagem usando html2canvas
+          // A opção { backgroundColor: null } torna o fundo transparente
+          const canvas = await html2canvas(characterRef.current, { backgroundColor: null, scale: 0.5 });
+          const imageBase64 = canvas.toDataURL('image/jpeg', 0.6); // Converte para Base64
+
+          if (!imageBase64) {
+             throw new Error("Falha ao capturar a imagem do personagem.");
+          }
+
+          // B. Chamar sua API do Backend
+          const API_URL = 'https://forja-qvex.onrender.com/api/personagens/gerar-historia';
+          const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              nome: nomePersonagem,
+              inspiracao1: inspiracaoUm,
+              inspiracao2: inspiracaoDois,
+              tonalidade: enredoHistoria,
+              imageBase64: imageBase64 // A imagem capturada!
+            }),
+          });
+    
+          if (!response.ok) {
+            const errData = await response.json();
+            throw new Error(errData.error || "Falha no servidor ao gerar história.");
+          }
+    
+          const data = await response.json();
+          setHistoriaGerada(data.historia); // Sucesso!
+
+        } catch (err) {
+          console.error(err);
+          setErrorHistoria(err.message);
+        } finally {
+          setLoadingHistoria(false);
+        }
+    };
+
     const handleButtonClick = (nomeDoBotao) => {
         setBtnAtivo(prev => prev === nomeDoBotao ? null : nomeDoBotao);
     };
@@ -81,8 +150,11 @@ function PaginaCustomizaçao() {
                              <button className={btnAtivo === 'CABEÇA' ? 'btn-corpo-follow-ativado' : 'btn-corpo-follow'} onClick={() => handleButtonClick('CABEÇA')}>
                                  <label className='botaoLbl'>CABEÇA</label> <img className='img-btn-icon' src="./icones/Cabeça.svg" alt="" />
                              </button>
-                          </div>
-                          <div className="menu-primario-custom-bottom">
+                             <button className={btnAtivo === 'HISTÓRIA' ? 'btn-corpo-follow-ativado' : 'btn-corpo-follow'} onClick={() => handleButtonClick('HISTÓRIA')}>
+                                 <label className='botaoLbl'>HISTÓRIA</label> <img className='img-btn-icon' src="./icones/Cabeça.svg" alt="" />
+                             </button>
+                         </div>
+                         <div className="menu-primario-custom-bottom">
                              <button onClick={() => setZoomAtivo(true)} className='btn-zoom'></button>
                              <button onClick={() => setZoomAtivo(false)} className='btn-tirar-zoom'></button>
                              <button onClick={handleAdicionarClick} className='btn-tirar-zooms' disabled={isAdding}>
@@ -99,6 +171,7 @@ function PaginaCustomizaçao() {
                                 onCorDePeleChange={(v) => atualizarPersonagem('corPele', v)}
                                 corPeleAtual={personagem.corPele}
                             />}
+
                             {btnAtivo === 'CABEÇA' && <MenuSecCabeca
                                 onCabeloChange={(v) => atualizarPersonagem('cabelo', v)}
                                 onCorCabeloChange={(v) => atualizarPersonagem('corCabelo', v)}
@@ -107,7 +180,28 @@ function PaginaCustomizaçao() {
                                 cabelosDisponiveis={opcoesDoPersonagem.cabelo[personagem.genero]}
                                 coresCabeloDisponiveis={opcoesDoPersonagem.corCabelo}
                             />}
-                            {btnAtivo === 'HISTÓRIA' && <MenuSecHistoria />}
+
+                            {/* parte do botão para gerar história do personagem */}
+                            {btnAtivo === 'HISTÓRIA' && <MenuSecHistoria 
+                                // Estados do formulário
+                                nomePersonagem={nomePersonagem}
+                                setNomePersonagem={setNomePersonagem}
+                                inspiracaoUm={inspiracaoUm}
+                                setInspiracaoUm={setInspiracaoUm}
+                                inspiracaoDois={inspiracaoDois}
+                                setInspiracaoDois={setInspiracaoDois}
+                                enredoHistoria={enredoHistoria}
+                                setEnredoHistoria={setEnredoHistoria}
+                                
+                                // Estados da API
+                                historiaGerada={historiaGerada}
+                                setHistoriaGerada={setHistoriaGerada} // Para permitir edição
+                                loading={loadingHistoria}
+                                error={errorHistoria}
+                                
+                                // A Função de Ação
+                                onGerarHistoria={handleGerarHistoria}    
+                            />}
                         </div>
                     </div>
                 </div>

@@ -84,59 +84,79 @@ const criarAPartirDoCarrinho = async (req, res) => {
 };
 
 const receberCallback = async (req, res) => {
-    // Manter o log é ótimo para depuração!
+   
     console.log('--- CALLBACK DO PROFESSOR RECEBIDO ---');
     console.log('BODY:', JSON.stringify(req.body, null, 2));
 
     try {
-        // 1. Extrair os dados que importam do JSON
         const statusExterno = req.body.status;
-        const orderId = req.body.payload.orderId;      // ex: "pedido-forja-3"
-        const producaoId = req.body.id;                // ex: "68f91767..."
+        const orderId = req.body.payload.orderId;      
+        const producaoId = req.body.id;                
 
-        // 2. Validar se temos o que precisamos
         if (!orderId || !statusExterno || !producaoId) {
             console.warn('Callback recebido com dados incompletos.');
             return res.status(400).json({ message: "Dados do callback incompletos." });
         }
 
-        // 3. A LÓGICA DE NEGÓCIO: Só atualizar se o status for "COMPLETED"
         if (statusExterno === "COMPLETED") {
             
-            const nossoStatus = 'forjado'; // O status que você quer!
+            const nossoStatus = 'forjado'; 
 
-            // 4. Chamar o Model para atualizar nosso banco
+            const slotAleatorio = Math.floor(Math.random() * 100) + 1;
+            console.log(`Pedido ${orderId} concluído. Atribuindo slot aleatório: ${slotAleatorio}`);
+
             const pedidoAtualizado = await PedidoModel.atualizarStatusPorCallback(
                 orderId, 
                 nossoStatus, 
-                producaoId
+                producaoId,
+                slotAleatorio
             );
 
             if (!pedidoAtualizado) {
                 console.error(`Callback para orderId ${orderId} não encontrou pedido no nosso banco.`);
-                // O professor não precisa saber disso, só avisamos que não encontramos.
+                
                 return res.status(404).json({ message: "Pedido não encontrado no nosso sistema." });
             }
 
             console.log(`SUCESSO: Pedido ${pedidoAtualizado.id} (Externo: ${orderId}) atualizado para status: ${nossoStatus}`);
 
         } else {
-            // O status não é "COMPLETED" (ex: "IN_PROGRESS")
             console.log(`Callback recebido para ${orderId} com status: ${statusExterno}. Nenhuma ação de atualização foi tomada.`);
         }
 
-        // 5. Responda 200 OK para o servidor do professor (ISSO É ESSENCIAL)
-        // Avisamos que recebemos e processamos com sucesso.
         res.status(200).json({ message: "Callback processado com sucesso." });
 
     } catch (error) {
         console.error('### ERRO NO PROCESSAMENTO DO CALLBACK ###', error);
-        // Se algo der errado, avisamos o professor.
+       
         res.status(500).json({ message: "Erro interno ao processar callback." });
     }
 };
 
+const getPedidosPorSessao = async (req, res) => {
+    try {
+        // Pegamos o session_id que vem na URL (ex: /api/pedidos/por-sessao/abc-123)
+        const { session_id } = req.params;
+
+        if (!session_id) {
+            return res.status(400).json({ message: "ID de sessão é obrigatório." });
+        }
+
+        // Chama o model
+        const pedidos = await PedidoModel.buscarPorSessao(session_id);
+
+        // Retorna os pedidos encontrados (pode ser um array vazio [])
+        res.status(200).json(pedidos);
+
+    } catch (error) {
+        console.error("Erro ao buscar pedidos:", error);
+        res.status(500).json({ message: "Erro ao buscar pedidos." });
+    }
+};
+
+// Adicione a nova função ao module.exports
 module.exports = {
     criarAPartirDoCarrinho,
     receberCallback,
+    getPedidosPorSessao, // <-- ADICIONE AQUI
 };

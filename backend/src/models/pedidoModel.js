@@ -19,12 +19,15 @@ const atualizarStatus = async (client, pedidoId, status, orderIdExterno) => {
     );
 };
 
-const atualizarStatusPorCallback = async (orderIdExterno, novoStatus, producaoIdExterno) => {
+const atualizarStatusPorCallback = async (orderIdExterno, novoStatus, producaoIdExterno, slot) => {
     const result = await db.query(
         `UPDATE pedidos 
-         SET status = $2, producao_id_externo = $3 
-         WHERE orderId_externo = $1 RETURNING *`,
-        [orderIdExterno, novoStatus, producaoIdExterno]
+         SET status = $2, 
+             producao_id_externo = $3, 
+             slot = $4                  -- <-- Nova linha
+         WHERE orderId_externo = $1 
+         RETURNING *`,
+        [orderIdExterno, novoStatus, producaoIdExterno, slot] 
     );
     return result.rows[0];
 };

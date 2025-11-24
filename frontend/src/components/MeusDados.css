@@ -62,21 +62,20 @@
             .inputs-parte-botao-editar{
                 display: flex;
                 justify-content: start;
-                align-items: end;
+                align-items: center;
                 padding-left: 5px;
                 height: 100%;
                 width: 30%;
                 background-color: transparent;
                 gap: 10px;
+                padding-top: 25px;
             }
                 .botao-editar-dados{
                     height: 40px;
                     width: 40px;
                     border: solid 1px #fff;
-                    /* background-color: #5B5E1C; */
                     opacity: 80%;
                     cursor: pointer;
-                    margin-bottom: 8px;
                     box-shadow: 0px 0px 2px 1px #fff inset;
                 }
 
@@ -113,7 +112,7 @@
                 display: flex;
                 height: 28%;
                 width: 100%;
-                background-color: rgb(99, 165, 165);
+                background-color: transparent;
             }
                 .parte-inputs-edicao{
                     display: flex;
@@ -127,7 +126,7 @@
                 }
                     .input-rua-endereco{
                         height: 40px;
-                        width: 510px;
+                        width: 630px;
                         background-color: #5B5E1C;
                         opacity: 80%;
                         color: #fff;
@@ -137,7 +136,7 @@
                     }
                     .input-numero-endereco{
                         height: 40px;
-                        width: 60px;
+                        width: 90px;
                         background-color: #5B5E1C;
                         opacity: 80%;
                         color: #fff;
@@ -150,11 +149,11 @@
                         justify-content: start;
                         align-items: center;
                         padding-left: 10px;
-                        padding-top: 8px;
+                        padding-top: 0px;
                         height: 100%;
                         width: 30%;
                         gap: 10px;
-                        background-color: rgb(131, 59, 59);
+                        background-color: transparent;
                     }
 
                 .parte-inputs-edicao-2{
@@ -169,7 +168,7 @@
                 }
                     .input-estado-endereco{
                         height: 40px;
-                        width: 60px;
+                        width: 100px;
                         background-color: #5B5E1C;
                         opacity: 80%;
                         color: #fff;
@@ -179,7 +178,7 @@
                     }
                     .inputs-cidade-endereco{
                         height: 40px;
-                        width: 250px;
+                        width: 300px;
                         background-color: #5B5E1C;
                         opacity: 80%;
                         color: #fff;
@@ -189,7 +188,7 @@
                     }
                     .inputs-bairro-endereco{
                         height: 40px;
-                        width: 250px;
+                        width: 310px;
                         background-color: #5B5E1C;
                         opacity: 80%;
                         color: #fff;
@@ -210,7 +209,7 @@
                 }
                     .input-complemento-endereco{
                         height: 40px;
-                        width: 430px;
+                        width: 580px;
                         background-color: #5B5E1C;
                         opacity: 80%;
                         color: #fff;
