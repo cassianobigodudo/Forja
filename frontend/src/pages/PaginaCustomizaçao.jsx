@@ -8,17 +8,16 @@ import MenuSecCabeca from '../components/MenuSecCabeca';
 import MenuSecCorpo from '../components/MenuSecCorpo';
 import MenuSecHistoria from '../components/MenuSecHistoria';
 
-import { useGlobalContext } from '../context/GlobalContext';
+// Removido: import { useGlobalContext } ...
 import { useLogicaCustomizacao } from '../hooks/HookCustomizacao';
 
 function PaginaCustomizaçao() {
-    const { sessionId } = useGlobalContext(); // Pega o sessionId global
+    // Removido: const { sessionId } = useGlobalContext(); 
     
-    // Pega a nova função do seu hook
     const { 
         personagem, 
         atualizarPersonagem, 
-        adicionarPersonagemAoCarrinho, // <-- A NOVA FUNÇÃO DO HOOK
+        adicionarPersonagemAoCarrinho, 
         caminhosDasImagens, 
         opcoesDoPersonagem 
     } = useLogicaCustomizacao();
@@ -27,7 +26,6 @@ function PaginaCustomizaçao() {
     const [zoomAtivo, setZoomAtivo] = useState(false);
     const characterRef = useRef(null);
     
-    // Estado da UI para feedback
     const [isAdding, setIsAdding] = useState(false);
     const [message, setMessage] = useState('');
 
@@ -43,26 +41,29 @@ function PaginaCustomizaçao() {
     const [errorHistoria, setErrorHistoria] = useState(null);
 
     const handleAdicionarClick = async () => {
-        if (!sessionId) return; // Garante que o session Id já foi carregado
+        // 1. MUDANÇA: Verifica o usuario_id no localStorage
+        const usuarioId = localStorage.getItem('usuario_id');
+        
+        if (!usuarioId) {
+            alert("Você precisa estar logado para adicionar ao carrinho!");
+            // Opcional: navigate('/login');
+            return; 
+        }
 
         setIsAdding(true);
         setMessage('Adicionando ao carrinho...');
         setZoomAtivo(false);
 
-        // Pequeno delay para a UI atualizar antes de capturar a imagem
         setTimeout(async () => {
             try {
-                // Chama a função do hook, que agora faz todo o trabalho pesado
-                await adicionarPersonagemAoCarrinho(characterRef, sessionId);
+                // 2. MUDANÇA: Chamamos a função SEM passar o ID (o hook já pega do localStorage)
+                await adicionarPersonagemAoCarrinho(characterRef);
 
-                setMessage('Personagem adicionado com sucesso! Redirecionando...');
-                
-
-                setIsAdding(false); // Libera o botão para nova tentativa
+                setMessage('Personagem adicionado com sucesso!');
+                setIsAdding(false); 
             } catch (error) {
-                // Como o hook lança o erro, podemos pegá-lo aqui
                 setMessage('Falha ao adicionar. Tente novamente.');
-                setIsAdding(false); // Libera o botão para nova tentativa
+                setIsAdding(false); 
             }
         }, 200);
     };
@@ -128,6 +129,7 @@ function PaginaCustomizaçao() {
     const handleButtonClick = (nomeDoBotao) => {
         setBtnAtivo(prev => prev === nomeDoBotao ? null : nomeDoBotao);
     };
+
     return (
         <div className="container-pagina">
             <Navbar />
@@ -158,7 +160,7 @@ function PaginaCustomizaçao() {
                              <button onClick={handleAdicionarClick} className='btn-tirar-zooms' disabled={isAdding}>
                                 {isAdding ? 'ADICIONANDO...' : 'Adicionar ao carrinho'}
                             </button>
-                         </div>
+                          </div>
                     </div>
                     <div className="menu-secundario-custom">
                         <div className="menu-secundario-fundo">
