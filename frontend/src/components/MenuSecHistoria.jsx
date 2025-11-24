@@ -106,8 +106,12 @@ function MenuSecHistoria({
           <div className="parte-gerar-historia">
             <button 
               className="botao-gerar-historia" 
-              onClick={onGerarHistoria}>{loading ? "Gerando..." : "GERAR HISTÓRIA"}</button>
-              {/* disabled={loading} */}
+              onClick={onGerarHistoria}
+              disabled={loading}
+            >
+              {loading ? "Gerando..." : "GERAR HISTÓRIA"}
+
+            </button>
           </div>
 
         </div>

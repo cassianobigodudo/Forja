@@ -86,15 +86,15 @@ function PaginaCustomizaçao() {
         try {
           // A. Capturar a Imagem usando html2canvas
           // A opção { backgroundColor: null } torna o fundo transparente
-          const canvas = await html2canvas(characterRef.current, { backgroundColor: null });
-          const imageBase64 = canvas.toDataURL('image/png'); // Converte para Base64
+          const canvas = await html2canvas(characterRef.current, { backgroundColor: null, scale: 0.5 });
+          const imageBase64 = canvas.toDataURL('image/jpeg', 0.6); // Converte para Base64
 
           if (!imageBase64) {
              throw new Error("Falha ao capturar a imagem do personagem.");
           }
 
           // B. Chamar sua API do Backend
-          const API_URL = 'https://forja-qvex.onrender.com/api/personagem/gerar-historia';
+          const API_URL = 'https://forja-qvex.onrender.com/api/personagens/gerar-historia';
           const response = await fetch(API_URL, {
             method: 'POST',
             headers: {
