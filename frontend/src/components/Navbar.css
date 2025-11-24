@@ -20,6 +20,7 @@
     font-size: 50px;
     padding-left: 30px;
     font-family: 'fonte-logo';
+    cursor: pointer;
 }
 
 .container-navigate{
@@ -60,10 +61,10 @@
 
 .label-navbar{
     cursor: pointer;
-    font-size: 26px;
+    font-size: 40px;
     transition: 0.5s;
 }
 .label-navbar:hover{
-    font-size: 29px;
+    font-size: 50px;
     transition: 0.5s;
 }

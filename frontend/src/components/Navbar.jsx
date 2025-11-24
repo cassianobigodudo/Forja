@@ -13,15 +13,14 @@ function Navbar() {
   return (
     <div className="container-componente-navbar">
         <div className="container-logo">
-            <label className='forja-navbar-logo'>FORJA</label>
+            <label className='forja-navbar-logo' onClick={() => {navigate('/')}}>FORJA</label>
         </div>
 
         <div className="container-navigate">
 
 
-            <label className='label-navbar' onClick={() => {navigate('/')}}>Início</label>
             <label className='label-navbar' onClick={() => {navigate('/custom')}}>Forja</label>
-            <label className='label-navbar' onClick={() => {navigate('/usuario')}}>Loja</label>
+            <label className='label-navbar' onClick={() => {navigate('/')}}>Loja</label>
         </div>
 
         <div className="container-carrinho-usuario">
