@@ -52,7 +52,7 @@ const criarAPartirDoCarrinho = async (req, res) => {
                 }
 
                 // 3. Envia para o serviço externo
-                await axios.post('http://52.1.197.112:3000/queue/items', requisicaoParaProfessor);
+                await axios.post('http://52.72.137.244:3000//queue/items', requisicaoParaProfessor);
                 
                 // 4. Atualiza o status do pedido usando o PedidoModel
                 await PedidoModel.atualizarStatus(client, novoPedidoId, 'enviado', orderIdExterno);
