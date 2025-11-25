@@ -50,7 +50,17 @@ const gerarHistoria = async (req, res) => {
         }
 
         // 2. Remover cabeçalho da Base64
-        const base64Data = imageBase64.replace(/^data:image\/png;base64,/, "");
+        // const base64Data = imageBase64.replace(/^data:image\/png;base64,/, "");
+
+        let base64Data = imageBase64;
+
+        // Remove qualquer prefixo de base64
+        if (base64Data.includes(",")) {
+            base64Data = base64Data.split(",")[1];
+        }
+
+        // Remove espaços, quebras de linha e caracteres inválidos
+        base64Data = base64Data.trim().replace(/\s/g, "");
 
         // 3. Criar Prompt
         const prompt = `
@@ -73,7 +83,6 @@ const gerarHistoria = async (req, res) => {
 
         // 5. Enviar TEXTO + IMAGEM
         const result = await model.generateContent({
-            model: "gemini-1.5-flash",
             contents: [
                 {
                     role: "user",
