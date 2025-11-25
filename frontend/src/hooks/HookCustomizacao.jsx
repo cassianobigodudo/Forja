@@ -104,44 +104,52 @@ export const useLogicaCustomizacao = () => {
         });
     };
 
-    const adicionarPersonagemAoCarrinho = async (referenciaDoElemento, sessionId) => {
-        // A função não precisa mais de setDadosDoPersonagem e setImagemPersonagem
-        // Ela fará as chamadas de API e retornará sucesso ou erro.
-
+    const adicionarPersonagemAoCarrinho = async (referenciaDoElemento) => {
+        
         try {
-            // 1. Capturar a imagem
+            // 1. Recuperar o ID do usuário logado
+            const usuarioId = localStorage.getItem('usuario_id');
+
+            // 2. Trava de segurança: Se não houver login, interrompe o processo.
+            if (!usuarioId) {
+                alert("Você precisa estar logado para salvar o personagem e adicionar ao carrinho.");
+                // Opcional: window.location.href = '/login'; // Redirecionar se quiser
+                throw new Error("Usuário não autenticado.");
+            }
+
+            // 3. Capturar a imagem
             const canvas = await html2canvas(referenciaDoElemento.current, { backgroundColor: null, scale: 0.45 });
             const imagemEmBase64 = canvas.toDataURL('image/png');
             
-            // 2. Montar o objeto completo, incluindo o session_id
+            // 4. Montar o objeto completo usando usuario_id
             const personagemCompleto = { 
                 ...personagem, 
                 img: imagemEmBase64,
-                session_id: sessionId 
+                usuario_id: usuarioId // <--- Mudança aqui: usa o ID do usuário
             };
             
             console.log("Enviando os seguintes dados para /personagens:", personagemCompleto);
 
-            // 3. Salvar o personagem no banco (API Call 1)
-            // const resposta = await axios.post('http://localhost:3000/api/personagens', personagemCompleto);
+            // 5. Salvar o personagem no banco (API Call 1)
             const resposta = await axios.post('https://forja-qvex.onrender.com/api/personagens', personagemCompleto);
             const novoPersonagemSalvo = resposta.data;
             console.log("Personagem salvo com sucesso:", novoPersonagemSalvo);
             
-            // 4. Adicionar o personagem recém-salvo ao carrinho (API Call 2)
-            // await axios.post('http://localhost:3000/api/carrinho', {
+            // 6. Adicionar o personagem recém-salvo ao carrinho (API Call 2)
             await axios.post('https://forja-qvex.onrender.com/api/carrinho', {
-                session_id: sessionId,
+                usuario_id: usuarioId, // <--- Mudança aqui
                 personagem_id: novoPersonagemSalvo.id
             });
             console.log(`Personagem ID ${novoPersonagemSalvo.id} adicionado ao carrinho.`);
 
-            // 5. Retornar os dados do personagem salvo em caso de sucesso
+            // 7. Retornar os dados do personagem salvo em caso de sucesso
             return novoPersonagemSalvo;
 
         } catch (erro) {
             console.error('Erro no processo de adicionar ao carrinho:', erro);
-            // 6. Lançar o erro para que o componente que chamou possa tratá-lo (mostrar uma mensagem, etc.)
+            // Verifica se foi erro do nosso "throw" manual ou erro de rede
+            const mensagemErro = erro.response?.data?.message || erro.message || "Erro ao adicionar ao carrinho";
+            alert(mensagemErro); 
             throw erro;
         }
     };

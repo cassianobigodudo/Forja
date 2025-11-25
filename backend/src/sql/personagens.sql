@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS personagens (
     id SERIAL PRIMARY KEY,
-    session_id VARCHAR(255) NOT NULL,
+    session_id VARCHAR(255),
     genero VARCHAR(20) ,
     generoNum INT ,
     corPele VARCHAR(20) ,

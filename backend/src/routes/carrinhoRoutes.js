@@ -6,7 +6,7 @@ const carrinhoController = require('../controllers/carrinhoController');
 // POST /api/carrinho
 router.post('/', carrinhoController.adicionarItem);
 
-// GET /api/carrinho/:session_id
-router.get('/:session_id', carrinhoController.getItens);
+// GET /api/carrinho/:usuario_id
+router.get('/:usuario_id', carrinhoController.getItens);
 
 module.exports = router;
