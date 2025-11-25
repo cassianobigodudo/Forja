@@ -90,7 +90,11 @@ function PaginaCustomizaçao() {
         //   const canvas = await html2canvas(characterRef.current, { backgroundColor: null, scale: 0.5 });
         //   const imageBase64 = canvas.toDataURL('image/jpeg', 0.6); // Converte para Base64
 
-            const canvas = await html2canvas(document.getElementById("viewport"));
+            // const canvas = await html2canvas(document.getElementById("viewport"));
+            const canvas = await html2canvas(characterRef.current, {
+                backgroundColor: null,
+                scale: 1
+            });
             const base64full = canvas.toDataURL("image/png"); // vem com prefixo data:
             const base64 = base64full.split(",")[1]; // remove o prefixo
 
