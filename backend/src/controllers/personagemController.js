@@ -59,6 +59,7 @@ const gerarHistoria = async (req, res) => {
 
         // 5. Enviar TEXTO + IMAGEM
         const result = await model.generateContent({
+            model: "gemini-1.5-flash",
             contents: [
                 {
                     role: "user",

@@ -86,10 +86,14 @@ function PaginaCustomizaçao() {
         try {
           // A. Capturar a Imagem usando html2canvas
           // A opção { backgroundColor: null } torna o fundo transparente
-          const canvas = await html2canvas(characterRef.current, { backgroundColor: null, scale: 0.5 });
-          const imageBase64 = canvas.toDataURL('image/jpeg', 0.6); // Converte para Base64
+        //   const canvas = await html2canvas(characterRef.current, { backgroundColor: null, scale: 0.5 });
+        //   const imageBase64 = canvas.toDataURL('image/jpeg', 0.6); // Converte para Base64
 
-          if (!imageBase64) {
+            const canvas = await html2canvas(document.getElementById("viewport"));
+            const base64full = canvas.toDataURL("image/png"); // vem com prefixo data:
+            const base64 = base64full.split(",")[1]; // remove o prefixo
+
+          if (!base64) {
              throw new Error("Falha ao capturar a imagem do personagem.");
           }
 
@@ -105,7 +109,7 @@ function PaginaCustomizaçao() {
               inspiracao1: inspiracaoUm,
               inspiracao2: inspiracaoDois,
               tonalidade: enredoHistoria,
-              imageBase64: imageBase64 // A imagem capturada!
+              imageBase64: base64 // A imagem capturada!
             }),
           });
     
