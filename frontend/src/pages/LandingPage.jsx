@@ -27,13 +27,13 @@ function LandingPage() {
         </div>
 
         <div className="container-saberMais" onClick={SaberMais}>
-          <label className='lbl-saibaMais' onClick={SaberMais}>Quer saber mais? Morra!</label>
+          <label className='lbl-saibaMais' onClick={SaberMais}>Quer saber mais? Clique Aqui!</label>
           <img src="/icones/flecha-pra-baixo.svg" className='flechinha' onClick={SaberMais} />
         </div>
       </div>
       <div className="container-landing-page-baixo" ref={sectionBaixoRef}>
         <div className="container-saberMenos" onClick={SaberMenos}>
-          <label className='lbl-saibaMenos' onClick={SaberMais}>Quer saber menos? Viva!</label>
+          <label className='lbl-saibaMenos' onClick={SaberMais}>Retornar</label>
           <img src="/icones/flecha-pra-baixo.svg" className='flechinha-inversa' onClick={SaberMais} />
 
         </div>

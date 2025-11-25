@@ -17,7 +17,7 @@
 }
 
 .forja-navbar-logo{
-    font-size: 50px;
+    font-size: 80px;
     padding-left: 30px;
     font-family: 'fonte-logo';
     cursor: pointer;
@@ -42,12 +42,12 @@
 }
 
 .carrinho-navbar{
-    width: 45px;;
+    width: 60px;;
     margin-right: 10px;
 }
 
 .usuario-navbar{
-    width: 45px;;
+    width: 60px;;
     margin-right: 30px;
     cursor: pointer;
 }

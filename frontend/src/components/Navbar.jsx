@@ -19,8 +19,8 @@ function Navbar() {
         <div className="container-navigate">
 
 
-            <label className='label-navbar' onClick={() => {navigate('/custom')}}>Forja</label>
-            <label className='label-navbar' onClick={() => {navigate('/')}}>Loja</label>
+            <label className='label-navbar' onClick={() => {navigate('/custom')}}>Forjar</label>
+            <label className='label-navbar' onClick={() => {navigate('/loja')}}>Loja</label>
         </div>
 
         <div className="container-carrinho-usuario">

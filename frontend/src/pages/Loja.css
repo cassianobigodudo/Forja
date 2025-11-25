@@ -1,0 +1,14 @@
+.container-loja{
+    background-color:#313b31 ;
+    height: 100vh;
+    width: 100vw;
+    background-image: url('/fundo/tim-mcburnie-tmcburnie-110-scenes-10.jpg');
+    background-repeat: no-repeat;
+}
+
+.lbl-pre-forjados{
+    color: white;
+    font-family: 'fonte-titulos';
+    font-size: 50px;
+
+}
