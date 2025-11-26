@@ -7,6 +7,10 @@ require("dotenv").config();
 // Inicializa o cliente da IA. Ele automaticamente lerá a chave do process.env
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
+// ===============================
+// CRIAR PERSONAGEM
+// ===============================
+
 const criarPersonagem = async (req, res) => {
     console.log("--- [DEBUG] 1. Requisição chegou no Controller ---");
     console.log("Dados recebidos:", JSON.stringify(req.body, null, 2));

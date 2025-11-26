@@ -137,7 +137,6 @@ function MenuSecHistoria({
             readOnly={loading}
           ></textarea>
 
-          <button className="botao-salvar-historia-personagem" onClick={() => alert("Botão para salvar a história gerada")}>SALVAR HISTÓRIA</button>
         </div>
 
       </div>

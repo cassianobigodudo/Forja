@@ -111,22 +111,11 @@
     gap: 10px;
   }
     .campo-historia-personagem{
-      min-height: 80%;
-      min-width: 90%;
-      max-height: 80%;
-      max-width: 90%;
-      min-height: 80%;
-      min-width: 90%;
+      min-height: 90%;
+      min-width: 95%;
+      max-height: 90%;
+      max-width: 95%;
       background-color: whitesmoke;
       padding: 5px;
       overflow-y: auto;
-    }
-    
-    .botao-salvar-historia-personagem{
-      height: 50px;
-      width: 250px;
-      cursor: pointer;
-      color: #fff;
-      border: solid 2px #fff;
-      font-family: --Texto;
     }
