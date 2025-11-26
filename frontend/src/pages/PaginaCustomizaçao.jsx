@@ -9,8 +9,8 @@ import MenuSecHistoria from '../components/MenuSecHistoria';
 
 // Menus de Peças Individuais (Diretos)
 import MenuTorso from '../components/MenuTorso';
-import MenuPernas from '../components/MenuPernas';   // Certifique-se de criar este arquivo
-import MenuSapatos from '../components/MenuSapatos'; // Certifique-se de criar este arquivo
+import MenuPernas from '../components/MenuPernas'; 
+import MenuSapatos from '../components/MenuSapatos'; 
 
 import { useGlobalContext } from '../context/GlobalContext';
 import { useLogicaCustomizacao } from './Hook/HookCustomizacao.js';
@@ -25,7 +25,6 @@ function PaginaCustomizaçao() {
     salvarPersonagem, 
     caminhosDasImagens, 
     opcoesDoPersonagem,
-    // Handlers específicos
     handleAcessoriosCabecaChange, 
     handleAcessorioPescocoChange,
     handleMarcasChange
@@ -36,7 +35,6 @@ function PaginaCustomizaçao() {
   const characterRef = useRef(null);
   const [isSaving, setIsSaving] = useState(false);
 
-  // Efeito de Salvar
   useEffect(() => {
     if (isSaving && !zoomAtivo) {
       const captureAndSave = async () => {
@@ -64,38 +62,36 @@ function PaginaCustomizaçao() {
       <div className="pagina-customs">
       <div className="area-customizacao">
         
-        {/* =========================================================
-            ÁREA DO PAPERDOLL (PERSONAGEM)
-           ========================================================= */}
+        {/* ÁREA DO PAPERDOLL */}
         <div className={`paperdoll-area ${zoomAtivo ? 'zoomed' : ''}`}>
           <div ref={characterRef} className="character-container" style={{ position: 'relative' }}>
             
-            {/* 1. FUNDO (Cabelo atrás, acessórios fundo) */}
+            {/* 1. FUNDO */}
             {caminhosDasImagens.cabeloFundo && <img src={caminhosDasImagens.cabeloFundo} alt="" style={{ position: 'absolute', top: 0, left: 0 }} />}
             {caminhosDasImagens.acessoriosCabecaFundo.map((c, i) => <img key={`bg-${i}`} src={c} alt="" style={{ position: 'absolute', top: 0, left: 0 }} />)}
 
             {/* 2. CORPO BASE */}
             <img src={caminhosDasImagens.corpo} alt="Corpo" style={{ position: 'relative' }} />
             
-            {/* 3. MARCAS (Pele) */}
+            {/* 3. MARCAS */}
             {caminhosDasImagens.marcas && <img src={caminhosDasImagens.marcas} alt="Marcas" style={{ position: 'absolute', top: 0, left: 0 }} />}
 
-            {/* 4. PERNAS (Embaixo do Torso e Sapatos) */}
+            {/* 4. PERNAS */}
             {caminhosDasImagens.roupaBaixo && (
                <img src={caminhosDasImagens.roupaBaixo} alt="Pernas" style={{ position: 'absolute', top: 0, left: 0 }} />
             )}
 
-            {/* 5. TORSO (Em cima das pernas) */}
+            {/* 5. TORSO */}
             {caminhosDasImagens.roupaCima && (
                <img src={caminhosDasImagens.roupaCima} alt="Torso" style={{ position: 'absolute', top: 0, left: 0 }} />
             )}
 
-            {/* 6. SAPATOS (Geralmente cobrem a barra da calça/perna) */}
+            {/* 6. SAPATOS */}
             {caminhosDasImagens.sapato && (
                <img src={caminhosDasImagens.sapato} alt="Sapatos" style={{ position: 'absolute', top: 0, left: 0 }} />
             )}
 
-            {/* 7. PESCOÇO / CABEÇA / ROSTO (Ficam por cima de tudo) */}
+            {/* 7. ACESSÓRIOS TOPO */}
             {caminhosDasImagens.acessorioPescoco && <img src={caminhosDasImagens.acessorioPescoco} alt="" style={{ position: 'absolute', top: 0, left: 0 }} />}
             {caminhosDasImagens.cabeloFrente && <img src={caminhosDasImagens.cabeloFrente} alt="" style={{ position: 'absolute', top: 0, left: 0 }} />}
             {caminhosDasImagens.acessoriosCabecaRosto.map((c, i) => <img key={`face-${i}`} src={c} alt="" style={{ position: 'absolute', top: 0, left: 0 }} />)}
@@ -104,37 +100,24 @@ function PaginaCustomizaçao() {
           </div>
         </div>
 
-        {/* =========================================================
-            MENU PRIMÁRIO (BOTÕES DA ESQUERDA)
-           ========================================================= */}
+        {/* MENU PRIMÁRIO */}
         <div className="menu-primario-custom-container">
             <div className="menu-primario-custom-top">
-            
-              {/* CORPO */}
               <button className={btnAtivo === 'CORPO' ? 'btn-corpo-ativado' : 'btn-corpo'} onClick={() => handleButtonClick('CORPO')}>
                   <label className='botaoLbl'>CORPO</label> <img className='img-btn-icon' src="./icones/Corpo.svg" alt="" />
               </button>
-              
-              {/* CABEÇA */}
               <button className={btnAtivo === 'CABEÇA' ? 'btn-corpo-follow-ativado' : 'btn-corpo-follow'} onClick={() => handleButtonClick('CABEÇA')}>
                   <label className='botaoLbl'>CABEÇA</label> <img className='img-btn-icon' src="./icones/Cabeça.svg" alt="" />
               </button>
-
-              {/* TORSO */}
               <button className={btnAtivo === 'TORSO' ? 'btn-corpo-follow-ativado' : 'btn-corpo-follow'} onClick={() => handleButtonClick('TORSO')}>
                   <label className='botaoLbl'>TORSO</label> <img className='img-btn-icon' src="./icones/Torso.svg" alt="" onError={(e)=>e.target.style.display='none'}/>
               </button>
-
-              {/* PERNAS */}
               <button className={btnAtivo === 'PERNAS' ? 'btn-corpo-follow-ativado' : 'btn-corpo-follow'} onClick={() => handleButtonClick('PERNAS')}>
                   <label className='botaoLbl'>PERNAS</label> <img className='img-btn-icon' src="./icones/Pernas.svg" alt="" onError={(e)=>e.target.style.display='none'}/>
               </button>
-
-              {/* SAPATOS */}
               <button className={btnAtivo === 'SAPATOS' ? 'btn-corpo-follow-ativado' : 'btn-corpo-follow'} onClick={() => handleButtonClick('SAPATOS')}>
                   <label className='botaoLbl'>SAPATOS</label> <img className='img-btn-icon' src="./icones/Sapatos.svg" alt="" onError={(e)=>e.target.style.display='none'}/>
               </button>
-
             </div>
             
             <div className="menu-primario-custom-bottom">
@@ -144,13 +127,10 @@ function PaginaCustomizaçao() {
             </div>
         </div>
 
-        {/* =========================================================
-            MENU SECUNDÁRIO (CONTEÚDO DA DIREITA)
-           ========================================================= */}
+        {/* MENU SECUNDÁRIO */}
         <div className="menu-secundario-custom">
           <div className="menu-secundario-fundo">
             
-            {/* 1. Menu CORPO */}
             {btnAtivo === 'CORPO' && <MenuSecCorpo
               onGeneroChange={(v) => atualizarPersonagem('genero', v)}
               generoAtual={personagem.genero}
@@ -159,7 +139,6 @@ function PaginaCustomizaçao() {
               corPeleAtual={personagem.corPele}
             />}
 
-            {/* 2. Menu CABEÇA */}
             {btnAtivo === 'CABEÇA' && <MenuSecCabeca
               onCabeloChange={(v) => atualizarPersonagem('cabelo', v)}
               onCorCabeloChange={(v) => atualizarPersonagem('corCabelo', v)}
@@ -176,27 +155,40 @@ function PaginaCustomizaçao() {
               onMarcasChange={handleMarcasChange}
             />}
 
-            {/* 3. Menu TORSO (Direto) */}
+            {/* 3. MENU TORSO */}
             {btnAtivo === 'TORSO' && <MenuTorso
               onTorsoChange={(v) => atualizarPersonagem('roupaCima', v)}
               onVarianteChange={(v) => atualizarPersonagem('roupaCimaVariante', v)}
               torsoAtual={personagem.roupaCima}
               varianteAtual={personagem.roupaCimaVariante}
-              torsosDisponiveis={opcoesDoPersonagem.roupaCima}
+              
+              /* Seleciona lista por gênero */
+              torsosDisponiveis={
+                opcoesDoPersonagem.roupaCima && opcoesDoPersonagem.roupaCima[personagem.genero]
+                ? opcoesDoPersonagem.roupaCima[personagem.genero]
+                : []
+              }
+              
               variantesDisponiveis={opcoesDoPersonagem.roupaCimaVariantes}
             />}
 
-            {/* 4. Menu PERNAS (Direto) */}
+            {/* 4. MENU PERNAS */}
             {btnAtivo === 'PERNAS' && <MenuPernas
               onPernaChange={(v) => atualizarPersonagem('roupaBaixo', v)}
               onVarianteChange={(v) => atualizarPersonagem('roupaBaixoVariante', v)}
               pernaAtual={personagem.roupaBaixo}
               varianteAtual={personagem.roupaBaixoVariante}
-              pernasDisponiveis={opcoesDoPersonagem.roupaBaixo}
+              
+              /* Seleciona lista por gênero */
+              pernasDisponiveis={
+                opcoesDoPersonagem.roupaBaixo && opcoesDoPersonagem.roupaBaixo[personagem.genero] 
+                ? opcoesDoPersonagem.roupaBaixo[personagem.genero] 
+                : []
+              }
+              
               variantesDisponiveis={opcoesDoPersonagem.roupaBaixoVariantes}
             />}
             
-            {/* 5. Menu SAPATOS (Direto) */}
             {btnAtivo === 'SAPATOS' && <MenuSapatos
               onSapatoChange={(v) => atualizarPersonagem('sapato', v)}
               onVarianteChange={(v) => atualizarPersonagem('sapatoVariante', v)}
