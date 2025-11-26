@@ -1,5 +1,6 @@
-CREATE TABLE IF NOT EXISTS pedidos (
+CREATE TABLE IF NOT EXISTS personagens (
     id SERIAL PRIMARY KEY,
+    session_id VARCHAR(255),
     genero VARCHAR(20) ,
     generoNum INT ,
     corPele VARCHAR(20) ,
@@ -31,11 +32,10 @@ CREATE TABLE IF NOT EXISTS pedidos (
     sapatoVariante VARCHAR(50) ,
     sapatoVarianteNum INT ,
     historia TEXT ,
-	status VARCHAR(20) DEFAULT 'pendente'
     img TEXT 
 );
 
-COMMENT ON TABLE pedidos IS 'Armazena os pedidos de customização recebidos pela aplicação.';
+COMMENT ON TABLE personagens IS 'Armazena os pedidos de customização recebidos pela aplicação.';
 
 -- -- Conecte-se ao banco 'minha_loja' antes de rodar o comando abaixo
 -- TABELA DESATUALIZADA!!!!!!!!

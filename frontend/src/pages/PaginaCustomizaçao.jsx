@@ -1,45 +1,77 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import "./PaginaCustomizaçao.css";
+import html2canvas from 'html2canvas';
+
 import Navbar from '../components/Navbar';
 
-// Menus Originais
+// --- MENUS ORIGINAIS ---
 import MenuSecCabeca from '../components/MenuSecCabeca';
 import MenuSecCorpo from '../components/MenuSecCorpo';
 import MenuSecHistoria from '../components/MenuSecHistoria';
 
-// Menus de Peças Individuais (Diretos)
+// --- MENUS DE PEÇAS INDIVIDUAIS (VINDOS DA BRANCH JOSE) ---
 import MenuTorso from '../components/MenuTorso';
-import MenuPernas from '../components/MenuPernas'; 
-import MenuSapatos from '../components/MenuSapatos'; 
+import MenuPernas from '../components/MenuPernas';
+import MenuSapatos from '../components/MenuSapatos';
 
+// --- CONTEXTOS E HOOKS ---
+// Mantive o GlobalContext pois a branch Jose usa para setar dados locais, 
+// mas o foco principal de "Salvar" será o Hook da Main.
 import { useGlobalContext } from '../context/GlobalContext';
-import { useLogicaCustomizacao } from './Hook/HookCustomizacao.js';
+import { useLogicaCustomizacao } from './Hook/HookCustomizacao.js'; // Verifique se o caminho está correto (Hook ou hooks)
 
 function PaginaCustomizaçao() {
- 
+
+  // 1. Contexto Global (Branch Jose)
   const { setDadosDoPersonagem, setImagemPersonagem } = useGlobalContext();
-  
+
+  // 2. Lógica Unificada (Mistura de Main e Jose)
   const { 
     personagem, 
     atualizarPersonagem, 
-    salvarPersonagem, 
+    salvarPersonagem, // Da branch Jose
+    adicionarPersonagemAoCarrinho, // Da Main
     caminhosDasImagens, 
     opcoesDoPersonagem,
+    // Handlers específicos da Branch Jose
     handleAcessoriosCabecaChange, 
     handleAcessorioPescocoChange,
     handleMarcasChange
   } = useLogicaCustomizacao();
   
+  // --- ESTADOS DE UI (COMUNS) ---
   const [btnAtivo, setBtnAtivo] = useState('CORPO');
   const [zoomAtivo, setZoomAtivo] = useState(false);
   const characterRef = useRef(null);
+  
+  // --- ESTADOS DE SALVAMENTO/CARRINHO (MAIN) ---
+  const [isAdding, setIsAdding] = useState(false);
+  const [message, setMessage] = useState('');
+  
+  // --- ESTADOS DE SALVAMENTO LOCAL (JOSE) ---
   const [isSaving, setIsSaving] = useState(false);
 
+  // --- ESTADOS DA HISTÓRIA (MAIN) ---
+  const [nomePersonagem, setNomePersonagem] = useState("");
+  const [inspiracaoUm, setInspiracaoUm] = useState("");
+  const [inspiracaoDois, setInspiracaoDois] = useState("");
+  const [enredoHistoria, setEnredoHistoria] = useState("");
+
+  const [historiaGerada, setHistoriaGerada] = useState("");
+  const [loadingHistoria, setLoadingHistoria] = useState(false);
+  const [errorHistoria, setErrorHistoria] = useState(null);
+
+  // --- EFEITO: SALVAR NO CONTEXTO (JOSE) ---
+  // Mantido para garantir que a lógica de salvar localmente ao dar zoom ou clicar funcione
   useEffect(() => {
     if (isSaving && !zoomAtivo) {
       const captureAndSave = async () => {
-        await salvarPersonagem(characterRef, setDadosDoPersonagem, setImagemPersonagem);
-        setBtnAtivo('SALVAR');
+        // Usa a função da branch Jose
+        if(salvarPersonagem) {
+            await salvarPersonagem(characterRef, setDadosDoPersonagem, setImagemPersonagem);
+        }
+        setBtnAtivo('SALVAR'); // Feedback visual
         setIsSaving(false);
       };
       const timer = setTimeout(captureAndSave, 100);
@@ -47,13 +79,96 @@ function PaginaCustomizaçao() {
     }
   }, [isSaving, zoomAtivo, salvarPersonagem, setDadosDoPersonagem, setImagemPersonagem, characterRef]);
 
-  const handleButtonClick = (nomeDoBotao) => {
-    setBtnAtivo(prev => prev === nomeDoBotao ? null : nomeDoBotao);
+
+  // --- FUNÇÃO: ADICIONAR AO CARRINHO (DA MAIN - MAIS ROBUSTA) ---
+  const handleAdicionarClick = async () => {
+    const usuarioId = localStorage.getItem('usuario_id');
+    
+    if (!usuarioId) {
+        alert("Você precisa estar logado para adicionar ao carrinho!");
+        return; 
+    }
+
+    setIsAdding(true);
+    setMessage('Adicionando ao carrinho...');
+    setZoomAtivo(false);
+
+    // Opcional: Acionar também o salvamento local do Jose
+    setIsSaving(true); 
+
+    setTimeout(async () => {
+        try {
+            await adicionarPersonagemAoCarrinho(characterRef);
+            setMessage('Personagem adicionado com sucesso!');
+        } catch (error) {
+            setMessage('Falha ao adicionar. Tente novamente.');
+        } finally {
+            setIsAdding(false);
+        }
+    }, 200);
   };
 
-  const handleSaveClick = () => {
-    setIsSaving(true); 
-    setZoomAtivo(false);
+  // --- FUNÇÃO: GERAR HISTÓRIA (DA MAIN) ---
+  const handleGerarHistoria = async () => {
+    if (!nomePersonagem || !inspiracaoUm || !inspiracaoDois || !enredoHistoria) {
+      setErrorHistoria("Por favor, preencha todos os campos da história.");
+      return;
+    }
+  
+    if (!characterRef.current) {
+      setErrorHistoria("Erro: Não foi possível encontrar a referência do personagem.");
+      return;
+    }
+
+    setLoadingHistoria(true);
+    setErrorHistoria(null);
+    setHistoriaGerada("");
+  
+    try {
+       const canvas = await html2canvas(characterRef.current, {
+            backgroundColor: null,
+            scale: 1
+       });
+       const base64full = canvas.toDataURL("image/jpeg", 0.8);
+       const base64 = base64full.split(",")[1];
+
+      if (!base64) {
+         throw new Error("Falha ao capturar a imagem do personagem.");
+      }
+
+      const API_URL = 'https://forja-qvex.onrender.com/api/personagens/gerar-historia';
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          nome: nomePersonagem,
+          inspiracao1: inspiracaoUm,
+          inspiracao2: inspiracaoDois,
+          tonalidade: enredoHistoria,
+          imageBase64: base64 
+        }),
+      });
+  
+      if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.error || "Falha no servidor ao gerar história.");
+      }
+  
+      const data = await response.json();
+      setHistoriaGerada(data.historia);
+
+    } catch (err) {
+      console.error(err);
+      setErrorHistoria(err.message);
+    } finally {
+      setLoadingHistoria(false);
+    }
+  };
+
+  const handleButtonClick = (nomeDoBotao) => {
+    setBtnAtivo(prev => prev === nomeDoBotao ? null : nomeDoBotao);
   };
 
   return (
@@ -62,13 +177,13 @@ function PaginaCustomizaçao() {
       <div className="pagina-customs">
       <div className="area-customizacao">
         
-        {/* ÁREA DO PAPERDOLL */}
+        {/* --- ÁREA DO PAPERDOLL (VERSÃO JOSE - MAIS COMPLETA) --- */}
         <div className={`paperdoll-area ${zoomAtivo ? 'zoomed' : ''}`}>
           <div ref={characterRef} className="character-container" style={{ position: 'relative' }}>
             
             {/* 1. FUNDO */}
             {caminhosDasImagens.cabeloFundo && <img src={caminhosDasImagens.cabeloFundo} alt="" style={{ position: 'absolute', top: 0, left: 0 }} />}
-            {caminhosDasImagens.acessoriosCabecaFundo.map((c, i) => <img key={`bg-${i}`} src={c} alt="" style={{ position: 'absolute', top: 0, left: 0 }} />)}
+            {caminhosDasImagens.acessoriosCabecaFundo && caminhosDasImagens.acessoriosCabecaFundo.map((c, i) => <img key={`bg-${i}`} src={c} alt="" style={{ position: 'absolute', top: 0, left: 0 }} />)}
 
             {/* 2. CORPO BASE */}
             <img src={caminhosDasImagens.corpo} alt="Corpo" style={{ position: 'relative' }} />
@@ -94,13 +209,13 @@ function PaginaCustomizaçao() {
             {/* 7. ACESSÓRIOS TOPO */}
             {caminhosDasImagens.acessorioPescoco && <img src={caminhosDasImagens.acessorioPescoco} alt="" style={{ position: 'absolute', top: 0, left: 0 }} />}
             {caminhosDasImagens.cabeloFrente && <img src={caminhosDasImagens.cabeloFrente} alt="" style={{ position: 'absolute', top: 0, left: 0 }} />}
-            {caminhosDasImagens.acessoriosCabecaRosto.map((c, i) => <img key={`face-${i}`} src={c} alt="" style={{ position: 'absolute', top: 0, left: 0 }} />)}
-            {caminhosDasImagens.acessoriosCabecaTopo.map((c, i) => <img key={`top-${i}`} src={c} alt="" style={{ position: 'absolute', top: 0, left: 0 }} />)}
+            {caminhosDasImagens.acessoriosCabecaRosto && caminhosDasImagens.acessoriosCabecaRosto.map((c, i) => <img key={`face-${i}`} src={c} alt="" style={{ position: 'absolute', top: 0, left: 0 }} />)}
+            {caminhosDasImagens.acessoriosCabecaTopo && caminhosDasImagens.acessoriosCabecaTopo.map((c, i) => <img key={`top-${i}`} src={c} alt="" style={{ position: 'absolute', top: 0, left: 0 }} />)}
 
           </div>
         </div>
 
-        {/* MENU PRIMÁRIO */}
+        {/* --- MENU PRIMÁRIO (UNIFICADO) --- */}
         <div className="menu-primario-custom-container">
             <div className="menu-primario-custom-top">
               <button className={btnAtivo === 'CORPO' ? 'btn-corpo-ativado' : 'btn-corpo'} onClick={() => handleButtonClick('CORPO')}>
@@ -109,6 +224,7 @@ function PaginaCustomizaçao() {
               <button className={btnAtivo === 'CABEÇA' ? 'btn-corpo-follow-ativado' : 'btn-corpo-follow'} onClick={() => handleButtonClick('CABEÇA')}>
                   <label className='botaoLbl'>CABEÇA</label> <img className='img-btn-icon' src="./icones/Cabeça.svg" alt="" />
               </button>
+              {/* Botões Novos do Jose */}
               <button className={btnAtivo === 'TORSO' ? 'btn-corpo-follow-ativado' : 'btn-corpo-follow'} onClick={() => handleButtonClick('TORSO')}>
                   <label className='botaoLbl'>TORSO</label> <img className='img-btn-icon' src="./icones/Torso.svg" alt="" onError={(e)=>e.target.style.display='none'}/>
               </button>
@@ -118,16 +234,24 @@ function PaginaCustomizaçao() {
               <button className={btnAtivo === 'SAPATOS' ? 'btn-corpo-follow-ativado' : 'btn-corpo-follow'} onClick={() => handleButtonClick('SAPATOS')}>
                   <label className='botaoLbl'>SAPATOS</label> <img className='img-btn-icon' src="./icones/Sapatos.svg" alt="" onError={(e)=>e.target.style.display='none'}/>
               </button>
+              {/* Botão Novo da Main */}
+              <button className={btnAtivo === 'HISTÓRIA' ? 'btn-corpo-follow-ativado' : 'btn-corpo-follow'} onClick={() => handleButtonClick('HISTÓRIA')}>
+                  <label className='botaoLbl'>HISTÓRIA</label> <img className='img-btn-icon' src="./icones/Cabeça.svg" alt="" />
+              </button>
             </div>
             
             <div className="menu-primario-custom-bottom">
               <button onClick={() => setZoomAtivo(true)} className='btn-zoom'></button>
               <button onClick={() => setZoomAtivo(false)} className='btn-tirar-zoom'></button>
-              <button onClick={handleSaveClick} className='btn-tirar-zooms'>Adicionar ao carrinho</button>
+              {/* Botão de Adicionar ao Carrinho (Logica da Main) */}
+              <button onClick={handleAdicionarClick} className='btn-tirar-zooms' disabled={isAdding}>
+                 {isAdding ? 'ADICIONANDO...' : 'Adicionar ao carrinho'}
+              </button>
+              {message && <span style={{fontSize: '0.8rem', marginLeft: '10px'}}>{message}</span>}
             </div>
         </div>
 
-        {/* MENU SECUNDÁRIO */}
+        {/* --- MENU SECUNDÁRIO (SWITCH ENTRE TODOS OS TIPOS) --- */}
         <div className="menu-secundario-custom">
           <div className="menu-secundario-fundo">
             
@@ -146,6 +270,7 @@ function PaginaCustomizaçao() {
               corCabeloAtual={personagem.corCabelo}
               cabelosDisponiveis={opcoesDoPersonagem.cabelo[personagem.genero]}
               coresCabeloDisponiveis={opcoesDoPersonagem.corCabelo}
+              // Props extras da Branch Jose
               genero={personagem.genero}
               acessoriosCabecaAtuais={personagem.acessoriosCabeca}
               acessorioPescocoAtual={personagem.acessorioPescoco}
@@ -155,37 +280,30 @@ function PaginaCustomizaçao() {
               onMarcasChange={handleMarcasChange}
             />}
 
-            {/* 3. MENU TORSO */}
+            {/* --- MENUS NOVOS (JOSE) --- */}
             {btnAtivo === 'TORSO' && <MenuTorso
               onTorsoChange={(v) => atualizarPersonagem('roupaCima', v)}
               onVarianteChange={(v) => atualizarPersonagem('roupaCimaVariante', v)}
               torsoAtual={personagem.roupaCima}
               varianteAtual={personagem.roupaCimaVariante}
-              
-              /* Seleciona lista por gênero */
               torsosDisponiveis={
                 opcoesDoPersonagem.roupaCima && opcoesDoPersonagem.roupaCima[personagem.genero]
                 ? opcoesDoPersonagem.roupaCima[personagem.genero]
                 : []
               }
-              
               variantesDisponiveis={opcoesDoPersonagem.roupaCimaVariantes}
             />}
 
-            {/* 4. MENU PERNAS */}
             {btnAtivo === 'PERNAS' && <MenuPernas
               onPernaChange={(v) => atualizarPersonagem('roupaBaixo', v)}
               onVarianteChange={(v) => atualizarPersonagem('roupaBaixoVariante', v)}
               pernaAtual={personagem.roupaBaixo}
               varianteAtual={personagem.roupaBaixoVariante}
-              
-              /* Seleciona lista por gênero */
               pernasDisponiveis={
                 opcoesDoPersonagem.roupaBaixo && opcoesDoPersonagem.roupaBaixo[personagem.genero] 
                 ? opcoesDoPersonagem.roupaBaixo[personagem.genero] 
                 : []
               }
-              
               variantesDisponiveis={opcoesDoPersonagem.roupaBaixoVariantes}
             />}
             
@@ -198,7 +316,22 @@ function PaginaCustomizaçao() {
               variantesDisponiveis={opcoesDoPersonagem.sapatoVariantes}
             />}
 
-            {btnAtivo === 'HISTÓRIA' && <MenuSecHistoria />}
+            {/* --- MENU HISTÓRIA (MAIN) --- */}
+            {btnAtivo === 'HISTÓRIA' && <MenuSecHistoria 
+                nomePersonagem={nomePersonagem}
+                setNomePersonagem={setNomePersonagem}
+                inspiracaoUm={inspiracaoUm}
+                setInspiracaoUm={setInspiracaoUm}
+                inspiracaoDois={inspiracaoDois}
+                setInspiracaoDois={setInspiracaoDois}
+                enredoHistoria={enredoHistoria}
+                setEnredoHistoria={setEnredoHistoria}
+                historiaGerada={historiaGerada}
+                setHistoriaGerada={setHistoriaGerada}
+                loading={loadingHistoria}
+                error={errorHistoria}
+                onGerarHistoria={handleGerarHistoria}     
+            />}
 
           </div>
         </div>

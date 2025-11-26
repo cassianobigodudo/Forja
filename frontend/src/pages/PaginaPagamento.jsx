@@ -1,34 +1,87 @@
-import React, { useState } from 'react';
-import "./PaginaPagamento.css";
-import Navbar from '../components/Navbar';
-import { useGlobalContext } from '../context/GlobalContext';
-import axios from 'axios';
+    // seu-projeto/src/pages/PaginaPagamento.jsx - VERSÃO COMPLETA E ATUALIZADA
 
-function PaginaPagamento() {
-    const { dadosDoPersonagem, imagemPersonagem } = useGlobalContext();
+    import React, { useState, useEffect } from 'react';
+    import { useGlobalContext } from '../context/GlobalContext';
+    import "./PaginaPagamento.css";
+    import Navbar from '../components/Navbar';
+    import axios from 'axios';
     
-    const [isProcessing, setIsProcessing] = useState(false);
-    const [statusMessage, setStatusMessage] = useState('');
+    function PaginaPagamento() {
+        const { usuarioId, isLoadingAuth } = useGlobalContext();
+        // 1. MUDANÇA: Pegar o usuario_id do localStorage em vez do con
 
-    const genero = dadosDoPersonagem?.genero;
-    const corPele = dadosDoPersonagem?.corPele;
+        // 2. Estados para gerenciar a página.
+        const [cartItems, setCartItems] = useState([]); 
+        const [isLoading, setIsLoading] = useState(true); 
+        const [isProcessing, setIsProcessing] = useState(false); 
+        const [statusMessage, setStatusMessage] = useState(''); 
 
-    const handleEnviarPedidos = async () => {
-        setIsProcessing(true);
-        setStatusMessage('Enviando pedidos para a produção...');
+        // 3. useEffect para buscar os itens do carrinho.
+        useEffect(() => {
+            if (isLoadingAuth) return;
+            if (usuarioId) {
+                const fetchCartItems = async () => {
+                    try {
+                        const response = await axios.get(`https://forja-qvex.onrender.com/api/carrinho/${usuarioId}`);
+                        setCartItems(response.data); 
+                    } catch (error) {
+                        console.error("Erro ao buscar o carrinho:", error);
+                        setStatusMessage("Não foi possível carregar seu carrinho. Tente recarregar a página.");
+                    } finally {
+                        setIsLoading(false); 
+                    }
+                };
 
-        try {
-            const response = await axios.post('http://localhost:3000/enviar-pedidos-pendentes');
-            console.log('Resposta do servidor:', response.data);
-            setStatusMessage(`Sucesso! ${response.data.sucessos?.length || 0} pedido(s) enviado(s).`);
-        } catch (error) {
-            console.error("Erro ao enviar pedidos:", error);
-            setStatusMessage('Ocorreu um erro. Por favor, tente novamente.');
-            setIsProcessing(false);
+                fetchCartItems();
+            } else {
+                // Se não tiver usuario_id, para de carregar e avisa
+                setIsLoading(false);
+                setStatusMessage("Você precisa estar logado para ver o carrinho.");
+            }
+        }, [usuarioId, isLoadingAuth]); 
+
+        // 4. Função chamada pelo botão "PROSSEGUIR".
+        const handleFinalizarCompra = async () => {
+            if (!usuarioId) {
+                alert("Erro de autenticação. Faça login novamente.");
+                return;
+            }
+
+            setIsProcessing(true);
+            setStatusMessage('Finalizando sua compra e enviando para produção...');
+
+            try {
+                // MUDANÇA: Envia usuario_id no corpo da requisição
+                const response = await axios.post('https://forja-qvex.onrender.com/api/pedidos', {
+                    usuario_id: usuarioId 
+                });
+                
+                const { sucessos, falhas } = response.data;
+                setStatusMessage(`Compra finalizada! ${sucessos?.length || 0} item(ns) enviado(s) com sucesso.`);
+                
+                // Limpa o carrinho na tela
+                setCartItems([]); 
+
+            } catch (error) {
+                console.error("Erro ao finalizar a compra:", error);
+                setStatusMessage('Ocorreu um erro no checkout. Por favor, tente novamente.');
+            } finally {
+                setIsProcessing(false); 
+            }
+        };
+
+        if (isLoading) {
+            return (
+                <div className="container-pagina">
+                    <Navbar />
+                    <div className="container-loading">
+                        <h2>Carregando seu carrinho...</h2>
+                    </div>
+                </div>
+            );
         }
-    };
 
-    if (!dadosDoPersonagem) {
+        // 5. O JSX final que renderiza o carrinho e o botão de checkout.
         return (
             <div className="container-paginaz"> 
                 <Navbar/>
@@ -44,13 +97,29 @@ function PaginaPagamento() {
                         <section className='Checkout'>
                             <h2 className='titulo'>Pagamento:</h2>
                             <div className='lista'>
-                                <article className="item">
-                                    <label>Nenhum pedido feito</label>
-                                    <label></label>
-                                </article>
+                                {cartItems.length > 0 ? (
+                                    // Mapeia e exibe cada item do carrinho
+                                    cartItems.map((item) => (
+                                        <article className="item" key={item.id}>
+                                            <label className=''>Sua Figura:</label>
+                                            <img src={item.img} className='thumb' alt={`Personagem ${item.id}`} />
+                                            <label>
+                                                <h1>Gênero: {item.genero}</h1>
+                                                <h2>Tom de pele: {item.corpele}</h2>
+                                            </label>
+                                        </article>
+                                    ))
+                                ) : (
+                                    // Mensagem exibida se o carrinho estiver vazio
+                                    <article className="item">
+                                        <label>
+                                            {statusMessage ? '' : 'Seu carrinho está vazio.'}
+                                        </label>
+                                    </article>
+                                )}
                             </div>
                         </section>
-
+                        
                         <aside className='direita'>
                             <div className='metodos'>
                                 <button className="metodo-pix" >Pix</button>
@@ -58,77 +127,26 @@ function PaginaPagamento() {
                                 <button className="metodo-boleto" >Boleto</button>
                             </div>
                             <aside className="resumo">
-                                <p className="envio">Envio 0$</p>
+                                <p className="envio">Envio 99,99$</p>
                                 <hr className='risco'/>
                                 <p className="total-label">Total:</p>
-                                <p className="total">0$</p>
+                                <p className="total">99.999,99$</p>
                             </aside>
                             <button 
                                 className="btn-prosseguir" 
-                                onClick={handleEnviarPedidos}
-                                disabled={isProcessing}
+                                onClick={handleFinalizarCompra}
+                                // O botão é desabilitado se estiver processando OU se o carrinho estiver vazio
+                                disabled={isProcessing || cartItems.length === 0}
                             >
                                 {isProcessing ? 'PROCESSANDO...' : 'PROSSEGUIR'}
                             </button>
+                            {/* Exibe mensagens de status para o usuário */}
                             {statusMessage && <p style={{ textAlign: 'center', marginTop: '10px' }}>{statusMessage}</p>}
                         </aside>
                     </main>
-                </div>   
+                </div>
             </div>
         );
     }
 
-    return (
-        <div className="container-pagina"> 
-            <Navbar/>
-            <div className="container">
-                <main className='conteudo'>
-                    <aside className='esquerda'>
-                        <p className='continue'>Continuar comprando?</p>
-                        <hr className='risco' />
-                        <button className='btn-voltar'>VOLTAR<br/>PARA<br/>A FORJA</button>
-                        <div className="figurina" />
-                    </aside>
-
-                    <section className='Checkout'>
-                        <h2 className='titulo'>Pagamento:</h2>
-                        <div className='lista'>
-                            <article className="item">
-                                <label className=''>Sua Figura:</label>
-                                <img src={imagemPersonagem} className='thumb' alt="Personagem" />
-                                <label>
-                                    <h1>Gênero: {genero}</h1>
-                                    <h2>Tom de pele: {corPele}</h2>
-                                </label>
-                            </article>
-                        </div>
-                    </section>
-                    
-                    <aside className='direita'>
-                        <div className='metodos'>
-                            <button className="metodo-pix" >Pix</button>
-                            <button className="metodo-cartao" >Cartão</button>
-                            <button className="metodo-boleto" >Boleto</button>
-                        </div>
-                        <aside className="resumo">
-                            <p className="envio">Envio 99,99$</p>
-                            <hr className='risco'/>
-                            <p className="total-label">Total:</p>
-                            <p className="total">99.999,99$</p>
-                        </aside>
-                        <button 
-                            className="btn-prosseguir" 
-                            onClick={handleEnviarPedidos}
-                            disabled={isProcessing}
-                        >
-                            {isProcessing ? 'PROCESSANDO...' : 'PROSSEGUIR'}
-                        </button>
-                        {statusMessage && <p style={{ textAlign: 'center', marginTop: '10px' }}>{statusMessage}</p>}
-                    </aside>
-                </main>
-            </div>
-        </div>
-    );
-}
-
-export default PaginaPagamento;
+    export default PaginaPagamento;
