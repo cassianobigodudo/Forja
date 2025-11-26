@@ -83,7 +83,7 @@
 
         // 5. O JSX final que renderiza o carrinho e o botão de checkout.
         return (
-            <div className="container-pagina"> 
+            <div className="container-paginaz"> 
                 <Navbar/>
                 <div className="container">
                     <main className='conteudo'>
