@@ -119,6 +119,7 @@
       min-width: 90%;
       background-color: whitesmoke;
       padding: 5px;
+      overflow-y: auto;
     }
     
     .botao-salvar-historia-personagem{

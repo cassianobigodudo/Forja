@@ -64,7 +64,7 @@ const gerarHistoria = async (req, res) => {
 
         // 3. Criar Prompt
         const prompt = `
-            Crie uma história original de RPG com aproximadamente 150 palavras.
+            Crie uma história de background para um boneco de RPG com aproximadamente 150 palavras, usando as informações abaixo como inspiração. Atenção aos elementos de inspiração, quero que você *CRIE* baseado nos elementos, e não dependa só deles. Análise a miniatura printada na imagem e pegue todos os detalhes dela, desde o cabelo, as roupas, suas armas (ou a falta de armas) e seus acessórios. Conecte esses elementos de forma criativa em uma narrativa coerente.
             Use as seguintes informações:
 
             - Nome: ${nome}
@@ -72,8 +72,6 @@ const gerarHistoria = async (req, res) => {
             - Inspiração 2: ${inspiracao2}
             - Tom / estilo da história: ${tonalidade}
 
-            Também analise a imagem fornecida para descrever aparência, expressão, roupas e possíveis pistas visuais.
-            Conecte esses elementos de forma criativa em uma narrativa coerente.
         `;
 
         // 4. Modelo
