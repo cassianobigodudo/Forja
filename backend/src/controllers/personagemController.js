@@ -78,7 +78,7 @@ const gerarHistoria = async (req, res) => {
 
         // 4. Modelo
         const model = genAI.getGenerativeModel({
-            model: "gemini-1.5-flash"
+            model: "gemini-1.5-flash-latest"
         });
 
         // 5. Enviar TEXTO + IMAGEM
