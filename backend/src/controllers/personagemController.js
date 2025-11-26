@@ -90,7 +90,7 @@ const gerarHistoria = async (req, res) => {
                         { text: prompt },
                         {
                             inlineData: {
-                                mimeType: "image/png",
+                                mimeType: "image/jpeg",
                                 data: base64Data
                             }
                         }

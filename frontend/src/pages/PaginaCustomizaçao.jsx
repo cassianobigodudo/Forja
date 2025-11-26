@@ -95,7 +95,7 @@ function PaginaCustomizaçao() {
                 backgroundColor: null,
                 scale: 1
             });
-            const base64full = canvas.toDataURL("image/png"); // vem com prefixo data:
+            const base64full = canvas.toDataURL("image/jpeg", 0.8); // vem com prefixo data:
             const base64 = base64full.split(",")[1]; // remove o prefixo
 
           if (!base64) {
