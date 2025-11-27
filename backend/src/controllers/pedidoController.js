@@ -5,8 +5,8 @@ const axios = require('axios');
 
 // Ação de criar um pedido a partir do carrinho
 const criarAPartirDoCarrinho = async (req, res) => {
-    const { usuario_id } = req.body;
-    if (!usuario_id) {
+    const { id_usuario } = req.body;
+    if (!id_usuario) {
         return res.status(400).json({ message: 'ID de sessão é obrigatório.' });
     }
 
@@ -16,7 +16,7 @@ const criarAPartirDoCarrinho = async (req, res) => {
         await client.query('BEGIN');
 
         // 1. Usa o CarrinhoModel para buscar os itens
-        const itensCarrinho = await CarrinhoModel.buscarPorSessao(usuario_id);
+        const itensCarrinho = await CarrinhoModel.buscarPorSessao(id_usuario);
 
         if (itensCarrinho.length === 0) {
             return res.status(400).json({ message: 'Seu carrinho está vazio.' });
@@ -28,7 +28,7 @@ const criarAPartirDoCarrinho = async (req, res) => {
             let novoPedidoId = null;
             try {
                 // 2. Cria o pedido usando o PedidoModel
-                novoPedidoId = await PedidoModel.criar(client, usuario_id, item.id, 'processando');
+                novoPedidoId = await PedidoModel.criar(client, id_usuario, item.id, 'processando');
 
                 const orderIdExterno = `pedido-forja-${novoPedidoId}`;
                 const requisicaoParaProfessor = {
@@ -69,7 +69,7 @@ const criarAPartirDoCarrinho = async (req, res) => {
         }
 
         // 5. Limpa o carrinho usando o CarrinhoModel
-        await CarrinhoModel.limparPorSessao(client, usuario_id);
+        await CarrinhoModel.limparPorSessao(client, id_usuario);
         
         await client.query('COMMIT');
         res.status(200).json({ mensagem: 'Finalização de compra processada.', ...resultados });

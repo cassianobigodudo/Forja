@@ -108,7 +108,7 @@ export const useLogicaCustomizacao = () => {
         
         try {
             // 1. Recuperar o ID do usuário logado
-            const usuarioId = localStorage.getItem('usuario_id');
+            const usuarioId = localStorage.getItem('id_usuario');
 
             // 2. Trava de segurança: Se não houver login, interrompe o processo.
             if (!usuarioId) {
@@ -121,11 +121,11 @@ export const useLogicaCustomizacao = () => {
             const canvas = await html2canvas(referenciaDoElemento.current, { backgroundColor: null, scale: 0.45 });
             const imagemEmBase64 = canvas.toDataURL('image/png');
             
-            // 4. Montar o objeto completo usando usuario_id
+            // 4. Montar o objeto completo usando id_usuario
             const personagemCompleto = { 
                 ...personagem, 
                 img: imagemEmBase64,
-                usuario_id: usuarioId // <--- Mudança aqui: usa o ID do usuário
+                id_usuario: usuarioId // <--- Mudança aqui: usa o ID do usuário
             };
             
             console.log("Enviando os seguintes dados para /personagens:", personagemCompleto);
@@ -137,7 +137,7 @@ export const useLogicaCustomizacao = () => {
             
             // 6. Adicionar o personagem recém-salvo ao carrinho (API Call 2)
             await axios.post('https://forja-qvex.onrender.com/api/carrinho', {
-                usuario_id: usuarioId, // <--- Mudança aqui
+                id_usuario: usuarioId, // <--- Mudança aqui
                 personagem_id: novoPersonagemSalvo.id
             });
             console.log(`Personagem ID ${novoPersonagemSalvo.id} adicionado ao carrinho.`);

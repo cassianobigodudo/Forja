@@ -13,8 +13,8 @@ const criarPersonagem = async (req, res) => {
 
     try {
         // 1. Validação
-        if (!req.body.usuario_id) {
-            console.log("--- [ERRO] Falta usuario_id ---");
+        if (!req.body.id_usuario) {
+            console.log("--- [ERRO] Falta id_usuario ---");
             return res.status(400).json({ message: 'Usuário não identificado.' });
         }
 
@@ -34,6 +34,16 @@ const criarPersonagem = async (req, res) => {
         res.status(500).json({ message: 'Erro ao salvar personagem.' });
     }
 };
+
+const buscarPersonagensLoja = async (req, res) => {
+    try {
+        const personagens = await PersonagemModel.buscar();
+        res.status(200).json(personagens);
+    } catch (err) {
+        console.error("Erro ao buscar personagens da loja:", err);
+        res.status(500).json({ message: 'Erro ao buscar personagens da loja.' });
+    }
+}
 
 
 // ===============================
@@ -107,5 +117,6 @@ const gerarHistoria = async (req, res) => {
 // ===============================
 module.exports = {
     criarPersonagem,
-    gerarHistoria
+    gerarHistoria,
+    buscarPersonagensLoja
 };

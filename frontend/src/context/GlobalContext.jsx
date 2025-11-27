@@ -13,7 +13,7 @@ export const GlobalContextProvider = ({ children }) => {
 
   useEffect(() => {
         // 1. Ao carregar o site, verifica o HD (LocalStorage)
-        const idSalvo = localStorage.getItem('usuario_id');
+        const idSalvo = localStorage.getItem('id_usuario');
         const nomeSalvo = localStorage.getItem('usuario_nome');
 
         if (idSalvo) {
@@ -31,7 +31,7 @@ export const GlobalContextProvider = ({ children }) => {
         setUsuarioNome(dadosUsuario.nome_usuario);
 
         // Atualiza o HD (Persistência)
-        localStorage.setItem('usuario_id', dadosUsuario.id_usuario);
+        localStorage.setItem('id_usuario', dadosUsuario.id_usuario);
         localStorage.setItem('usuario_nome', dadosUsuario.nome_usuario);
     };
 
@@ -39,7 +39,7 @@ export const GlobalContextProvider = ({ children }) => {
     const logoutUsuario = () => {
         setUsuarioId(null);
         setUsuarioNome(null);
-        localStorage.removeItem('usuario_id');
+        localStorage.removeItem('id_usuario');
         localStorage.removeItem('usuario_nome');
         // Opcional: window.location.href = '/'; 
     };

@@ -41,8 +41,8 @@ function PaginaCustomizaçao() {
     const [errorHistoria, setErrorHistoria] = useState(null);
 
     const handleAdicionarClick = async () => {
-        // 1. MUDANÇA: Verifica o usuario_id no localStorage
-        const usuarioId = localStorage.getItem('usuario_id');
+        // 1. MUDANÇA: Verifica o id_usuario no localStorage
+        const usuarioId = localStorage.getItem('id_usuario');
         
         if (!usuarioId) {
             alert("Você precisa estar logado para adicionar ao carrinho!");

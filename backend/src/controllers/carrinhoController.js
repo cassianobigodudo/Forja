@@ -3,14 +3,14 @@ const CarrinhoModel = require('../models/carrinhoModel');
 
 // Lida com a adição de um item
 const adicionarItem = async (req, res) => {
-    const { usuario_id, personagem_id } = req.body;
-    console.log("Adicionando ao carrinho:", { usuario_id, personagem_id });
-    if (!usuario_id || !personagem_id) {
+    const { id_usuario, personagem_id } = req.body;
+    console.log("Adicionando ao carrinho:", { id_usuario, personagem_id });
+    if (!id_usuario || !personagem_id) {
         return res.status(400).json({ message: 'ID de sessão e ID do personagem são obrigatórios.' });
     }
 
     try {
-        await CarrinhoModel.adicionarItem(usuario_id, personagem_id);
+        await CarrinhoModel.adicionarItem(id_usuario, personagem_id);
         res.status(201).json({ message: 'Personagem adicionado ao carrinho!' });
     } catch (error) {
         if (error.code === '23505') { // Item duplicado
@@ -23,9 +23,9 @@ const adicionarItem = async (req, res) => {
 
 // Lida com a busca dos itens do carrinho
 const getItens = async (req, res) => {
-    const { usuario_id } = req.params;
+    const { id_usuario } = req.params;
     try {
-        const itens = await CarrinhoModel.buscarPorSessao(usuario_id);
+        const itens = await CarrinhoModel.buscarPorSessao(id_usuario);
         res.status(200).json(itens);
     } catch (error) {
         console.error("Erro ao buscar itens do carrinho:", error);
