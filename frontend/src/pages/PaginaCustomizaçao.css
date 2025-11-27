@@ -9,7 +9,7 @@
  }
 }
 
-.container-pagina {
+.container-paginas{
  height: 100vh;
  width: 100vw;
  display: flex;
@@ -19,10 +19,11 @@
  background-image: url(./fundo/tim-mcburnie-completa-escurecido.png);
  background-repeat: no-repeat;
  background-size: 170%;
- background-position: 90% 50%;
+ background-position: 100% 50%;
+ overflow: hidden;
 }
 
-.pagina-custom {
+.pagina-customs {
  display: flex;
  align-items: center;
  text-align: center;

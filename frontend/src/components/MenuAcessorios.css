@@ -1,0 +1,132 @@
+/* =========================================
+   Variáveis & Configurações (Tema Cabelos)
+   ========================================= */
+:root {
+  /* Cores */
+  --cor-destaque: #ffc107;       /* Amarelo */
+  --cor-texto: white;
+  --cor-borda-padrao: white;
+  --cor-borda-inativa: #5a5a5a;
+  
+  /* Fundos */
+  --bg-item: rgba(0, 0, 0, 0.2);
+  --bg-item-hover: rgba(255, 255, 255, 0.2);
+
+  /* Fontes */
+  --fonte-tema: "fonte-titulos", sans-serif;
+
+  /* Transições */
+  --transicao-padrao: 0.3s ease;
+}
+
+/* Animação de Entrada */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* =========================================
+   Container Principal
+   ========================================= */
+.container-menu-acessorios {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 10px;
+  box-sizing: border-box;
+  overflow-y: auto; /* Scroll vertical ativado */
+  
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* =========================================
+   Seção de Títulos (Labels)
+   ========================================= */
+.acessorios-secao {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.lbl-acessorio {
+  font-family: var(--fonte-tema);
+  font-size: 18px;
+  letter-spacing: 1px;
+  color: var(--cor-texto);
+  text-align: left;
+  margin-left: 5px;
+  text-transform: uppercase;
+}
+
+/* =========================================
+   Grid de Itens
+   ========================================= */
+.acessorios-grid {
+  display: grid;
+  /* Grid responsivo: ajusta a quantidade de colunas automaticamente */
+  grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+  gap: 8px;
+  padding: 5px;
+}
+
+/* =========================================
+   Item Individual (Opção)
+   ========================================= */
+.acessorio-opcao {
+  width: 60px;
+  height: 60px;
+  
+  /* Estilo Visual */
+  background-color: var(--bg-item);
+  border: 2px solid var(--cor-borda-padrao);
+  border-radius: 0; /* Quadrado (sem borda arredondada) */
+  
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  /* CORREÇÃO DE ZOOM 1: Padding mínimo para dar espaço à imagem */
+  padding: 1px;
+  box-sizing: border-box;
+  
+  /* CORREÇÃO DE ZOOM 2: Impede que a imagem ampliada saia do quadrado */
+  overflow: hidden;
+
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+/* Imagem dentro do item */
+.acessorio-opcao img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  
+  /* CORREÇÃO DE ZOOM 3: Aumenta a imagem em 35% */
+ 
+
+  transform: scale(4) translateY(19px)
+}
+
+/* Estados Interativos */
+.acessorio-opcao:hover {
+  background-color: var(--bg-item-hover);
+}
+
+.acessorio-opcao.ativada {
+  border-color: var(--cor-destaque);
+}
+
+/* =========================================
+   Botão "Nenhum/Vazio" (Xadrez)
+   ========================================= */
+.acessorio-opcao:empty {
+  background-color: rgba(0,0,0,0.3);
+  background-image: 
+    linear-gradient(45deg, rgba(255,255,255,0.05) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.05) 75%, rgba(255,255,255,0.05)),
+    linear-gradient(45deg, rgba(255,255,255,0.05) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.05) 75%, rgba(255,255,255,0.05));
+  background-size: 10px 10px;
+  background-position: 0 0, 5px 5px;
+}
