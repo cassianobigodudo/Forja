@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import html2canvas from 'html2canvas';
 
-// --- MAPEAMENTOS ---
+// --- MAPEAMENTOS (Mantidos iguais) ---
 const mapeamentosParaNumeros = {
   genero: { 'FEMININO': 2, 'MASCULINO': 3 },
   corPele: { 'NEGRA': 0, 'PARDA': 1, 'LEITE': 2, 'BRANCA': 3, 'VERDE': 4, 'LARANJA': 5, 'CINZA': 6 },
@@ -17,6 +17,7 @@ const mapeamentosParaNumeros = {
   acessorioPescoco: { 'COLAR': 0 },
 };
 
+// ... (CONSTANTES DE ITENS E HELPERS MANTIDOS IGUAIS - OMITIDOS PARA BREVIDADE) ...
 const ITENS_EXCLUSIVOS = { 'MASCARA': true, 'CAPACETE-TRIBAL-MASCARA': true, 'CAPACETE-CAVALEIRO': true, 'CAPACETE-DARK': true, 'CAPACETE-MADEIRA': true, 'CAPACETE-TRIBAL': true };
 const ITENS_BASE = { 'CHAPEU-SOL-TOPO': true, ...ITENS_EXCLUSIVOS };
 const ACESSORIOS_ESCONDEM_CABELO = { 'CAPACETE-CAVALEIRO': true, 'CAPACETE-DARK': true, 'CAPACETE-TRIBAL-MASCARA': true, 'MASCARA': true };
@@ -49,78 +50,64 @@ const getCaminhoAcessorio = (nomeItem, genero) => {
   return infoItem ? `/personagem-${genero}/ACESSORIOS-${genero}S/${infoItem.categoria}/${infoItem.nome}.png` : null;
 };
 
-// --- HELPER: Caminho Torso ---
 const getCaminhoRoupaCima = (nomeItem, variante, genero) => {
     if (!nomeItem) return null;
     let varSufixo = variante || 'top-1';
-
-    if (genero === 'FEMININO') {
-        return `/personagem-FEMININO/ROUPAS-TORSO/${nomeItem}-top-1.png`;
-    }
-
+    if (genero === 'FEMININO') return `/personagem-FEMININO/ROUPAS-TORSO/${nomeItem}-top-1.png`;
     if (genero === 'MASCULINO') {
-        if (nomeItem === 'Besourto' && varSufixo === 'top-1') {
-            varSufixo = 'Top-1'; // Exceção
-        }
+        if (nomeItem === 'Besourto' && varSufixo === 'top-1') varSufixo = 'Top-1';
         return `/personagem-MASCULINO/ROUPAS-TORSO/${nomeItem}-${varSufixo}.png`;
     }
-    
     return null;
 };
 
-// --- HELPER: Caminho Pernas ---
 const getCaminhoRoupaBaixo = (nomeItem, variante, genero) => {
     if (!nomeItem) return null;
-    
-    if (genero === 'FEMININO') {
-        return `/personagem-FEMININO/ROUPAS-PERNAS/${nomeItem}-bottom-1.png`;
-    }
-
+    if (genero === 'FEMININO') return `/personagem-FEMININO/ROUPAS-PERNAS/${nomeItem}-bottom-1.png`;
     if (genero === 'MASCULINO') {
         const itensSufixoCurto = ['Calca', 'Leggings', 'MeiaCalca'];
-        if (itensSufixoCurto.includes(nomeItem)) {
-            return `/personagem-MASCULINO/ROUPAS-PERNA/${nomeItem}-1.png`; // Exceção
-        }
+        if (itensSufixoCurto.includes(nomeItem)) return `/personagem-MASCULINO/ROUPAS-PERNA/${nomeItem}-1.png`;
         return `/personagem-MASCULINO/ROUPAS-PERNA/${nomeItem}-bottom-1.png`;
     }
-
     return null;
 };
 
-// --- Opções ---
+const getCaminhoSapato = (nomeItem, variante, genero) => {
+    if (!nomeItem) return null;
+    const varSufixo = variante || '1';
+    return `/personagem-${genero}/SAPATOS/${nomeItem}-${varSufixo}.png`;
+};
+
+// --- Opções (Mantidas iguais) ---
 const opcoesDoPersonagem = {
  cabelo: { MASCULINO: ['AFRO', 'CURTO', 'DREAD', 'LONGO', 'LOCO', 'RASPADO'], FEMININO: ['AFRO', 'CURTO', 'DREAD', 'LONGO', 'LOCO', 'RASPADO'] },
  corCabelo: [ { nome: 'PRETO', color: '#1a1a1a' }, { nome: 'VERMELHO', color: '#c43a3a' }, { nome: 'LOIRO', color: '#f5d453' }, { nome: 'BRANCO', color: '#e0e0e0' } ],
  corPele: [ { nome: 'NEGRA', color: '#3b2010ff' }, { nome: 'PARDA', color: '#8C5230' }, { nome: 'LEITE', color: '#D2A17C' }, { nome: 'BRANCA', color: '#F9E4D4' }, { nome: 'VERDE', color: '#4d771eff' }, { nome: 'LARANJA', color: '#c26632ff' }, { nome: 'CINZA', color: '#99af9eff' } ],
  estilosComCabeloFundo: ['AFRO'],
- 
  roupaCima: {
     MASCULINO: ['Besourto', 'Guerreiro', 'Ladino', 'Limpo', 'Marcial', 'Monge', 'Regalia', 'Social'],
-    FEMININO: ['Besourto', 'Bikini', 'Camponesa', 'Guerreiro', 'Ladina', 'Limpo', 'Mage', 'Monge', 'Regalia', 'Social']
+    FEMININO: ['Besourto', 'Bikini', 'Camponesa', 'Guerreiro','Grego', 'Ladina','Marcial', 'Limpo', 'Mage', 'Monge', 'Regalia', 'Social']
  },
  roupaCimaVariantes: ['top-1'], 
-
  roupaBaixo: {
     MASCULINO: ['Besouro', 'Calca', 'Grego', 'Ladino', 'Leggings', 'Limpo', 'Marcial', 'MeiaCalca', 'Monge'],
-    FEMININO: ['Besourto', 'Bikini', 'Camponesa', 'Ladina', 'Leggings', 'Limpo', 'Monge', 'Refinado', 'Social']
+    FEMININO: ['Besourto', 'Bikini', 'Camponesa', 'Ladina','Grego','Marcial', 'Leggings', 'Limpo', 'Monge', 'Refinado', 'Social']
  },
  roupaBaixoVariantes: ['1'], 
+ sapato: ['Aneis', 'BotasAltas', 'BotasNeve', 'Sabatao', 'Sandalia', 'Sapatilha'],
+ sapatoVariantes: ['1'],
 };
 
 // --- Estado Inicial ---
 const estadoInicialDoPersonagem = {
  genero: 'FEMININO', generoNum: 2, corPele: 'NEGRA', corPeleNum: 0,
  cabelo: 'CURTO', cabeloNum: 0, corCabelo: 'PRETO', corCabeloNum: '1', 
- acessoriosCabeca: ['CHAPEU-SOL-TOPO', 'ARGOLA'], acessorioPescoco: 'COLAR', marcas: 'CICATRIZ-NARIZ',
- 
- // Atualizado: Feminino inicia com Besourto e Leggings
- roupaCima: 'Bikini', 
- roupaCimaVariante: 'top-1', 
- roupaBaixo: 'Leggings', 
- roupaBaixoVariante: '1',
-
+ acessoriosCabeca: ['null', 'ARGOLA'], acessorioPescoco: 'COLAR', marcas: 'CICATRIZ-NARIZ',
+ roupaCima: 'Bikini', roupaCimaVariante: 'top-1', 
+ roupaBaixo: 'Grego', roupaBaixoVariante: '1',
+ sapato: 'Sandalia', sapatoVariante: '1',
  acessCabeca: 6, acessCabecapadrao: '1', acessPescocoNum: 0, marcaspadrao: '1', 
- img: '', historia: '', armas: '', baseMini: '', sapato: ''
+ img: '', historia: '', armas: '', baseMini: ''
 };
 
 export const useLogicaCustomizacao = () => {
@@ -128,8 +115,14 @@ export const useLogicaCustomizacao = () => {
 
  const atualizarPersonagem = (caracteristica, novoValor) => {
   setPersonagem(prev => {
-   // REGRA: Se tentar remover a roupa de cima (novoValor === null) e for Feminino, ignora a ação.
+   
+   // --- NOVO: REGRA DE ROUPAS OBRIGATÓRIAS ---
+   // Regra 1: Se tentar remover roupa de cima (FEMININO) -> Ignora
    if (caracteristica === 'roupaCima' && !novoValor && prev.genero === 'FEMININO') {
+      return prev;
+   }
+   // Regra 2: Se tentar remover roupa de baixo (QUALQUER GÊNERO) -> Ignora
+   if (caracteristica === 'roupaBaixo' && !novoValor) {
       return prev;
    }
 
@@ -148,14 +141,18 @@ export const useLogicaCustomizacao = () => {
    
    // Lógica de Troca de Gênero
    if (caracteristica === 'genero' && prev.genero !== novoValor) {
-     novoEstado.cabelo = null; novoEstado.cabeloNum = null; 
+     // --- NOVO: CABELO SEMPRE CURTO AO TROCAR ---
+     novoEstado.cabelo = 'CURTO'; 
+     novoEstado.cabeloNum = mapeamentosParaNumeros.cabelo['CURTO']; // ou apenas 0
+     
+     // Reseta acessórios
      novoEstado.acessoriosCabeca = []; novoEstado.acessorioPescoco = null; novoEstado.marcas = null;
      
-     // REGRA: Ambos começam com Leggings ao trocar de gênero
-     novoEstado.roupaBaixo = 'Leggings'; 
-     
-     // REGRA: Feminino sempre deve ter pelo menos 1 top (inicia com Besourto ao trocar)
-     // Masculino pode ficar sem top (null)
+     // Mantém Leggings e sapato padrão
+     novoEstado.roupaBaixo = 'Grego'; 
+     novoEstado.sapato = 'Sandalia'; 
+
+     // Define Top inicial se for mulher
      if (novoValor === 'FEMININO') {
          novoEstado.roupaCima = 'Bikini';
      } else {
@@ -187,7 +184,7 @@ export const useLogicaCustomizacao = () => {
   } catch (e) { console.error(e); }
  };
  
- const { genero, corPele, cabelo, corCabelo, acessoriosCabeca, acessorioPescoco, marcas, roupaCima, roupaCimaVariante, roupaBaixo, roupaBaixoVariante } = personagem;
+ const { genero, corPele, cabelo, corCabelo, acessoriosCabeca, acessorioPescoco, marcas, roupaCima, roupaCimaVariante, roupaBaixo, roupaBaixoVariante, sapato, sapatoVariante } = personagem;
 
  // --- GERAÇÃO DOS CAMINHOS ---
  const caminhoBaseCorpo = genero === 'MASCULINO' 
@@ -200,6 +197,7 @@ export const useLogicaCustomizacao = () => {
  
  const caminhoRoupaCima = getCaminhoRoupaCima(roupaCima, roupaCimaVariante, genero);
  const caminhoRoupaBaixo = getCaminhoRoupaBaixo(roupaBaixo, roupaBaixoVariante, genero);
+ const caminhoSapato = getCaminhoSapato(sapato, sapatoVariante, genero);
 
  const acessoriosCabecaFundo = [], acessoriosCabecaRosto = [], acessoriosCabecaTopo = [];
  acessoriosCabeca.forEach(nome => {
@@ -218,7 +216,8 @@ export const useLogicaCustomizacao = () => {
  const caminhosDasImagens = {
   corpo: caminhoBaseCorpo,
   roupaCima: caminhoRoupaCima,
-  roupaBaixo: caminhoRoupaBaixo, 
+  roupaBaixo: caminhoRoupaBaixo,
+  sapato: caminhoSapato,
   cabeloFrente: caminhoCabeloFrente, cabeloFundo: caminhoCabeloFundo,
   acessoriosCabecaFundo, acessoriosCabecaRosto, acessoriosCabecaTopo,
   acessorioPescoco: getCaminhoAcessorio(acessorioPescoco, genero),

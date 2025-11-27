@@ -10,49 +10,40 @@ import MenuSecCabeca from '../components/MenuSecCabeca';
 import MenuSecCorpo from '../components/MenuSecCorpo';
 import MenuSecHistoria from '../components/MenuSecHistoria';
 
-// --- MENUS DE PEÇAS INDIVIDUAIS (VINDOS DA BRANCH JOSE) ---
+// --- MENUS DE PEÇAS INDIVIDUAIS ---
 import MenuTorso from '../components/MenuTorso';
 import MenuPernas from '../components/MenuPernas';
 import MenuSapatos from '../components/MenuSapatos';
 
 // --- CONTEXTOS E HOOKS ---
-// Mantive o GlobalContext pois a branch Jose usa para setar dados locais, 
-// mas o foco principal de "Salvar" será o Hook da Main.
 import { useGlobalContext } from '../context/GlobalContext';
-import { useLogicaCustomizacao } from './Hook/HookCustomizacao.js'; // Verifique se o caminho está correto (Hook ou hooks)
+import { useLogicaCustomizacao } from './Hook/HookCustomizacao.js';
 
 function PaginaCustomizaçao() {
 
-  // 1. Contexto Global (Branch Jose)
   const { setDadosDoPersonagem, setImagemPersonagem } = useGlobalContext();
 
-  // 2. Lógica Unificada (Mistura de Main e Jose)
   const { 
     personagem, 
     atualizarPersonagem, 
-    salvarPersonagem, // Da branch Jose
-    adicionarPersonagemAoCarrinho, // Da Main
+    salvarPersonagem,
+    adicionarPersonagemAoCarrinho,
     caminhosDasImagens, 
     opcoesDoPersonagem,
-    // Handlers específicos da Branch Jose
     handleAcessoriosCabecaChange, 
     handleAcessorioPescocoChange,
     handleMarcasChange
   } = useLogicaCustomizacao();
   
-  // --- ESTADOS DE UI (COMUNS) ---
   const [btnAtivo, setBtnAtivo] = useState('CORPO');
   const [zoomAtivo, setZoomAtivo] = useState(false);
   const characterRef = useRef(null);
   
-  // --- ESTADOS DE SALVAMENTO/CARRINHO (MAIN) ---
   const [isAdding, setIsAdding] = useState(false);
   const [message, setMessage] = useState('');
-  
-  // --- ESTADOS DE SALVAMENTO LOCAL (JOSE) ---
   const [isSaving, setIsSaving] = useState(false);
 
-  // --- ESTADOS DA HISTÓRIA (MAIN) ---
+  // --- ESTADOS DA HISTÓRIA ---
   const [nomePersonagem, setNomePersonagem] = useState("");
   const [inspiracaoUm, setInspiracaoUm] = useState("");
   const [inspiracaoDois, setInspiracaoDois] = useState("");
@@ -62,16 +53,13 @@ function PaginaCustomizaçao() {
   const [loadingHistoria, setLoadingHistoria] = useState(false);
   const [errorHistoria, setErrorHistoria] = useState(null);
 
-  // --- EFEITO: SALVAR NO CONTEXTO (JOSE) ---
-  // Mantido para garantir que a lógica de salvar localmente ao dar zoom ou clicar funcione
   useEffect(() => {
     if (isSaving && !zoomAtivo) {
       const captureAndSave = async () => {
-        // Usa a função da branch Jose
         if(salvarPersonagem) {
             await salvarPersonagem(characterRef, setDadosDoPersonagem, setImagemPersonagem);
         }
-        setBtnAtivo('SALVAR'); // Feedback visual
+        setBtnAtivo('SALVAR');
         setIsSaving(false);
       };
       const timer = setTimeout(captureAndSave, 100);
@@ -79,8 +67,6 @@ function PaginaCustomizaçao() {
     }
   }, [isSaving, zoomAtivo, salvarPersonagem, setDadosDoPersonagem, setImagemPersonagem, characterRef]);
 
-
-  // --- FUNÇÃO: ADICIONAR AO CARRINHO (DA MAIN - MAIS ROBUSTA) ---
   const handleAdicionarClick = async () => {
     const usuarioId = localStorage.getItem('usuario_id');
     
@@ -92,8 +78,6 @@ function PaginaCustomizaçao() {
     setIsAdding(true);
     setMessage('Adicionando ao carrinho...');
     setZoomAtivo(false);
-
-    // Opcional: Acionar também o salvamento local do Jose
     setIsSaving(true); 
 
     setTimeout(async () => {
@@ -108,7 +92,6 @@ function PaginaCustomizaçao() {
     }, 200);
   };
 
-  // --- FUNÇÃO: GERAR HISTÓRIA (DA MAIN) ---
   const handleGerarHistoria = async () => {
     if (!nomePersonagem || !inspiracaoUm || !inspiracaoDois || !enredoHistoria) {
       setErrorHistoria("Por favor, preencha todos os campos da história.");
@@ -126,38 +109,36 @@ function PaginaCustomizaçao() {
   
     try {
        const canvas = await html2canvas(characterRef.current, {
-            backgroundColor: null,
-            scale: 1
+           backgroundColor: null,
+           scale: 1
        });
        const base64full = canvas.toDataURL("image/jpeg", 0.8);
        const base64 = base64full.split(",")[1];
 
-      if (!base64) {
-         throw new Error("Falha ao capturar a imagem do personagem.");
-      }
+       if (!base64) {
+          throw new Error("Falha ao capturar a imagem do personagem.");
+       }
 
-      const API_URL = 'https://forja-qvex.onrender.com/api/personagens/gerar-historia';
-      const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          nome: nomePersonagem,
-          inspiracao1: inspiracaoUm,
-          inspiracao2: inspiracaoDois,
-          tonalidade: enredoHistoria,
-          imageBase64: base64 
-        }),
-      });
+       const API_URL = 'https://forja-qvex.onrender.com/api/personagens/gerar-historia';
+       const response = await fetch(API_URL, {
+         method: 'POST',
+         headers: { 'Content-Type': 'application/json' },
+         body: JSON.stringify({
+           nome: nomePersonagem,
+           inspiracao1: inspiracaoUm,
+           inspiracao2: inspiracaoDois,
+           tonalidade: enredoHistoria,
+           imageBase64: base64 
+         }),
+       });
   
-      if (!response.ok) {
-        const errData = await response.json();
-        throw new Error(errData.error || "Falha no servidor ao gerar história.");
-      }
+       if (!response.ok) {
+         const errData = await response.json();
+         throw new Error(errData.error || "Falha no servidor ao gerar história.");
+       }
   
-      const data = await response.json();
-      setHistoriaGerada(data.historia);
+       const data = await response.json();
+       setHistoriaGerada(data.historia);
 
     } catch (err) {
       console.error(err);
@@ -171,13 +152,17 @@ function PaginaCustomizaçao() {
     setBtnAtivo(prev => prev === nomeDoBotao ? null : nomeDoBotao);
   };
 
+  // --- NOVA LÓGICA DE VISUALIZAÇÃO ---
+  // Verifica se a peça de baixo atual é Leggings
+  const isLeggings = personagem.roupaBaixo === 'Leggings';
+
   return (
     <div className="container-paginas">
       <Navbar />
       <div className="pagina-customs">
       <div className="area-customizacao">
         
-        {/* --- ÁREA DO PAPERDOLL (VERSÃO JOSE - MAIS COMPLETA) --- */}
+        {/* --- ÁREA DO PAPERDOLL --- */}
         <div className={`paperdoll-area ${zoomAtivo ? 'zoomed' : ''}`}>
           <div ref={characterRef} className="character-container" style={{ position: 'relative' }}>
             
@@ -191,19 +176,30 @@ function PaginaCustomizaçao() {
             {/* 3. MARCAS */}
             {caminhosDasImagens.marcas && <img src={caminhosDasImagens.marcas} alt="Marcas" style={{ position: 'absolute', top: 0, left: 0 }} />}
 
-            {/* 4. PERNAS */}
+            {/* --- LÓGICA DE CAMADAS: SAPATOS VS BOTTOMS --- */}
+            
+            {/* 4a. SAPATOS (CAMADA INFERIOR) */}
+            {/* Renderiza aqui se NÃO for Leggings (Sapatos ficam por baixo da calça) */}
+            {!isLeggings && caminhosDasImagens.sapato && (
+               <img src={caminhosDasImagens.sapato} alt="Sapatos" style={{ position: 'absolute', top: 0, left: 0 }} />
+            )}
+
+            {/* 5. PERNAS (BOTTOMS) */}
             {caminhosDasImagens.roupaBaixo && (
                <img src={caminhosDasImagens.roupaBaixo} alt="Pernas" style={{ position: 'absolute', top: 0, left: 0 }} />
             )}
 
-            {/* 5. TORSO */}
-            {caminhosDasImagens.roupaCima && (
-               <img src={caminhosDasImagens.roupaCima} alt="Torso" style={{ position: 'absolute', top: 0, left: 0 }} />
+            {/* 4b. SAPATOS (CAMADA SUPERIOR) */}
+            {/* Renderiza aqui se FOR Leggings (Sapatos ficam por cima da leggings) */}
+            {isLeggings && caminhosDasImagens.sapato && (
+               <img src={caminhosDasImagens.sapato} alt="Sapatos" style={{ position: 'absolute', top: 0, left: 0 }} />
             )}
 
-            {/* 6. SAPATOS */}
-            {caminhosDasImagens.sapato && (
-               <img src={caminhosDasImagens.sapato} alt="Sapatos" style={{ position: 'absolute', top: 0, left: 0 }} />
+            {/* --- FIM LÓGICA DE CAMADAS --- */}
+
+            {/* 6. TORSO */}
+            {caminhosDasImagens.roupaCima && (
+               <img src={caminhosDasImagens.roupaCima} alt="Torso" style={{ position: 'absolute', top: 0, left: 0 }} />
             )}
 
             {/* 7. ACESSÓRIOS TOPO */}
@@ -215,7 +211,7 @@ function PaginaCustomizaçao() {
           </div>
         </div>
 
-        {/* --- MENU PRIMÁRIO (UNIFICADO) --- */}
+        {/* --- MENU PRIMÁRIO --- */}
         <div className="menu-primario-custom-container">
             <div className="menu-primario-custom-top">
               <button className={btnAtivo === 'CORPO' ? 'btn-corpo-ativado' : 'btn-corpo'} onClick={() => handleButtonClick('CORPO')}>
@@ -224,7 +220,6 @@ function PaginaCustomizaçao() {
               <button className={btnAtivo === 'CABEÇA' ? 'btn-corpo-follow-ativado' : 'btn-corpo-follow'} onClick={() => handleButtonClick('CABEÇA')}>
                   <label className='botaoLbl'>CABEÇA</label> <img className='img-btn-icon' src="./icones/Cabeça.svg" alt="" />
               </button>
-              {/* Botões Novos do Jose */}
               <button className={btnAtivo === 'TORSO' ? 'btn-corpo-follow-ativado' : 'btn-corpo-follow'} onClick={() => handleButtonClick('TORSO')}>
                   <label className='botaoLbl'>TORSO</label> <img className='img-btn-icon' src="./icones/Torso.svg" alt="" onError={(e)=>e.target.style.display='none'}/>
               </button>
@@ -234,7 +229,6 @@ function PaginaCustomizaçao() {
               <button className={btnAtivo === 'SAPATOS' ? 'btn-corpo-follow-ativado' : 'btn-corpo-follow'} onClick={() => handleButtonClick('SAPATOS')}>
                   <label className='botaoLbl'>SAPATOS</label> <img className='img-btn-icon' src="./icones/Sapatos.svg" alt="" onError={(e)=>e.target.style.display='none'}/>
               </button>
-              {/* Botão Novo da Main */}
               <button className={btnAtivo === 'HISTÓRIA' ? 'btn-corpo-follow-ativado' : 'btn-corpo-follow'} onClick={() => handleButtonClick('HISTÓRIA')}>
                   <label className='botaoLbl'>HISTÓRIA</label> <img className='img-btn-icon' src="./icones/Cabeça.svg" alt="" />
               </button>
@@ -243,7 +237,6 @@ function PaginaCustomizaçao() {
             <div className="menu-primario-custom-bottom">
               <button onClick={() => setZoomAtivo(true)} className='btn-zoom'></button>
               <button onClick={() => setZoomAtivo(false)} className='btn-tirar-zoom'></button>
-              {/* Botão de Adicionar ao Carrinho (Logica da Main) */}
               <button onClick={handleAdicionarClick} className='btn-tirar-zooms' disabled={isAdding}>
                  {isAdding ? 'ADICIONANDO...' : 'Adicionar ao carrinho'}
               </button>
@@ -251,7 +244,7 @@ function PaginaCustomizaçao() {
             </div>
         </div>
 
-        {/* --- MENU SECUNDÁRIO (SWITCH ENTRE TODOS OS TIPOS) --- */}
+        {/* --- MENU SECUNDÁRIO --- */}
         <div className="menu-secundario-custom">
           <div className="menu-secundario-fundo">
             
@@ -270,7 +263,6 @@ function PaginaCustomizaçao() {
               corCabeloAtual={personagem.corCabelo}
               cabelosDisponiveis={opcoesDoPersonagem.cabelo[personagem.genero]}
               coresCabeloDisponiveis={opcoesDoPersonagem.corCabelo}
-              // Props extras da Branch Jose
               genero={personagem.genero}
               acessoriosCabecaAtuais={personagem.acessoriosCabeca}
               acessorioPescocoAtual={personagem.acessorioPescoco}
@@ -280,7 +272,6 @@ function PaginaCustomizaçao() {
               onMarcasChange={handleMarcasChange}
             />}
 
-            {/* --- MENUS NOVOS (JOSE) --- */}
             {btnAtivo === 'TORSO' && <MenuTorso
               onTorsoChange={(v) => atualizarPersonagem('roupaCima', v)}
               onVarianteChange={(v) => atualizarPersonagem('roupaCimaVariante', v)}
@@ -316,7 +307,6 @@ function PaginaCustomizaçao() {
               variantesDisponiveis={opcoesDoPersonagem.sapatoVariantes}
             />}
 
-            {/* --- MENU HISTÓRIA (MAIN) --- */}
             {btnAtivo === 'HISTÓRIA' && <MenuSecHistoria 
                 nomePersonagem={nomePersonagem}
                 setNomePersonagem={setNomePersonagem}
