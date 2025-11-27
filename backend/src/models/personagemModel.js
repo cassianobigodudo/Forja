@@ -1,15 +1,51 @@
 const db = require('../config/database');
 
 const criar = async (personagemData) => {
-    const { usuario_id, genero, generoNum, corPele, corPeleNum, img } = personagemData;
-    const result = await db.query(
-        `INSERT INTO personagens (usuario_id, genero, generoNum, corPele, corPeleNum, img)
-         VALUES ($1, $2, $3, $4, $5, $6) RETURNING *;`,
-        [usuario_id, genero, generoNum, corPele, corPeleNum, img]
-    );
-    return result.rows[0];
+    console.log("--- [DEBUG MODEL] Iniciando INSERT no banco... ---");
+    
+    // Desestruturação segura
+    const { id_usuario, genero, generoNum, corPele, corPeleNum, img } = personagemData;
+    
+    // Validação extra antes do SQL
+    if (!img) console.warn("--- [AVISO MODEL] A imagem está vazia ou undefined! ---");
+
+    try {
+        const result = await db.query(
+            `INSERT INTO personagens (id_usuario, genero, generoNum, corPele, corPeleNum, img)
+             VALUES ($1, $2, $3, $4, $5, $6) RETURNING *;`,
+            [id_usuario, genero, generoNum, corPele, corPeleNum, img]
+        );
+        
+        console.log("--- [DEBUG MODEL] INSERT realizado com sucesso. ---");
+        return result.rows[0];
+
+    } catch (error) {
+        console.error("--- [ERRO MODEL] Falha na query SQL de Insert: ---", error);
+        throw error;
+    }
 };
+
+const buscar = async () => {
+    console.log("--- [DEBUG MODEL] Iniciando busca no banco de dados...");
+    
+    try {
+        // Query para verificar se o usuario 5 tem itens
+        const result = await db.query(`SELECT * FROM personagens WHERE id_usuario = 5;`);
+        
+        console.log(`--- [DEBUG MODEL] Query Sucesso. Itens encontrados: ${result.rows.length}`);
+        
+        if (result.rows.length === 0) {
+            console.warn("--- [AVISO MODEL] A busca retornou 0 itens. Verifique se o id_usuario 5 tem personagens na tabela.");
+        }
+
+        return result.rows;
+    } catch (error) {
+        console.error("--- [ERRO MODEL] Falha na query SQL:", error);
+        throw error; // Joga o erro para o controller pegar
+    }
+}
 
 module.exports = {
     criar,
+    buscar
 };
