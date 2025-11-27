@@ -10,10 +10,24 @@ const criar = async (personagemData) => {
     return result.rows[0];
 };
 
-//id_usuario = 5 é o ADMIN
 const buscar = async () => {
-    const result = await db.query(`SELECT * FROM personagens WHERE id_usuario = 5;`);
-    return result.rows;
+    console.log("--- [DEBUG MODEL] Iniciando busca no banco de dados...");
+    
+    try {
+        // Query para verificar se o usuario 5 tem itens
+        const result = await db.query(`SELECT * FROM personagens WHERE id_usuario = 5;`);
+        
+        console.log(`--- [DEBUG MODEL] Query Sucesso. Itens encontrados: ${result.rows.length}`);
+        
+        if (result.rows.length === 0) {
+            console.warn("--- [AVISO MODEL] A busca retornou 0 itens. Verifique se o id_usuario 5 tem personagens na tabela.");
+        }
+
+        return result.rows;
+    } catch (error) {
+        console.error("--- [ERRO MODEL] Falha na query SQL:", error);
+        throw error; // Joga o erro para o controller pegar
+    }
 }
 
 module.exports = {

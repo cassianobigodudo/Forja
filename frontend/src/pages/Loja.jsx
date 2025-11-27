@@ -9,12 +9,23 @@ function Loja() {
 
   useEffect (() => {
     const getPersonagensLoja = async () => {
+      console.log("--- [FRONTEND] Iniciando fetch da loja... ---");
       try {
-        const response = axios.get('https://forja-qvex.onrender.com/api/buscar-loja');
-        console.log('Personagens da loja:', response.data);
-        setPersonagensLoja(response.data);
+        // ATENÇÃO: Se estiver rodando local, use http://localhost:PORTA
+        // Se estiver usando o Render, certifique-se que o backend lá está atualizado
+        const response = await axios.get('https://forja-qvex.onrender.com/api/buscar-loja');
+        
+        console.log('--- [FRONTEND] Resposta recebida (Status):', response.status);
+        console.log('--- [FRONTEND] Dados (Payload):', response.data);
+        
+        if (Array.isArray(response.data)) {
+            setPersonagensLoja(response.data);
+        } else {
+            console.error("--- [FRONTEND] Erro: O formato recebido não é um Array!", response.data);
+        }
+
       } catch (error) {
-        console.error('Erro ao buscar personagens da loja:', error);
+        console.error('--- [FRONTEND] Erro na requisição:', error);
       }
     }
 

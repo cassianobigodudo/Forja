@@ -40,12 +40,20 @@ const criarPersonagem = async (req, res) => {
 };
 
 const buscarPersonagensLoja = async (req, res) => {
+    console.log("--- [DEBUG CONTROLLER] Requisição GET /buscar-loja recebida ---");
+
     try {
+        // Chama o Model
         const personagens = await PersonagemModel.buscar();
+        
+        console.log("--- [DEBUG CONTROLLER] Dados recebidos do Model. Enviando para o Frontend...");
+        
+        // Retorna o JSON
         res.status(200).json(personagens);
+        
     } catch (err) {
-        console.error("Erro ao buscar personagens da loja:", err);
-        res.status(500).json({ message: 'Erro ao buscar personagens da loja.' });
+        console.error("--- [ERRO CONTROLLER] Erro ao buscar personagens:", err);
+        res.status(500).json({ message: 'Erro interno ao buscar personagens da loja.' });
     }
 }
 
