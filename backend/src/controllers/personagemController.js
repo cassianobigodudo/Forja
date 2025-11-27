@@ -12,28 +12,31 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 // ===============================
 
 const criarPersonagem = async (req, res) => {
-    console.log("--- [DEBUG] 1. Requisição chegou no Controller ---");
-    console.log("Dados recebidos:", JSON.stringify(req.body, null, 2));
-
+    console.log("--- [DEBUG CONTROLLER] Criar Personagem - Início ---");
+    
     try {
-        // 1. Validação
+        // Valida se o ID do usuário veio
         if (!req.body.id_usuario) {
-            console.log("--- [ERRO] Falta id_usuario ---");
+            console.error("--- [ERRO CONTROLLER] Falta id_usuario no corpo da requisição! ---");
+            console.log("Body recebido (sem img):", { ...req.body, img: "OMITIDO" });
             return res.status(400).json({ message: 'Usuário não identificado.' });
         }
 
-        console.log("--- [DEBUG] 2. Dados validados. Chamando Model... ---");
+        // Verifica tamanho da imagem (Base64)
+        const imgSize = req.body.img ? req.body.img.length : 0;
+        console.log(`--- [DEBUG CONTROLLER] ID Usuário: ${req.body.id_usuario}`);
+        console.log(`--- [DEBUG CONTROLLER] Gênero: ${req.body.genero} (Num: ${req.body.generoNum})`);
+        console.log(`--- [DEBUG CONTROLLER] Tamanho da Imagem Recebida: ${imgSize} caracteres`);
 
-        // 2. Chama o Model (Onde costuma travar se o banco estiver ruim)
+        console.log("--- [DEBUG CONTROLLER] Chamando PersonagemModel.criar... ---");
         const novoPersonagem = await PersonagemModel.criar(req.body);
         
-        console.log("--- [DEBUG] 3. Model retornou com sucesso! ---");
-        console.log("ID Criado:", novoPersonagem.id);
+        console.log("--- [DEBUG CONTROLLER] Sucesso! ID do Novo Personagem:", novoPersonagem.id);
 
         res.status(201).json(novoPersonagem);
 
     } catch (err) {
-        console.error("--- [ERRO FATAL] No Controller ---");
+        console.error("--- [ERRO FATAL CONTROLLER] Erro ao salvar personagem: ---");
         console.error(err);
         res.status(500).json({ message: 'Erro ao salvar personagem.' });
     }
