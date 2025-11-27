@@ -13,7 +13,7 @@ function Loja() {
       try {
         // ATENÇÃO: Se estiver rodando local, use http://localhost:PORTA
         // Se estiver usando o Render, certifique-se que o backend lá está atualizado
-        const response = await axios.get('https://forja-qvex.onrender.com/api/buscar-loja');
+        const response = await axios.get('https://forja-qvex.onrender.com/api/personagens/buscar-loja');
         
         console.log('--- [FRONTEND] Resposta recebida (Status):', response.status);
         console.log('--- [FRONTEND] Dados (Payload):', response.data);
