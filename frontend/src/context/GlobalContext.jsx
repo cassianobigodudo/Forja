@@ -12,37 +12,46 @@ export const GlobalContextProvider = ({ children }) => {
   const [isLoadingAuth, setIsLoadingAuth] = useState(true);
 
   useEffect(() => {
-        // 1. Ao carregar o site, verifica o HD (LocalStorage)
-        const idSalvo = localStorage.getItem('id_usuario');
-        const nomeSalvo = localStorage.getItem('usuario_nome');
+    const idSalvo = localStorage.getItem('id_usuario');
+    const nomeSalvo = localStorage.getItem('usuario_nome');
 
-        if (idSalvo) {
-            setUsuarioId(idSalvo);
-            setUsuarioNome(nomeSalvo);
-        }
-        
-        setIsLoadingAuth(false); // Terminou de verificar
-    }, []);
+    console.log("--- [DEBUG CONTEXT] Inicializando... LocalStorage tem ID?", idSalvo);
 
-    // 2. Função de Login (Centralizada)
-    const loginUsuario = (dadosUsuario) => {
-        // Atualiza a memória RAM (React reage na hora)
-        setUsuarioId(dadosUsuario.id_usuario);
-        setUsuarioNome(dadosUsuario.nome_usuario);
+    if (idSalvo) {
+        setUsuarioId(idSalvo);
+        setUsuarioNome(nomeSalvo);
+    }
+    
+    setIsLoadingAuth(false);
+}, []);
 
-        // Atualiza o HD (Persistência)
-        localStorage.setItem('id_usuario', dadosUsuario.id_usuario);
-        localStorage.setItem('usuario_nome', dadosUsuario.nome_usuario);
-    };
+const loginUsuario = (dadosUsuario) => {
+    console.log("--- [DEBUG CONTEXT] loginUsuario chamado com:", dadosUsuario);
 
-    // 3. Função de Logout (Centralizada)
-    const logoutUsuario = () => {
-        setUsuarioId(null);
-        setUsuarioNome(null);
-        localStorage.removeItem('id_usuario');
-        localStorage.removeItem('usuario_nome');
-        // Opcional: window.location.href = '/'; 
-    };
+    // FALLBACK: Se o backend mandar 'id' em vez de 'id_usuario', corrigimos aqui
+    const idFinal = dadosUsuario.id_usuario || dadosUsuario.id; 
+    const nomeFinal = dadosUsuario.nome_usuario || dadosUsuario.nome;
+
+    if (!idFinal) {
+        console.error("--- [ERRO CRÍTICO] ID do usuário está undefined/null!");
+    }
+
+    setUsuarioId(idFinal);
+    setUsuarioNome(nomeFinal);
+
+    localStorage.setItem('id_usuario', idFinal);
+    localStorage.setItem('usuario_nome', nomeFinal);
+    
+    console.log(`--- [DEBUG CONTEXT] Salvo no LocalStorage. ID: ${idFinal}`);
+};
+
+const logoutUsuario = () => {
+    console.log("--- [DEBUG CONTEXT] Logout efetuado.");
+    setUsuarioId(null);
+    setUsuarioNome(null);
+    localStorage.removeItem('id_usuario');
+    localStorage.removeItem('usuario_nome');
+};
 
   return (
     <GlobalContext.Provider value={{

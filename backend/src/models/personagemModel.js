@@ -1,13 +1,28 @@
 const db = require('../config/database');
 
 const criar = async (personagemData) => {
+    console.log("--- [DEBUG MODEL] Iniciando INSERT no banco... ---");
+    
+    // Desestruturação segura
     const { id_usuario, genero, generoNum, corPele, corPeleNum, img } = personagemData;
-    const result = await db.query(
-        `INSERT INTO personagens (id_usuario, genero, generoNum, corPele, corPeleNum, img)
-         VALUES ($1, $2, $3, $4, $5, $6) RETURNING *;`,
-        [id_usuario, genero, generoNum, corPele, corPeleNum, img]
-    );
-    return result.rows[0];
+    
+    // Validação extra antes do SQL
+    if (!img) console.warn("--- [AVISO MODEL] A imagem está vazia ou undefined! ---");
+
+    try {
+        const result = await db.query(
+            `INSERT INTO personagens (id_usuario, genero, generoNum, corPele, corPeleNum, img)
+             VALUES ($1, $2, $3, $4, $5, $6) RETURNING *;`,
+            [id_usuario, genero, generoNum, corPele, corPeleNum, img]
+        );
+        
+        console.log("--- [DEBUG MODEL] INSERT realizado com sucesso. ---");
+        return result.rows[0];
+
+    } catch (error) {
+        console.error("--- [ERRO MODEL] Falha na query SQL de Insert: ---", error);
+        throw error;
+    }
 };
 
 const buscar = async () => {

@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useGlobalContext } from '../context/GlobalContext';
 import './CaixaCadastroLogin.css'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 function CaixaCadastroLogin() {
 
@@ -13,46 +14,58 @@ function CaixaCadastroLogin() {
 
   const { loginUsuario } = useGlobalContext();
   const API_URL = "https://forja-qvex.onrender.com/api"
+  const navigate = useNavigate();
 
   async function AutenticacaoConta(){
-  if (!inputEmail || !inputSenha) {
+    if (!inputEmail || !inputSenha) {
         alert("Por favor, preencha email e senha.");
         return;
-      }
+    }
 
       try {
         if (isLogin) {
           // ================= LOGICA DE LOGIN =================
+          console.log("--- [DEBUG LOGIN] Tentando logar com:", inputEmail);
+
           const response = await axios.post(`${API_URL}/usuarios/login`, {
             email: inputEmail,
             senha: inputSenha
           });
 
+          console.log("--- [DEBUG LOGIN] Resposta do Backend:", response.data);
+
+          // VERIFICAÇÃO DE SEGURANÇA PARA DEBUG
+          if (!response.data.id_usuario) {
+             console.warn("--- [ALERTA] O Backend não retornou 'id_usuario'. Verifique se veio como 'id' ou '_id'. Chaves recebidas:", Object.keys(response.data));
+          }
+
+          // Envia para o Contexto
           loginUsuario(response.data);
 
-          alert(`Bem-vindo de volta, ${response.data.nome_usuario}!`);
+          alert(`Bem-vindo de volta, ${response.data.nome_usuario || 'Viajante'}!`);
+          
+          console.log("--- [DEBUG LOGIN] Redirecionando para /loja...");
+          navigate('/loja'); // 3. REDIRECIONAR
 
         } else {
           // ================= LOGICA DE CADASTRO =================
-          
           if (inputSenha !== inputConfirmarSenha) {
             alert("As senhas não coincidem!");
             return;
           }
 
-          const response = await axios.post(`${API_URL}/usuarios/cadastro`, {
-            nome: inputNome,   // Mapeia inputNome -> nome
-            email: inputEmail, // Mapeia inputEmail -> email
-            senha: inputSenha  // Mapeia inputSenha -> senha
+          await axios.post(`${API_URL}/usuarios/cadastro`, {
+            nome: inputNome,   
+            email: inputEmail, 
+            senha: inputSenha  
           });
           
           alert("Cadastro realizado com sucesso! Agora faça login.");
-          setIsLogin(true); // Muda para a tela de login automaticamente
+          setIsLogin(true); 
         }
 
       } catch (error) {
-        console.error("Erro na autenticação:", error);
-        // Mostra a mensagem de erro que veio do backend (ex: "Senha incorreta")
+        console.error("--- [ERRO LOGIN] Falha na requisição:", error);
         const mensagemErro = error.response?.data?.message || "Erro ao conectar.";
         alert(mensagemErro);
       }
