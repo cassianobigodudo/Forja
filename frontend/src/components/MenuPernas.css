@@ -2,22 +2,16 @@
    Variáveis Globais & Configurações
    ========================================= */
 :root {
-  /* Cores */
-  --cor-destaque: #ffc107;      /* Amarelo do item ativado */
+  --cor-destaque: #ffc107;
   --cor-texto: white;
   --cor-borda-padrao: white;
   --cor-borda-inativa: #5a5a5a;
-  
-  /* Fundos */
   --bg-item: rgba(0, 0, 0, 0.2);
   --bg-item-hover: rgba(255, 255, 255, 0.2);
-
-  /* Transições */
   --transicao-padrao: 0.3s ease;
   --transicao-rapida: 0.2s ease;
 }
 
-/* Animações */
 @keyframes fadeIn {
   from { opacity: 0; }
   to   { opacity: 1; }
@@ -26,80 +20,74 @@
 /* =========================================
    Container Principal
    ========================================= */
-.container-menu-cabelos {
-  /* Layout */
+.container-menu-pernas {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
   gap: 15px;
-
-  /* Dimensões */
   width: 100%;
   height: 100%;
   padding: 10px;
-
-  /* Animação */
   animation: fadeIn var(--transicao-padrao);
 }
 
 /* =========================================
-   Grid de Cabelos (Opções)
+   Grid de Pernas (Opções)
    ========================================= */
-.cabelos-grid {
+.pernas-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 30px;
   width: 90%;
 }
 
-.cabelo-opcao {
-  /* Layout Interno */
+.pernas-opcao {
   display: flex;
   justify-content: center;
   align-items: center;
   aspect-ratio: 1 / 1;
   padding: 5px;
-  overflow: hidden; /* Added to ensure content doesn't spill out when scaled */
+  overflow: hidden; 
 
-
-  /* Estilo Visual */
   background-color: var(--bg-item);
   border: 2px solid var(--cor-borda-padrao);
   cursor: pointer;
-
-  /* Transição */
   transition: background-color var(--transicao-padrao), 
               border-color var(--transicao-padrao);
+              background-color: rgb(17, 11, 6, 0.7);
 }
 
-.cabelo-opcao img {
+.pernas-opcao img {
   width: 90%;
   height: 90%;
   object-fit: contain;
-  pointer-events: none; /* Evita arrastar a imagem acidentalmente */
+  pointer-events: none;
   
-  /* --- MODIFICATIONS START HERE --- */
-  transform: scale(5) translateY(38%); /* Scale up by 30% and move down by 10% of its height */
-  /* You can adjust the scale and translateY values as needed: */
-  /* scale(1.5) for 50% bigger */
-  /* translateY(20%) for moving it further down */
-  /* --- MODIFICATIONS END HERE --- */
+  /* --- AJUSTE DE ZOOM PARA PERNAS --- */
+  /* scale(1.2): Zoom leve para preencher melhor
+     translateY(-5%): Move a imagem um pouco para cima para centralizar calças */
+  transform: scale(2.5) translateY(-3%); 
+  transition: transform var(--transicao-padrao);
 }
 
-/* Estados Interativos (.cabelo-opcao) */
-.cabelo-opcao:hover {
+.pernas-opcao:hover {
   background-color: var(--bg-item-hover);
 }
 
-.cabelo-opcao.ativada {
+.pernas-opcao:hover img {
+    /* Zoom extra no hover */
+    transform: scale(2.6) translateY(-5%);
+}
+
+.pernas-opcao.ativada {
   border-color: var(--cor-destaque);
 }
 
 /* =========================================
-   Seção de Cores
+   Seção de Variantes
    ========================================= */
-.cores-cabelo-container {
+.variantes-pernas-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -107,21 +95,21 @@
   gap: 15px;
 }
 
-.lbl-cabelo {
+.lbl-pernas {
   font-family: "fonte-titulos", sans-serif;
   font-size: 20px;
   letter-spacing: 2px;
   color: var(--cor-texto);
 }
 
-.cores-cabelo {
+.variantes-pernas {
   display: flex;
   justify-content: center;
   gap: 15px;
-  flex-wrap: wrap; /* Garante que não quebre em telas muito pequenas */
+  flex-wrap: wrap; 
 }
 
-.cor-cabelo {
+.variante-pernas {
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -131,11 +119,10 @@
               transform var(--transicao-rapida);
 }
 
-/* Estados Interativos (.cor-cabelo) */
-.cor-cabelo:hover {
+.variante-pernas:hover {
   transform: scale(1.1);
 }
 
-.cor-cabelo.ativada {
+.variante-pernas.ativada {
   border-color: var(--cor-borda-padrao);
 }

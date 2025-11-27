@@ -14,6 +14,7 @@ import MenuSecHistoria from '../components/MenuSecHistoria';
 import MenuTorso from '../components/MenuTorso';
 import MenuPernas from '../components/MenuPernas';
 import MenuSapatos from '../components/MenuSapatos';
+import MenuArmas from '../components/MenuArmas'; // <--- IMPORTADO AQUI
 
 // --- CONTEXTOS E HOOKS ---
 import { useGlobalContext } from '../context/GlobalContext';
@@ -152,8 +153,6 @@ function PaginaCustomizaçao() {
     setBtnAtivo(prev => prev === nomeDoBotao ? null : nomeDoBotao);
   };
 
-  // --- NOVA LÓGICA DE VISUALIZAÇÃO ---
-  // Verifica se a peça de baixo atual é Leggings
   const isLeggings = personagem.roupaBaixo === 'Leggings';
 
   return (
@@ -177,25 +176,17 @@ function PaginaCustomizaçao() {
             {caminhosDasImagens.marcas && <img src={caminhosDasImagens.marcas} alt="Marcas" style={{ position: 'absolute', top: 0, left: 0 }} />}
 
             {/* --- LÓGICA DE CAMADAS: SAPATOS VS BOTTOMS --- */}
-            
-            {/* 4a. SAPATOS (CAMADA INFERIOR) */}
-            {/* Renderiza aqui se NÃO for Leggings (Sapatos ficam por baixo da calça) */}
             {!isLeggings && caminhosDasImagens.sapato && (
                <img src={caminhosDasImagens.sapato} alt="Sapatos" style={{ position: 'absolute', top: 0, left: 0 }} />
             )}
 
-            {/* 5. PERNAS (BOTTOMS) */}
             {caminhosDasImagens.roupaBaixo && (
                <img src={caminhosDasImagens.roupaBaixo} alt="Pernas" style={{ position: 'absolute', top: 0, left: 0 }} />
             )}
 
-            {/* 4b. SAPATOS (CAMADA SUPERIOR) */}
-            {/* Renderiza aqui se FOR Leggings (Sapatos ficam por cima da leggings) */}
             {isLeggings && caminhosDasImagens.sapato && (
                <img src={caminhosDasImagens.sapato} alt="Sapatos" style={{ position: 'absolute', top: 0, left: 0 }} />
             )}
-
-            {/* --- FIM LÓGICA DE CAMADAS --- */}
 
             {/* 6. TORSO */}
             {caminhosDasImagens.roupaCima && (
@@ -207,6 +198,11 @@ function PaginaCustomizaçao() {
             {caminhosDasImagens.cabeloFrente && <img src={caminhosDasImagens.cabeloFrente} alt="" style={{ position: 'absolute', top: 0, left: 0 }} />}
             {caminhosDasImagens.acessoriosCabecaRosto && caminhosDasImagens.acessoriosCabecaRosto.map((c, i) => <img key={`face-${i}`} src={c} alt="" style={{ position: 'absolute', top: 0, left: 0 }} />)}
             {caminhosDasImagens.acessoriosCabecaTopo && caminhosDasImagens.acessoriosCabecaTopo.map((c, i) => <img key={`top-${i}`} src={c} alt="" style={{ position: 'absolute', top: 0, left: 0 }} />)}
+
+            {/* 8. ARMAS  */}
+            {caminhosDasImagens.armas && (
+                <img src={caminhosDasImagens.armas} alt="Arma" style={{ position: 'absolute', top: 0, left: 0, zIndex: -100 }} />
+            )}
 
           </div>
         </div>
@@ -229,8 +225,13 @@ function PaginaCustomizaçao() {
               <button className={btnAtivo === 'SAPATOS' ? 'btn-corpo-follow-ativado' : 'btn-corpo-follow'} onClick={() => handleButtonClick('SAPATOS')}>
                   <label className='botaoLbl'>SAPATOS</label> <img className='img-btn-icon' src="./icones/Sapatos.svg" alt="" onError={(e)=>e.target.style.display='none'}/>
               </button>
+              {/* --- BOTÃO DE ARMAS NOVO --- */}
+              <button className={btnAtivo === 'ARMAS' ? 'btn-corpo-follow-ativado' : 'btn-corpo-follow'} onClick={() => handleButtonClick('ARMAS')}>
+                  <label className='botaoLbl'>ARMAS</label> <img className='img-btn-icon' src="./icones/Armas.svg" alt="" onError={(e)=>e.target.style.display='none'}/>
+              </button>
+
               <button className={btnAtivo === 'HISTÓRIA' ? 'btn-corpo-follow-ativado' : 'btn-corpo-follow'} onClick={() => handleButtonClick('HISTÓRIA')}>
-                  <label className='botaoLbl'>HISTÓRIA</label> <img className='img-btn-icon' src="./icones/Cabeça.svg" alt="" />
+                  <label className='botaoLbl'>HISTÓRIA</label> <img className='img-btn-icon' src="./icones/Historia.svg" alt="" onError={(e)=>e.target.style.display='none'}/>
               </button>
             </div>
             
@@ -305,6 +306,12 @@ function PaginaCustomizaçao() {
               varianteAtual={personagem.sapatoVariante}
               sapatosDisponiveis={opcoesDoPersonagem.sapato}
               variantesDisponiveis={opcoesDoPersonagem.sapatoVariantes}
+            />}
+
+            {btnAtivo === 'ARMAS' && <MenuArmas
+              onArmaChange={(v) => atualizarPersonagem('armas', v)}
+              armaAtual={personagem.armas}
+              armasDisponiveis={opcoesDoPersonagem.armas}
             />}
 
             {btnAtivo === 'HISTÓRIA' && <MenuSecHistoria 
