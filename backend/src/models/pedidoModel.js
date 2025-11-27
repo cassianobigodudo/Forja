@@ -2,11 +2,11 @@
 const db = require('../config/database');
 
 // Cria um novo registro de pedido dentro de uma transação
-const criar = async (client, session_id, personagem_id, status) => {
+const criar = async (client, usuario_id, personagem_id, status) => {
     const resPedido = await client.query(
-        `INSERT INTO pedidos (session_id, personagem_id, status)
+        `INSERT INTO pedidos (usuario_id, personagem_id, status)
          VALUES ($1, $2, $3) RETURNING id`,
-        [session_id, personagem_id, status]
+        [usuario_id, personagem_id, status]
     );
     return resPedido.rows[0].id;
 };
@@ -32,32 +32,31 @@ const atualizarStatusPorCallback = async (orderIdExterno, novoStatus, producaoId
     return result.rows[0];
 };
 
-const buscarPorSessao = async (session_id) => {
+const buscarPorUsuario = async (usuario_id) => {
     const { rows } = await db.query(
         `SELECT 
             p.id as pedido_id, 
             p.status, 
             p.orderid_externo, 
             p.producao_id_externo,
-            p.data_pedido,
             p.slot,
             pers.genero,
             pers.corPele,
-            pers.img
+            pers.img,
+            pers.historia
          FROM pedidos p
          JOIN personagens pers ON p.personagem_id = pers.id
-         WHERE p.session_id = $1
-         ORDER BY p.data_pedido DESC; -- (Mostrar os mais novos primeiro)
+         WHERE p.usuario_id = $1
+         ORDER BY p.id DESC;
         `,
-        [session_id]
+        [usuario_id]
     );
     return rows;
 };
 
-// Adicione a nova função ao module.exports
 module.exports = {
     criar,
     atualizarStatus,
     atualizarStatusPorCallback,
-    buscarPorSessao, // <-- ADICIONE AQUI
+    buscarPorUsuario, // Exporte a nova função
 };

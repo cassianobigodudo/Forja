@@ -1,91 +1,132 @@
+/* =========================================
+   Variáveis Globais & Configurações
+   ========================================= */
+:root {
+  /* Cores */
+  --cor-destaque: #ffc107;       /* Amarelo do item ativado */
+  --cor-texto: white;
+  --cor-borda-padrao: white;
+  --cor-borda-inativa: #5a5a5a;
+  
+  /* Fundos */
+  --bg-item: rgba(0, 0, 0, 0.2);
+  --bg-item-hover: rgba(255, 255, 255, 0.2);
+
+  /* Transições */
+  --transicao-padrao: 0.3s ease;
+  --transicao-rapida: 0.2s ease;
+}
+
+/* Animações */
 @keyframes fadeIn {
- from {
-  opacity: 0;
- }
- to {
-  opacity: 1;
- }
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
+/* =========================================
+   Container Principal
+   ========================================= */
 .container-menu-cabelos {
- height: 100%;
- width: 100%;
- display: flex;
- flex-direction: column;
- justify-content: space-evenly;
- align-items: center;
- padding: 10px;
- gap: 15px;
- animation: fadeIn 0.3s ease-out;
+  /* Layout */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 15px;
+
+  /* Dimensões */
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+
+  /* Animação */
+  animation: fadeIn var(--transicao-padrao);
 }
 
+/* =========================================
+   Grid de Cabelos (Opções)
+   ========================================= */
 .cabelos-grid {
- display: grid;
- grid-template-columns: repeat(4, 1fr);
- gap: 10px;
- width: 90%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  width: 90%;
 }
 
 .cabelo-opcao {
- aspect-ratio: 1 / 1;
- background-color: rgba(0, 0, 0, 0.2);
- border: 2px solid white;
- cursor: pointer;
- transition: background-color 0.3s, border-color 0.3s;
- display: flex;
- justify-content: center;
- align-items: center;
- padding: 5px;
-}
+  /* Layout Interno */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  aspect-ratio: 1 / 1;
+  padding: 5px;
 
-.cabelo-opcao:hover {
- background-color: rgba(255, 255, 255, 0.2);
-}
+  /* Estilo Visual */
+  background-color: var(--bg-item);
+  border: 2px solid var(--cor-borda-padrao);
+  cursor: pointer;
 
-.cabelo-opcao.ativada {
- border-color: #ffc107;
+  /* Transição */
+  transition: background-color var(--transicao-padrao), 
+              border-color var(--transicao-padrao);
 }
 
 .cabelo-opcao img {
- width: 90%;
- height: 90%;
- object-fit: contain;
+  width: 90%;
+  height: 90%;
+  object-fit: contain;
+  pointer-events: none; /* Evita arrastar a imagem acidentalmente */
 }
 
+/* Estados Interativos (.cabelo-opcao) */
+.cabelo-opcao:hover {
+  background-color: var(--bg-item-hover);
+}
+
+.cabelo-opcao.ativada {
+  border-color: var(--cor-destaque);
+}
+
+/* =========================================
+   Seção de Cores
+   ========================================= */
 .cores-cabelo-container {
- display: flex;
- flex-direction: column;
- align-items: center;
- width: 100%;
- gap: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 15px;
 }
 
 .lbl-cabelo {
- font-size: 20px;
- letter-spacing: 2px;
- color: white;
- font-family: "fonte-titulos";
+  font-family: "fonte-titulos", sans-serif;
+  font-size: 20px;
+  letter-spacing: 2px;
+  color: var(--cor-texto);
 }
 
 .cores-cabelo {
- display: flex;
- justify-content: center;
- gap: 15px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap; /* Garante que não quebre em telas muito pequenas */
 }
 
 .cor-cabelo {
- width: 40px;
- height: 40px;
- border-radius: 50%;
- border: 3px solid #5a5a5a;
- cursor: pointer;
- transition: border-color 0.3s, transform 0.2s;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 3px solid var(--cor-borda-inativa);
+  cursor: pointer;
+  transition: border-color var(--transicao-padrao), 
+              transform var(--transicao-rapida);
 }
 
+/* Estados Interativos (.cor-cabelo) */
 .cor-cabelo:hover {
- transform: scale(1.1);
+  transform: scale(1.1);
 }
 
 .cor-cabelo.ativada {
- border-color: white;
+  border-color: var(--cor-borda-padrao);
 }
