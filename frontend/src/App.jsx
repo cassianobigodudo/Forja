@@ -10,13 +10,6 @@ function App() {
 
   return (
     <LandingPage/>
-//     <PaginaCustomizaçao/> 
-/* 
-    <PaginaPagamento/> */
-/* 
-    <LandingPage/> */
-
-   /*  <UserAccount/> */
    
   )
 }

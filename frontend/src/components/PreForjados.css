@@ -1,0 +1,68 @@
+.pre-forjados-container{
+    /* width: 300vw;  */
+    height: 45vh;
+    width: 35.8vh;
+    /* aspect-ratio: 542/4567; */
+    background-image: url("/fundo/fundo-pre-forjados.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .espaco-trabalhado-pre-forjados{
+        margin-left: 2px;
+        /* background-color: red; */
+        width: 92%;
+        height: 92%;
+        display: flex;
+        flex-direction: column;
+    }
+
+        .miniatura-container-pf{
+            /* background-color: blue; */
+            height: 78%;
+
+        }
+
+        .nome-miniatura-container-pf{
+            /* background-color: green; */
+            height: 10%;
+        }
+
+        .valor-vermais-carrinho-pf{
+            display: flex;
+            /* background-color: chocolate; */
+            height: 12%;
+        }
+
+            .valor-miniatura-pf{
+                display: flex;
+                align-items: center;
+                /* background-color: grey; */
+                width: 60%;
+
+            }
+                .valor-miniatura{
+                    padding-left: 5px;
+                    color: white;
+                    font-size: 30px;
+                    font-family: 'fonte-numeros';
+                }
+
+            .vermais-carrinho-pf{
+                /* background-color: red; */
+                width: 40%;
+                display: flex;
+                align-items: end;
+                justify-content: space-evenly;
+            }
+
+                .vermais{
+                    width: 44px;
+                }
+
+                .colocarcarrinho{
+                    width: 48px;
+                }
