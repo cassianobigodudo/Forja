@@ -62,8 +62,7 @@
             align-items: center;
             height: 19%;
             width: 100%;
-            background-color: transparent;
-            
+            background-color: transparent;  
         }
             .inputs-parte-dados{
                 display: flex;
@@ -114,7 +113,7 @@
                     cursor: pointer;
                     box-shadow: 0px 0px 2px 1px #fff inset;
                 }
-
+        
         .parte-inputs-endereco{
             display: flex;
             justify-content: start;
@@ -143,157 +142,36 @@
                     box-shadow: 0px 0px 2px 1px #fff inset;
                     font-size: 10px;
                 }
-
-            .input-partes-endereco{
-                display: flex;
-                height: 28%;
-                width: 100%;
-                background-color: transparent;
+              
+            .inputs-parte-dados-endereco{
+              display: flex;
+              justify-content: center;
+              align-items: center;
             }
-                .parte-inputs-edicao{
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    padding-left: 5px;
-                    height: 100%;
-                    width: 70%;
-                    background-color: transparent;
-                    gap: 10px;
-                }
-                    .input-rua-endereco{
-                        height: 40px;
-                        width: 630px;
-                    background-color: rgb(91, 94, 28, 0.8);
-                       border-style: solid;
-                    border-width: 2px;
-                    border-color: rgb(255, 255, 255, 0.4);
-                    outline: none;
-                        opacity: 80%;
-                        color: #fff;
-                        padding-left: 5px;
-                        font-family: "fonte-paragrafos";
-                        font-size: 18px;
-                    }
-                    .input-numero-endereco{
-                        height: 40px;
-                        width: 90px;
-                    background-color: rgb(91, 94, 28, 0.8); border-style: solid;
-                    border-width: 2px;
-                    border-color: rgb(255, 255, 255, 0.4);
-                    outline: none;
-                        opacity: 80%;
-                        color: #fff;
-                        padding-left: 5px;
-                        font-family: "fonte-paragrafos";
-                        font-size: 18px;
-                    }
-                    .parte-botao-edicao{
-                        display: flex;
-                        justify-content: start;
-                        align-items: center;
-                        padding-left: 10px;
-                        padding-top: 0px;
-                        height: 100%;
-                        width: 30%;
-                        gap: 10px;
-                        background-color: transparent;
-                    }
-
-                .parte-inputs-edicao-2{
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    padding-left: 5px;
-                    height: 100%;
-                    width: 70%;
-                    background-color: transparent;
-                    gap: 10px;
-                }
-                    .input-estado-endereco{
-                        height: 40px;
-                        width: 100px;
-                    background-color: rgb(91, 94, 28, 0.8); border-style: solid;
-                    border-width: 2px;
-                    border-color: rgb(255, 255, 255, 0.4);
-                    outline: none;
-                        opacity: 80%;
-                        color: #fff;
-                        padding-left: 5px;
-                        font-family: "fonte-paragrafos";
-                        font-size: 18px;
-                    }
-                    .inputs-cidade-endereco{
-                        height: 40px;
-                        width: 300px;
-                    background-color: rgb(91, 94, 28, 0.8); border-style: solid;
-                    border-width: 2px;
-                    border-color: rgb(255, 255, 255, 0.4);
-                    outline: none;
-                        opacity: 80%;
-                        color: #fff;
-                        padding-left: 5px;
-                        font-family: "fonte-paragrafos";
-                        font-size: 18px;
-                    }
-                    .inputs-bairro-endereco{
-                        height: 40px;
-                        width: 310px;
-                    background-color: rgb(91, 94, 28, 0.8); border-style: solid;
-                    border-width: 2px;
-                    border-color: rgb(255, 255, 255, 0.4);
-                    outline: none;
-                        opacity: 80%;
-                        color: #fff;
-                        padding-left: 5px;
-                        font-family: "fonte-paragrafos";
-                        font-size: 18px;
-                    }
-                
-                .parte-inputs-edicao-3{
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    padding-left: 5px;
-                    height: 100%;
-                    width: 70%;
-                    background-color: transparent;
-                    gap: 10px;
-                }
-                    .input-complemento-endereco{
-                        height: 40px;
-                        width: 580px;
-                    background-color: rgb(91, 94, 28, 0.8); border-style: solid;
-                    border-width: 2px;
-                    border-color: rgb(255, 255, 255, 0.4);
-                    outline: none;
-                        opacity: 80%;
-                        color: #fff;
-                        padding-left: 5px;
-                        font-family: "fonte-paragrafos";
-                        font-size: 18px;
-                    }
-                    .input-cep-endereco{
-                        height: 40px;
-                        width: 140px;
-                    background-color: rgb(91, 94, 28, 0.8); border-style: solid;
-                    border-width: 2px;
-                    border-color: rgb(255, 255, 255, 0.4);
-                    outline: none;
-                        opacity: 80%;
-                        color: #fff;
-                        padding-left: 5px;
-                        font-family: "fonte-paragrafos";
-                        font-size: 18px;
-                    }
-.label-endereço{
+              .input-partes-endereco{
+                display: flex;
+                height: 100%;
+                width: 90%;
+                background-color: transparent;
+              }
+              .input-parte-botao-editar-endereco{
+                display: flex;
+                justify-content: start;
+                align-items: center;
+                height: 100%;
+                width: 10%;
+                background-color: transparent;
+                padding-top: 25px;
+              }
+              
+      .label-endereço{
         font-size: 22px;
         margin-left: 20px;
         letter-spacing: 2px;
         font-family: "fonte-titulos";
         color: #fff;
         transition: 1s;
-    
-    }
+      }
                 
 
     .parte-salvar-dados{
