@@ -1,143 +1,186 @@
-.container-user-account{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    height: 100vh;
-    width: 100vw;
-    background-image: url(/public/fundo/tim-mcburnie-illustrationtutorial-theentrance2.jpg);
-    background-size: cover;
-    
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
-    .container-principal{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        height: 98vh;
-        width: 99vw;
-        background-color: rgba(0, 0, 0, 0.1);
-        border-radius: 1%;
-        border: 50px solid #fff;
-        border-image: url(/public/fundo/arestas-do-fundo.svg) 30 round;
-    }
-        .container-principal-menu{
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100%;
-            width: 30%;
-            background-color: transparent;
-            
-        }
-            .parte-menu{
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                flex-direction: column;
-                height: 100%;
-                width: 80%;
-                border: solid 2px #fff;
-                background-color: var(--Fundo);
-            }
-                .menu-parte-foto{
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    flex-direction: column;
-                    gap: 15px;
-                    height: 35%;
-                    width: 100%;
-                    background-color: transparent;
-                }
-                    .parte-foto{
-                        height: 120px;
-                        width: 120px;
-                        border-radius: 50%;
-                        background-color: whitesmoke;
-                    }
-                    .label-nome-usuario{
-                        color: #fff;
-                        font-size: 25px;
-                        text-decoration: underline;
-                        font-family: "fonte-subtitulos";
-                    }
+.container-user-account {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  background-image: url(/public/fundo/tim-mcburnie-illustrationtutorial-theentrance2.jpg);
+  background-size: cover;
+  font-family: "fonte-titulos";
+}
 
-                .menu-parte-botoes{
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    flex-direction: column;
-                    gap: 20px;
-                    height: 50%;
-                    width: 100%;
-                    background-color: transparent;
-                }
-                    
-                    .botoes-menu {
-                        display: block;
-                        width: 300px;
-                        height: 60px;
-                        border: none;
-                        border-radius: 20px;
-                        background-color: #e0e0e0;
-                        font-size: 25px;
-                        padding: 10px 16px;
-                        cursor: pointer;
-                        font-weight: bolder;
-                        font-family: "fonte-subtitulos";
-                        margin-bottom: 8px;
-                        transition: 0.3s;
-                        color: #5B5E1C;
-                    }
+.container-principal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 85%;
+  width: 99vw;
+  background-color: rgba(0, 0, 0, 0.1);
+}
 
-                        .botoes-menu:hover {
-                            background-color: #fff;
-                            font-family: "fonte-subtitulos";
-                        }
+.container-principal-menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 87.5%;
+  width: 30%;
+  background-color: transparent;
+  margin-top: -53px;
+}
 
-                        .botoes-menu.ativo {
-                            background-color: #5B5E1C;
-                            color: white;
-                            font-weight: bold;
-                            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-                            font-family: "fonte-subtitulos";
-                        }
+.parte-menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+  width: 80%;
+  border: solid 2px #fff;
+  background-color: var(--Fundo);
+  animation: slideInLeft 0.6s ease-out forwards;
+}
 
-                .menu-parte-sair{
-                    display: flex;
-                    justify-content: end;
-                    align-items: center;
-                    padding-right: 70px;
-                    height: 15%;
-                    width: 100%;
-                    background-color: transparent;
-                }
-                    .botao-deslogar{
-                        height: 40px;
-                        width: 200px;
-                        background-color: red;
-                        border: none;
-                        border-radius: 10px;
-                        cursor: pointer;
-                        color: #fff;
-                        font-family: "fonte-subtitulos";
-                        font-size: 30px;
-                        font-weight: bolder;
-                    }
+.menu-parte-foto {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 15px;
+  height: 42%;
+  width: 100%;
+  background-color: transparent;
+}
 
-        .container-principal-componente{
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100%;
-            width: 70%;
-            background-color: transparent;
-        }
-            .parte-componente{
-                height: 100%;
-                width: 95%;
-                border: solid 2px #fff;
-                background-color: var(--Fundo);
-            }
+.parte-foto {
+  margin-top: 15px;
+  height: 110px;
+  width: 110px;
+  border-radius: 50%;
+  background-color: whitesmoke;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.parte-foto:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+}
+
+.label-nome-usuario {
+  color: #fff;
+  font-size: 26px;
+  text-decoration: underline;
+  margin-bottom: -5px;
+}
+
+.menu-parte-botoes {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+  height: 50%;
+  width: 100%;
+  background-color: transparent;
+}
+
+.botoes-menu {
+  display: block;
+  width: 320px;
+  height: 60px;
+  border: none;
+  background-color: rgba(0, 0, 0, 0.7);
+  font-size: 25px;
+  cursor: pointer;
+  font-weight: bolder;
+  font-family: "fonte-titulos";
+  margin-bottom: 4px;
+  color: #8e9d41;
+  transition: font-size 0.3s ease,
+              transform 0.3s ease,
+              box-shadow 0.3s ease,
+              background-color 0.3s ease,
+              color 0.3s ease;
+}
+
+.botoes-menu:hover {
+  font-size: 30px;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.botoes-menu:active {
+  font-size: 31px;
+  transition: 0.1s;
+  transform: translateY(-1px);
+}
+
+.botoes-menu.ativo {
+  font-size: 30px;
+  background-color: rgb(90, 94, 28, 0.8);
+  border-style: solid;
+  border-width: 2px;
+  border-color: white;
+  color: white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.menu-parte-sair {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 10%;
+  width: 100%;
+  padding-left: 210px;
+  transition: 1s;
+}
+
+.botao-deslogar {
+  height: 27px;
+  width: 50px;
+  background-color: rgba(0, 0, 0, 0.7);
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.4);
+  font-family: "fonte-paragrafos";
+  font-size: 20px;
+  font-weight: bolder;
+  transition: color 0.5s, transform 0.3s ease-out;
+}
+
+.botao-deslogar:hover {
+  color: rgba(255, 255, 255, 0.9);
+  transform: translateY(-2px);
+}
+
+.container-principal-componente {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 96.1%;
+  width: 70%;
+  background-color: transparent;
+}
+
+.parte-componente {
+  height: 91%;
+  width: 95%;
+  margin-top: -49px;
+  border: solid 2px #fff;
+  background-color: var(--Fundo);
+  animation: slideInLeft 0.6s 0.1s ease-out forwards;
+  opacity: 0;
+}
