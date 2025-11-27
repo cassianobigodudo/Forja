@@ -1,7 +1,63 @@
 import { useState } from 'react';
 import html2canvas from 'html2canvas';
 
-// --- MAPEAMENTOS (Mantidos iguais) ---
+// =====================================================================
+// 1. CONSTANTES INDUSTRIAIS (A LINGUAGEM DA MÁQUINA)
+// =====================================================================
+
+// Cores (Inteiros)
+const COR = { BRANCO: 1, PRETO: 2, VERDE: 3, AMARELO: 4, AZUL: 5, VERMELHO: 6, NULA: 7 };
+
+// Padrões (Strings)
+const PAD = { CASA: '1', BARCO: '2', ESTRELA: '3', NULO: '4' };
+
+// Mapeamento: Nome do Item (Visual) -> Dados da Máquina
+const DADOS_INDUSTRIAIS = {
+  roupaCima: {
+    'Bikini':    { cor: COR.AMARELO,  padrao: PAD.CASA },
+    'Besourto':  { cor: COR.AZUL,     padrao: PAD.ESTRELA },
+    'Guerreiro': { cor: COR.VERMELHO, padrao: PAD.BARCO },
+    'Social':    { cor: COR.PRETO,    padrao: PAD.NULO },
+    'Ladino':    { cor: COR.VERDE,    padrao: PAD.ESTRELA },
+    'Monge':     { cor: COR.BRANCO,   padrao: PAD.NULO },
+    'Grego':     { cor: COR.BRANCO,   padrao: PAD.CASA },
+    'Marcial':   { cor: COR.VERMELHO, padrao: PAD.ESTRELA },
+    'Limpo':     { cor: COR.BRANCO,   padrao: PAD.NULO },
+    // Fallback para itens não listados explicitamente
+    'DEFAULT':   { cor: COR.AZUL,     padrao: PAD.NULO } 
+  },
+  roupaBaixo: {
+    'Grego':     { cor: COR.BRANCO,   padrao: PAD.CASA },
+    'Jeans':     { cor: COR.AZUL,     padrao: PAD.NULO },
+    'Leggings':  { cor: COR.PRETO,    padrao: PAD.ESTRELA },
+    'Besouro':   { cor: COR.AZUL,     padrao: PAD.ESTRELA },
+    'Social':    { cor: COR.PRETO,    padrao: PAD.NULO },
+    'Marcial':   { cor: COR.VERMELHO, padrao: PAD.BARCO },
+    'DEFAULT':   { cor: COR.AZUL,     padrao: PAD.NULO }
+  },
+  sapato: {
+    // Sapatos definem a COR da faceta esquerda do 1º andar
+    'Sandalia':    { cor: COR.AMARELO },
+    'BotasAltas':  { cor: COR.PRETO },
+    'BotasNeve':   { cor: COR.BRANCO },
+    'Sapatilha':   { cor: COR.AZUL },
+    'Sabatao':     { cor: COR.VERMELHO },
+    'Aneis':       { cor: COR.VERDE },
+    'DEFAULT':     { cor: COR.NULA }
+  },
+  variantes: {
+    // Mapeia variantes (top-1, 1, etc) para Símbolos
+    'top-1': PAD.CASA, '1': PAD.CASA,
+    'top-2': PAD.BARCO, '2': PAD.BARCO,
+    'top-3': PAD.ESTRELA, '3': PAD.ESTRELA,
+    'top-4': PAD.NULO, '4': PAD.NULO,
+  }
+};
+
+// =====================================================================
+// 2. MAPEAMENTOS VISUAIS E REGRAS DE NEGÓCIO
+// =====================================================================
+
 const mapeamentosParaNumeros = {
   genero: { 'FEMININO': 2, 'MASCULINO': 3 },
   corPele: { 'NEGRA': 0, 'PARDA': 1, 'LEITE': 2, 'BRANCA': 3, 'VERDE': 4, 'LARANJA': 5, 'CINZA': 6 },
@@ -17,7 +73,6 @@ const mapeamentosParaNumeros = {
   acessorioPescoco: { 'COLAR': 0 },
 };
 
-// ... (CONSTANTES DE ITENS E HELPERS MANTIDOS IGUAIS - OMITIDOS PARA BREVIDADE) ...
 const ITENS_EXCLUSIVOS = { 'MASCARA': true, 'CAPACETE-TRIBAL-MASCARA': true, 'CAPACETE-CAVALEIRO': true, 'CAPACETE-DARK': true, 'CAPACETE-MADEIRA': true, 'CAPACETE-TRIBAL': true };
 const ITENS_BASE = { 'CHAPEU-SOL-TOPO': true, ...ITENS_EXCLUSIVOS };
 const ACESSORIOS_ESCONDEM_CABELO = { 'CAPACETE-CAVALEIRO': true, 'CAPACETE-DARK': true, 'CAPACETE-TRIBAL-MASCARA': true, 'MASCARA': true };
@@ -42,6 +97,7 @@ const MARCAS_MAPEADAS = {
  'SARDAS': { nome: 'SARDAS', categoria: 'MARCAS' }
 };
 
+// --- Helpers de Caminho ---
 const getPosicaoAcessorio = (nomeItem) => ACESSORIOS_CABECA_MAPEADOS[nomeItem]?.posicao || 'topo';
 
 const getCaminhoAcessorio = (nomeItem, genero) => {
@@ -78,7 +134,7 @@ const getCaminhoSapato = (nomeItem, variante, genero) => {
     return `/personagem-${genero}/SAPATOS/${nomeItem}-${varSufixo}.png`;
 };
 
-// --- Opções (Mantidas iguais) ---
+// --- Listas de Opções para UI ---
 const opcoesDoPersonagem = {
  cabelo: { MASCULINO: ['AFRO', 'CURTO', 'DREAD', 'LONGO', 'LOCO', 'RASPADO'], FEMININO: ['AFRO', 'CURTO', 'DREAD', 'LONGO', 'LOCO', 'RASPADO'] },
  corCabelo: [ { nome: 'PRETO', color: '#1a1a1a' }, { nome: 'VERMELHO', color: '#c43a3a' }, { nome: 'LOIRO', color: '#f5d453' }, { nome: 'BRANCO', color: '#e0e0e0' } ],
@@ -88,27 +144,68 @@ const opcoesDoPersonagem = {
     MASCULINO: ['Besourto', 'Guerreiro', 'Ladino', 'Limpo', 'Marcial', 'Monge', 'Regalia', 'Social'],
     FEMININO: ['Besourto', 'Bikini', 'Camponesa', 'Guerreiro','Grego', 'Ladina','Marcial', 'Limpo', 'Mage', 'Monge', 'Regalia', 'Social']
  },
- roupaCimaVariantes: ['top-1'], 
+ roupaCimaVariantes: ['top-1', 'top-2', 'top-3'], 
  roupaBaixo: {
     MASCULINO: ['Besouro', 'Calca', 'Grego', 'Ladino', 'Leggings', 'Limpo', 'Marcial', 'MeiaCalca', 'Monge'],
     FEMININO: ['Besourto', 'Bikini', 'Camponesa', 'Ladina','Grego','Marcial', 'Leggings', 'Limpo', 'Monge', 'Refinado', 'Social']
  },
- roupaBaixoVariantes: ['1'], 
+ roupaBaixoVariantes: ['1', '2', '3'], 
  sapato: ['Aneis', 'BotasAltas', 'BotasNeve', 'Sabatao', 'Sandalia', 'Sapatilha'],
- sapatoVariantes: ['1'],
+ sapatoVariantes: ['1', '2', '3'],
 };
 
-// --- Estado Inicial ---
+// =====================================================================
+// 3. ESTADO INICIAL DO PERSONAGEM
+// =====================================================================
+
 const estadoInicialDoPersonagem = {
- genero: 'FEMININO', generoNum: 2, corPele: 'NEGRA', corPeleNum: 0,
- cabelo: 'CURTO', cabeloNum: 0, corCabelo: 'PRETO', corCabeloNum: '1', 
- acessoriosCabeca: ['null', 'ARGOLA'], acessorioPescoco: 'COLAR', marcas: 'CICATRIZ-NARIZ',
- roupaCima: 'Bikini', roupaCimaVariante: 'top-1', 
- roupaBaixo: 'Grego', roupaBaixoVariante: '1',
- sapato: 'Sandalia', sapatoVariante: '1',
- acessCabeca: 6, acessCabecapadrao: '1', acessPescocoNum: 0, marcaspadrao: '1', 
- img: '', historia: '', armas: '', baseMini: ''
+  // --- CARACTERÍSTICAS FÍSICAS (3º Andar) ---
+  genero: 'FEMININO', generoNum: 2, 
+  corPele: 'NEGRA', corPeleNum: 0,
+  cabelo: 'CURTO', cabeloNum: 0, 
+  corCabelo: 'PRETO', corCabeloNum: '1', 
+  
+  acessoriosCabeca: ['null', 'ARGOLA'], 
+  acessCabeca: 6, acessCabecapadrao: '1', // Numéricos
+  
+  acessorioPescoco: 'COLAR', acessPescocoNum: 0, // Cor do bloco 2º andar
+  marcas: 'CICATRIZ-NARIZ', marcaspadrao: '1',
+
+  // --- ROUPA DE CIMA (2º Andar) ---
+  // Estilo (Faceta Frontal)
+  roupaCima: 'Bikini', 
+  roupaCimaCorNum: 4,      // 4: Amarelo
+  roupaCimaPadrao: '1',    // '1': Casa
+  
+  // Variação (Faceta Direita)
+  roupaCimaVariante: 'top-1', 
+  roupaCimaVarPadrao: '1', // '1': Casa
+
+  // --- ROUPA DE BAIXO (1º Andar) ---
+  // Estilo (Faceta Frontal)
+  roupaBaixo: 'Grego', 
+  roupaBaixoCorNum: 1,     // 1: Branco
+  roupaBaixoPadrao: '1',   // '1': Casa
+
+  // Variação (Faceta Direita)
+  roupaBaixoVariante: '1',
+  roupaBaixoVarPadrao: '1',
+
+  // --- SAPATOS (1º Andar) ---
+  // Estilo e Variação (Faceta Esquerda)
+  sapato: 'Sandalia', 
+  sapatoCorNum: 4,         // 4: Amarelo
+  
+  sapatoVariante: '1', 
+  sapatoVarPadrao: '1',
+
+  // --- META DADOS ---
+  img: '', historia: '', armas: '', baseMini: ''
 };
+
+// =====================================================================
+// 4. O HOOK (LÓGICA)
+// =====================================================================
 
 export const useLogicaCustomizacao = () => {
  const [personagem, setPersonagem] = useState(estadoInicialDoPersonagem);
@@ -116,47 +213,92 @@ export const useLogicaCustomizacao = () => {
  const atualizarPersonagem = (caracteristica, novoValor) => {
   setPersonagem(prev => {
    
-   // --- NOVO: REGRA DE ROUPAS OBRIGATÓRIAS ---
-   // Regra 1: Se tentar remover roupa de cima (FEMININO) -> Ignora
-   if (caracteristica === 'roupaCima' && !novoValor && prev.genero === 'FEMININO') {
-      return prev;
-   }
-   // Regra 2: Se tentar remover roupa de baixo (QUALQUER GÊNERO) -> Ignora
-   if (caracteristica === 'roupaBaixo' && !novoValor) {
-      return prev;
-   }
+   // --- REGRA DE ROUPAS OBRIGATÓRIAS ---
+   if (caracteristica === 'roupaCima' && !novoValor && prev.genero === 'FEMININO') return prev;
+   if (caracteristica === 'roupaBaixo' && !novoValor) return prev;
 
    let novoEstado = { ...prev };
    let valorFinal = novoValor;
    
+   // Toggle cabelo
    if (caracteristica === 'cabelo' && prev.cabelo === novoValor) valorFinal = null;
    novoEstado[caracteristica] = valorFinal;
 
-   const keyNum = `${caracteristica}Num`;
-   if (mapeamentosParaNumeros[caracteristica]) novoEstado[keyNum] = valorFinal ? mapeamentosParaNumeros[caracteristica][valorFinal] : null;
+   // --- ATUALIZAÇÃO AUTOMÁTICA DOS CÓDIGOS INDUSTRIAIS ---
 
+   // 1. Atualizar Roupa Cima (Cor + Símbolo)
+   if (caracteristica === 'roupaCima' && valorFinal) {
+     const dados = DADOS_INDUSTRIAIS.roupaCima[valorFinal] || DADOS_INDUSTRIAIS.roupaCima['DEFAULT'];
+     novoEstado.roupaCimaCorNum = dados.cor;
+     novoEstado.roupaCimaPadrao = dados.padrao;
+   }
+
+   // 2. Atualizar Variante Roupa Cima (Símbolo apenas)
+   if (caracteristica === 'roupaCimaVariante' && valorFinal) {
+     novoEstado.roupaCimaVarPadrao = DADOS_INDUSTRIAIS.variantes[valorFinal] || '4';
+   }
+
+   // 3. Atualizar Roupa Baixo (Cor + Símbolo)
+   if (caracteristica === 'roupaBaixo' && valorFinal) {
+     const dados = DADOS_INDUSTRIAIS.roupaBaixo[valorFinal] || DADOS_INDUSTRIAIS.roupaBaixo['DEFAULT'];
+     novoEstado.roupaBaixoCorNum = dados.cor;
+     novoEstado.roupaBaixoPadrao = dados.padrao;
+   }
+
+   // 4. Atualizar Variante Roupa Baixo (Símbolo apenas)
+   if (caracteristica === 'roupaBaixoVariante' && valorFinal) {
+     novoEstado.roupaBaixoVarPadrao = DADOS_INDUSTRIAIS.variantes[valorFinal] || '4';
+   }
+
+   // 5. Atualizar Sapato (Cor apenas)
+   if (caracteristica === 'sapato' && valorFinal) {
+     const dados = DADOS_INDUSTRIAIS.sapato[valorFinal] || DADOS_INDUSTRIAIS.sapato['DEFAULT'];
+     novoEstado.sapatoCorNum = dados.cor;
+   }
+
+   // 6. Atualizar Variante Sapato (Símbolo apenas)
+   if (caracteristica === 'sapatoVariante' && valorFinal) {
+     novoEstado.sapatoVarPadrao = DADOS_INDUSTRIAIS.variantes[valorFinal] || '4';
+   }
+
+   // --- FIM DA LÓGICA INDUSTRIAL ---
+
+   // Mapeamento padrão (Pele, Cabelo, Genero)
+   const keyNum = `${caracteristica}Num`;
+   // Para corCabelo e Marcas, o sufixo é 'Num' mas o valor é string ('1'), o mapeamento cuida disso.
+   if (mapeamentosParaNumeros[caracteristica]) {
+       novoEstado[keyNum] = valorFinal ? mapeamentosParaNumeros[caracteristica][valorFinal] : null;
+   }
+
+   // Reset se acessório esconde cabelo
    if (caracteristica === 'cabelo' && valorFinal && prev.acessoriosCabeca.some(i => ACESSORIOS_ESCONDEM_CABELO[i])) {
        novoEstado.acessoriosCabeca = []; novoEstado.acessCabeca = null; novoEstado.acessCabecapadrao = null;
    }
    
    // Lógica de Troca de Gênero
    if (caracteristica === 'genero' && prev.genero !== novoValor) {
-     // --- NOVO: CABELO SEMPRE CURTO AO TROCAR ---
      novoEstado.cabelo = 'CURTO'; 
-     novoEstado.cabeloNum = mapeamentosParaNumeros.cabelo['CURTO']; // ou apenas 0
+     novoEstado.cabeloNum = mapeamentosParaNumeros.cabelo['CURTO'];
      
-     // Reseta acessórios
      novoEstado.acessoriosCabeca = []; novoEstado.acessorioPescoco = null; novoEstado.marcas = null;
+     novoEstado.acessCabeca = null; novoEstado.acessPescocoNum = null; novoEstado.marcaspadrao = null;
      
-     // Mantém Leggings e sapato padrão
+     // Reseta Roupas para os padrões do novo gênero
      novoEstado.roupaBaixo = 'Grego'; 
+     novoEstado.roupaBaixoCorNum = DADOS_INDUSTRIAIS.roupaBaixo['Grego'].cor;
+     novoEstado.roupaBaixoPadrao = DADOS_INDUSTRIAIS.roupaBaixo['Grego'].padrao;
+     
      novoEstado.sapato = 'Sandalia'; 
+     novoEstado.sapatoCorNum = DADOS_INDUSTRIAIS.sapato['Sandalia'].cor;
 
-     // Define Top inicial se for mulher
      if (novoValor === 'FEMININO') {
          novoEstado.roupaCima = 'Bikini';
+         novoEstado.roupaCimaCorNum = DADOS_INDUSTRIAIS.roupaCima['Bikini'].cor;
+         novoEstado.roupaCimaPadrao = DADOS_INDUSTRIAIS.roupaCima['Bikini'].padrao;
      } else {
          novoEstado.roupaCima = null;
+         novoEstado.roupaCimaCorNum = null;
+         novoEstado.roupaCimaPadrao = null;
      }
    }
    return novoEstado;
@@ -168,7 +310,13 @@ export const useLogicaCustomizacao = () => {
     let base = null, padrao = null;
     arr.forEach(i => ITENS_BASE[i] ? base = i : padrao = i);
     const esconde = arr.some(i => ACESSORIOS_ESCONDEM_CABELO[i]);
-    return { ...prev, acessoriosCabeca: arr, acessCabeca: base ? mapeamentosParaNumeros.acessCabecaBase[base] : null, acessCabecapadrao: padrao ? mapeamentosParaNumeros.acessCabecaPadrao[padrao] : null, cabelo: esconde ? null : prev.cabelo, cabeloNum: esconde ? null : prev.cabeloNum };
+    return { ...prev, 
+        acessoriosCabeca: arr, 
+        acessCabeca: base ? mapeamentosParaNumeros.acessCabecaBase[base] : null, 
+        acessCabecapadrao: padrao ? mapeamentosParaNumeros.acessCabecaPadrao[padrao] : null, 
+        cabelo: esconde ? null : prev.cabelo, 
+        cabeloNum: esconde ? null : prev.cabeloNum 
+    };
   });
  };
 
@@ -179,14 +327,15 @@ export const useLogicaCustomizacao = () => {
   try {
     const canvas = await html2canvas(ref.current, { backgroundColor: null, scale: 0.45 });
     const b64 = canvas.toDataURL('image/png');
+    // Salva o estado completo, agora incluindo todos os códigos industriais
     setImg(b64); setDados({ ...personagem, img: b64 });
-    console.log("Salvo:", personagem);
+    console.log("Salvo para Produção:", personagem);
   } catch (e) { console.error(e); }
  };
  
  const { genero, corPele, cabelo, corCabelo, acessoriosCabeca, acessorioPescoco, marcas, roupaCima, roupaCimaVariante, roupaBaixo, roupaBaixoVariante, sapato, sapatoVariante } = personagem;
 
- // --- GERAÇÃO DOS CAMINHOS ---
+ // --- GERAÇÃO DOS CAMINHOS DAS IMAGENS ---
  const caminhoBaseCorpo = genero === 'MASCULINO' 
     ? `/personagem-MASCULINO/CORPO-MASCULINO-PELE/CORPO-MASCULINO-${corPele}.png` 
     : `/personagem-FEMININO/CORPO-FEMININO-PELES/CORPO-FEMININO-${corPele}.png`;
