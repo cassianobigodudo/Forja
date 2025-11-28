@@ -70,7 +70,8 @@ function PaginaCustomizaçao() {
   }, [isSaving, zoomAtivo, salvarPersonagem, setDadosDoPersonagem, setImagemPersonagem, characterRef]);
 
   const handleAdicionarClick = async () => {
-    const usuarioId = localStorage.getItem('usuario_id');
+    const usuarioId = localStorage.getItem('id_usuario');
+    console.log(usuarioId)
     
     if (!usuarioId) {
         alert("Você precisa estar logado para adicionar ao carrinho!");
@@ -245,7 +246,7 @@ function PaginaCustomizaçao() {
               </button>
               {message && <span style={{fontSize: '0.8rem', marginLeft: '10px'}}>{message}</span>}
             </div>
-        </div>
+        </div>  
 
         {/* --- MENU SECUNDÁRIO --- */}
         <div className="menu-secundario-custom">
