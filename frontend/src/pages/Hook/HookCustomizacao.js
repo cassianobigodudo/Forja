@@ -164,8 +164,7 @@ const estadoInicialDoPersonagem = {
 
   sapato: 'Sandalia', sapatoCorNum: 4, 
   sapatoVariante: '1', sapatoVarPadrao: '1',
-
-  // --- ARMAS (Novo) ---
+  
   armas: null,            // Começa sem arma
   armasCorNum: 7,         // 7: Nula (Sem Faceta)
   armasPadrao: '4',       // '4': Nulo (Sem Ilustração)

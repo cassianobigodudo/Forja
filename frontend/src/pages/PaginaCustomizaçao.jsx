@@ -14,7 +14,7 @@ import MenuSecHistoria from '../components/MenuSecHistoria';
 import MenuTorso from '../components/MenuTorso';
 import MenuPernas from '../components/MenuPernas';
 import MenuSapatos from '../components/MenuSapatos';
-import MenuArmas from '../components/MenuArmas'; // <--- IMPORTADO AQUI
+import MenuArmas from '../components/MenuArmas';
 
 // --- CONTEXTOS E HOOKS ---
 import { useGlobalContext } from '../context/GlobalContext';
@@ -54,6 +54,7 @@ function PaginaCustomizaçao() {
   const [loadingHistoria, setLoadingHistoria] = useState(false);
   const [errorHistoria, setErrorHistoria] = useState(null);
 
+  // Auto-save effect
   useEffect(() => {
     if (isSaving && !zoomAtivo) {
       const captureAndSave = async () => {
@@ -78,7 +79,7 @@ function PaginaCustomizaçao() {
 
     setIsAdding(true);
     setMessage('Adicionando ao carrinho...');
-    setZoomAtivo(false);
+    setZoomAtivo(false); // Ensure zoom is off before capturing
     setIsSaving(true); 
 
     setTimeout(async () => {
@@ -109,15 +110,17 @@ function PaginaCustomizaçao() {
     setHistoriaGerada("");
   
     try {
+       // Capture logic
        const canvas = await html2canvas(characterRef.current, {
            backgroundColor: null,
-           scale: 1
+           scale: 1,
+           useCORS: true // Added for better image handling
        });
        const base64full = canvas.toDataURL("image/jpeg", 0.8);
        const base64 = base64full.split(",")[1];
 
        if (!base64) {
-          throw new Error("Falha ao capturar a imagem do personagem.");
+         throw new Error("Falha ao capturar a imagem do personagem.");
        }
 
        const API_URL = 'https://forja-qvex.onrender.com/api/personagens/gerar-historia';
@@ -163,7 +166,7 @@ function PaginaCustomizaçao() {
         
         {/* --- ÁREA DO PAPERDOLL --- */}
         <div className={`paperdoll-area ${zoomAtivo ? 'zoomed' : ''}`}>
-          <div ref={characterRef} className="character-container" style={{ position: 'relative' }}>
+          <div ref={characterRef} className="character-container">
             
             {/* 1. FUNDO */}
             {caminhosDasImagens.cabeloFundo && <img src={caminhosDasImagens.cabeloFundo} alt="" style={{ position: 'absolute', top: 0, left: 0 }} />}
@@ -225,7 +228,6 @@ function PaginaCustomizaçao() {
               <button className={btnAtivo === 'SAPATOS' ? 'btn-corpo-follow-ativado' : 'btn-corpo-follow'} onClick={() => handleButtonClick('SAPATOS')}>
                   <label className='botaoLbl'>SAPATOS</label> <img className='img-btn-icon' src="./icones/Sapatos.svg" alt="" onError={(e)=>e.target.style.display='none'}/>
               </button>
-              {/* --- BOTÃO DE ARMAS NOVO --- */}
               <button className={btnAtivo === 'ARMAS' ? 'btn-corpo-follow-ativado' : 'btn-corpo-follow'} onClick={() => handleButtonClick('ARMAS')}>
                   <label className='botaoLbl'>ARMAS</label> <img className='img-btn-icon' src="./icones/Armas.svg" alt="" onError={(e)=>e.target.style.display='none'}/>
               </button>
