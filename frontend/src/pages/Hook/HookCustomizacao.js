@@ -378,7 +378,7 @@ const adicionarPersonagemAoCarrinho = async (refElemento, dadosExtras = {}) => {
   // refElemento: a referência do React (useRef) para tirar o print
   // dadosExtras: objeto vindo da página { nome: "...", historia: "..." }
 
-  const usuarioId = localStorage.getItem('usuario_id');
+  const usuarioId = localStorage.getItem('id_usuario');
   
   if (!usuarioId) {
     throw new Error('Você precisa estar logado para salvar o personagem.');
