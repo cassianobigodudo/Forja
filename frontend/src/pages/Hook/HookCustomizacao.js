@@ -12,8 +12,26 @@ const COR = { BRANCO: 1, PRETO: 2, VERDE: 3, AMARELO: 4, AZUL: 5, VERMELHO: 6, N
 // Padrões (Strings)
 const PAD = { CASA: '1', BARCO: '2', ESTRELA: '3', NULO: '4' };
 
-// Mapeamento: Nome do Item (Visual) -> Dados da Máquina
 const DADOS_INDUSTRIAIS = {
+  // --- DADOS CORPORAIS (Mapeamento Simples: Nome -> Inteiro) ---
+  genero: { 'FEMININO': 2, 'MASCULINO': 3 },
+  corPele: { 'NEGRA': 0, 'PARDA': 1, 'LEITE': 2, 'BRANCA': 3, 'VERDE': 4, 'LARANJA': 5, 'CINZA': 6 },
+  cabelo: { 'CURTO': 0, 'LONGO': 1, 'AFRO': 2, 'DREAD': 3, 'LOCO': 4, 'RASPADO': 5 },
+  corCabelo: { 'PRETO': '1', 'VERMELHO': '2', 'LOIRO': '3', 'BRANCO': '4' },
+  
+  // --- ACESSÓRIOS & MARCAS (Mapeamento Simples) ---
+  marcas: { 'CICATRIZ-NARIZ': '1', 'CICATRIZ-OLHO': '2', 'SARDAS': '3' },
+  acessorioPescoco: { 'COLAR': 0 },
+
+  // Definições de Acessórios de Cabeça (Base = Numérico / Padrão = String)
+  acessCabecaBase: {
+    'CAPACETE-CAVALEIRO': 0, 'CAPACETE-DARK': 1, 'CAPACETE-TRIBAL-MASCARA': 2,
+    'MASCARA': 3, 'CAPACETE-MADEIRA': 4, 'CAPACETE-TRIBAL': 5,
+    'CHAPEU-SOL-TOPO': 6, 'CHAPEU-SOL-EMBAIXO': 6, 
+  },
+  acessCabecaPadrao: { 'ARGOLA': '1', 'OCULOS': '2' },
+
+  // --- ROUPAS & ITENS (Mapeamento Complexo: Item -> { cor, padrao }) ---
   roupaCima: {
     'Bikini':    { cor: COR.AMARELO,  padrao: PAD.CASA },
     'Besourto':  { cor: COR.AZUL,     padrao: PAD.ESTRELA },
@@ -24,7 +42,6 @@ const DADOS_INDUSTRIAIS = {
     'Grego':     { cor: COR.BRANCO,   padrao: PAD.CASA },
     'Marcial':   { cor: COR.VERMELHO, padrao: PAD.ESTRELA },
     'Limpo':     { cor: COR.BRANCO,   padrao: PAD.NULO },
-    // Fallback para itens não listados explicitamente
     'DEFAULT':   { cor: COR.AZUL,     padrao: PAD.NULO } 
   },
   roupaBaixo: {
@@ -37,7 +54,6 @@ const DADOS_INDUSTRIAIS = {
     'DEFAULT':   { cor: COR.AZUL,     padrao: PAD.NULO }
   },
   sapato: {
-    // Sapatos definem a COR da faceta esquerda do 1º andar
     'Sandalia':    { cor: COR.AMARELO },
     'BotasAltas':  { cor: COR.PRETO },
     'BotasNeve':   { cor: COR.BRANCO },
@@ -46,32 +62,18 @@ const DADOS_INDUSTRIAIS = {
     'Aneis':       { cor: COR.VERDE },
     'DEFAULT':     { cor: COR.NULA }
   },
+  armas: {
+    'Espada':  { cor: COR.BRANCO,   padrao: PAD.ESTRELA }, 
+    'Lanca':   { cor: COR.VERMELHO, padrao: PAD.BARCO },   
+    'Machado': { cor: COR.PRETO,    padrao: PAD.CASA },    
+    'DEFAULT': { cor: COR.NULA,     padrao: PAD.NULO }
+  },
   variantes: {
-    // Mapeia variantes (top-1, 1, etc) para Símbolos
     'top-1': PAD.CASA, '1': PAD.CASA,
     'top-2': PAD.BARCO, '2': PAD.BARCO,
     'top-3': PAD.ESTRELA, '3': PAD.ESTRELA,
     'top-4': PAD.NULO, '4': PAD.NULO,
   }
-};
-
-// =====================================================================
-// 2. MAPEAMENTOS VISUAIS E REGRAS DE NEGÓCIO
-// =====================================================================
-
-const mapeamentosParaNumeros = {
-  genero: { 'FEMININO': 2, 'MASCULINO': 3 },
-  corPele: { 'NEGRA': 0, 'PARDA': 1, 'LEITE': 2, 'BRANCA': 3, 'VERDE': 4, 'LARANJA': 5, 'CINZA': 6 },
-  cabelo: { 'CURTO': 0, 'LONGO': 1, 'AFRO': 2, 'DREAD': 3, 'LOCO': 4, 'RASPADO': 5 },
-  corCabelo: { 'PRETO': '1', 'VERMELHO': '2', 'LOIRO': '3', 'BRANCO': '4' },
-  marcas: { 'CICATRIZ-NARIZ': '1', 'CICATRIZ-OLHO': '2', 'SARDAS': '3' },
-  acessCabecaBase: {
-    'CAPACETE-CAVALEIRO': 0, 'CAPACETE-DARK': 1, 'CAPACETE-TRIBAL-MASCARA': 2,
-    'MASCARA': 3, 'CAPACETE-MADEIRA': 4, 'CAPACETE-TRIBAL': 5,
-    'CHAPEU-SOL-TOPO': 6, 'CHAPEU-SOL-EMBAIXO': 6, 
-  },
-  acessCabecaPadrao: { 'ARGOLA': '1', 'OCULOS': '2' },
-  acessorioPescoco: { 'COLAR': 0 },
 };
 
 const ITENS_EXCLUSIVOS = { 'MASCARA': true, 'CAPACETE-TRIBAL-MASCARA': true, 'CAPACETE-CAVALEIRO': true, 'CAPACETE-DARK': true, 'CAPACETE-MADEIRA': true, 'CAPACETE-TRIBAL': true };
@@ -267,8 +269,8 @@ export const useLogicaCustomizacao = () => {
    // Mapeamento padrão (Pele, Cabelo, Genero)
    const keyNum = `${caracteristica}Num`;
    // Para corCabelo e Marcas, o sufixo é 'Num' mas o valor é string ('1'), o mapeamento cuida disso.
-   if (mapeamentosParaNumeros[caracteristica]) {
-       novoEstado[keyNum] = valorFinal ? mapeamentosParaNumeros[caracteristica][valorFinal] : null;
+   if (DADOS_INDUSTRIAIS[caracteristica]) {
+       novoEstado[keyNum] = valorFinal ? DADOS_INDUSTRIAIS[caracteristica][valorFinal] : null;
    }
 
    // Reset se acessório esconde cabelo
@@ -279,7 +281,7 @@ export const useLogicaCustomizacao = () => {
    // Lógica de Troca de Gênero
    if (caracteristica === 'genero' && prev.genero !== novoValor) {
      novoEstado.cabelo = 'CURTO'; 
-     novoEstado.cabeloNum = mapeamentosParaNumeros.cabelo['CURTO'];
+     novoEstado.cabeloNum = DADOS_INDUSTRIAIS.cabelo['CURTO'];
      
      novoEstado.acessoriosCabeca = []; novoEstado.acessorioPescoco = null; novoEstado.marcas = null;
      novoEstado.acessCabeca = null; novoEstado.acessPescocoNum = null; novoEstado.marcaspadrao = null;
@@ -313,16 +315,16 @@ export const useLogicaCustomizacao = () => {
     const esconde = arr.some(i => ACESSORIOS_ESCONDEM_CABELO[i]);
     return { ...prev, 
         acessoriosCabeca: arr, 
-        acessCabeca: base ? mapeamentosParaNumeros.acessCabecaBase[base] : null, 
-        acessCabecapadrao: padrao ? mapeamentosParaNumeros.acessCabecaPadrao[padrao] : null, 
+        acessCabeca: base ? DADOS_INDUSTRIAIS.acessCabecaBase[base] : null, 
+        acessCabecapadrao: padrao ? DADOS_INDUSTRIAIS.acessCabecaPadrao[padrao] : null, 
         cabelo: esconde ? null : prev.cabelo, 
         cabeloNum: esconde ? null : prev.cabeloNum 
     };
   });
  };
 
- const handleAcessorioPescocoChange = (n) => setPersonagem(p => ({...p, acessorioPescoco: n, acessPescocoNum: n ? mapeamentosParaNumeros.acessorioPescoco[n] : null }));
- const handleMarcasChange = (n) => setPersonagem(p => ({...p, marcas: n, marcaspadrao: n ? mapeamentosParaNumeros.marcas[n] : null }));
+ const handleAcessorioPescocoChange = (n) => setPersonagem(p => ({...p, acessorioPescoco: n, acessPescocoNum: n ? DADOS_INDUSTRIAIS.acessorioPescoco[n] : null }));
+ const handleMarcasChange = (n) => setPersonagem(p => ({...p, marcas: n, marcaspadrao: n ? DADOS_INDUSTRIAIS.marcas[n] : null }));
 
  const salvarPersonagem = async (ref, setDados, setImg) => {
   try {
@@ -405,28 +407,39 @@ const adicionarPersonagemAoCarrinho = async (refElemento, dadosExtras = {}) => {
     // ============================================================
     // 🔍 DEBUGGER VIZINHO: CHECKPOINT 1 (FRONTEND)
     // ============================================================
-    console.group("%c 🛠️ FORJA DEBUG: Enviando Dados", "color: orange; font-weight: bold; font-size: 14px;");
-    console.log(`👤 ID Usuário: ${payload.usuario_id}`);
-    console.log(`📝 Nome Personagem: ${payload.nome}`);
+    console.group("%c 🛠️ FORJA DEBUG: Validação Industrial", "color: orange; font-weight: bold; font-size: 14px;");
 
-    console.log(`⚧️ Gênero: ${payload.genero} | Num: %c${payload.generoNum}`, "color: cyan; font-weight:bold");
-    console.log(`🎨 Pele: ${payload.corPele} | Num: %c${payload.corPeleNum}`, "color: cyan; font-weight:bold");
+    console.log(`👤 Identificação:`);
+    console.log(`   Nome: ${payload.nome} | ID User: ${payload.usuario_id}`);
 
-    console.log("---------------- TORSO (Industrial) ----------------");
-    console.log(`👕 Peça: ${payload.roupaCima}`);
-    console.log(`🔢 Cor (Bloco): %c${payload.roupaCimaCorNum}`, "color: lime; font-weight:bold; font-size: 12px");
-    console.log(`🔢 Padrão (Frente): %c${payload.roupaCimaPadrao}`, "color: lime; font-weight:bold; font-size: 12px");
-    console.log(`🔢 Variante: ${payload.roupaCimaVariante} -> Padrão Var: %c${payload.roupaCimaVarPadrao}`, "color: lime; font-weight:bold");
+    console.log(`\n🧬 Genética (Base):`);
+    console.log(`   Gênero:    "${payload.genero}"  -> Industrial: %c${payload.generoNum}`, "color: cyan; font-weight:bold");
+    console.log(`   Pele:      "${payload.corPele}" -> Industrial: %c${payload.corPeleNum}`, "color: cyan; font-weight:bold");
+    console.log(`   Cabelo:    "${payload.cabelo}"  -> Industrial: %c${payload.cabeloNum}`, "color: cyan; font-weight:bold");
+    console.log(`   Cor Cabelo:"${payload.corCabelo}"-> Industrial: %c${payload.corCabeloNum}`, "color: cyan; font-weight:bold");
 
-    console.log("---------------- PERNAS (Industrial) ----------------");
-    console.log(`👖 Peça: ${payload.roupaBaixo}`);
-    console.log(`🔢 Cor (Bloco): %c${payload.roupaBaixoCorNum}`, "color: lime; font-weight:bold; font-size: 12px");
-    console.log(`🔢 Padrão (Frente): %c${payload.roupaBaixoPadrao}`, "color: lime; font-weight:bold; font-size: 12px");
-    console.log(`🔢 Variante: ${payload.roupaBaixoVariante} -> Padrão Var: %c${payload.roupaBaixoVarPadrao}`, "color: lime; font-weight:bold");
+    console.log(`\n🧢 Acessórios & Detalhes:`);
+    console.log(`   Marcas:    "${payload.marcas}" -> Padrão ID: %c${payload.marcaspadrao}`, "color: yellow; font-weight:bold");
+    console.log(`   Pescoço:   "${payload.acessorioPescoco}" -> ID: %c${payload.acessPescocoNum}`, "color: yellow; font-weight:bold");
+    console.log(`   Cabeça Lista: [${payload.acessoriosCabeca}]`);
+    console.log(`   > Cabeça Base ID:   %c${payload.acessCabeca}`, "color: magenta; font-weight:bold");
+    console.log(`   > Cabeça Padrão ID: %c${payload.acessCabecapadrao}`, "color: magenta; font-weight:bold");
 
-    console.log("---------------- PÉS & ARMAS ----------------");
-    console.log(`👟 Sapato: ${payload.sapato} | CorNum: ${payload.sapatoCorNum} | VarPadrao: ${payload.sapatoVarPadrao}`);
-    console.log(`⚔️ Arma: ${payload.armas} | CorNum: ${payload.armasCorNum} | Padrão: ${payload.armasPadrao}`);
+    console.log(`\n👕 Torso (Indústria 4.0):`);
+    console.log(`   Peça:      "${payload.roupaCima}"`);
+    console.log(`   > Cor Bloco:    %c${payload.roupaCimaCorNum}`, "color: lime; font-weight:bold");
+    console.log(`   > Padrão Face:  %c${payload.roupaCimaPadrao}`, "color: lime; font-weight:bold");
+    console.log(`   > Var Símbolo:  %c${payload.roupaCimaVarPadrao} (Variante: ${payload.roupaCimaVariante})`, "color: lime; font-weight:bold");
+
+    console.log(`\n👖 Pernas (Indústria 4.0):`);
+    console.log(`   Peça:      "${payload.roupaBaixo}"`);
+    console.log(`   > Cor Bloco:    %c${payload.roupaBaixoCorNum}`, "color: lime; font-weight:bold");
+    console.log(`   > Padrão Face:  %c${payload.roupaBaixoPadrao}`, "color: lime; font-weight:bold");
+    console.log(`   > Var Símbolo:  %c${payload.roupaBaixoVarPadrao} (Variante: ${payload.roupaBaixoVariante})`, "color: lime; font-weight:bold");
+
+    console.log(`\n👟 Pés & ⚔️ Armas:`);
+    console.log(`   Sapato:    "${payload.sapato}" -> CorNum: %c${payload.sapatoCorNum}`, "color: white; background: blue");
+    console.log(`   Arma:      "${payload.armas}"  -> CorNum: %c${payload.armasCorNum} | Padrão: %c${payload.armasPadrao}`, "color: white; background: red");
 
     console.groupEnd();
     // ============================================================

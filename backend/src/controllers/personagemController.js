@@ -18,30 +18,26 @@ const criarPersonagem = async (req, res) => {
     console.log("\n================================================");
     console.log("📡 RECEBIDO NO CONTROLLER PERSONAGEM (REQ.BODY)");
     console.log("================================================");
-    
-    const d = req.body; // Atalho para leitura
+    const d = req.body;
 
-    console.log(`[BÁSICO] Usuário: ${d.usuario_id} | Nome: ${d.nome}`);
-    console.log(`[IMAGEM] Base64 recebida? ${d.img ? "SIM (Tamanho: " + d.img.length + ")" : "NÃO"}`);
+    console.log("1. DADOS DE CABELO E PELE:");
+    console.log(`   - Cabelo: ${d.cabelo} (Num: ${d.cabeloNum})`);
+    console.log(`   - Cor Cabelo: ${d.corCabelo} (Num: ${d.corCabeloNum})`);
+    console.log(`   - Pele: ${d.corPele} (Num: ${d.corPeleNum})`);
 
-    console.log(`\n[INDUSTRIAL - GÊNERO/PELE]`);
-    console.log(` > Gênero: ${d.genero} (Num: ${d.generoNum})`);
-    console.log(` > Pele: ${d.corPele} (Num: ${d.corPeleNum})`);
+    console.log("2. ACESSÓRIOS:");
+    console.log(`   - Pescoço: ${d.acessorioPescoco} (Num: ${d.acessPescocoNum})`);
+    console.log(`   - Cabeça Array: ${JSON.stringify(d.acessoriosCabeca)}`);
+    console.log(`   - Cabeça Base Num: ${d.acessCabeca}`);
+    console.log(`   - Cabeça Padrão: ${d.acessCabecapadrao}`);
+    console.log(`   - Marcas: ${d.marcas} (Padrao: ${d.marcaspadrao})`);
 
-    console.log(`\n[INDUSTRIAL - TORSO]`);
-    console.log(` > Nome: ${d.roupaCima}`);
-    console.log(` > Cor ID: ${d.roupaCimaCorNum}`);
-    console.log(` > Padrão ID: ${d.roupaCimaPadrao}`);
-    console.log(` > Var ID: ${d.roupaCimaVarPadrao}`);
-
-    console.log(`\n[INDUSTRIAL - PERNAS]`);
-    console.log(` > Nome: ${d.roupaBaixo}`);
-    console.log(` > Cor ID: ${d.roupaBaixoCorNum}`);
-    console.log(` > Padrão ID: ${d.roupaBaixoPadrao}`);
-
-    console.log(`\n[INDUSTRIAL - EXTRAS]`);
-    console.log(` > Arma: ${d.armas} (Cor: ${d.armasCorNum}, Pad: ${d.armasPadrao})`);
-    console.log("================================================\n");
+    console.log("3. ROUPAS INDUSTRIAIS (Cor/Padrão):");
+    console.log(`   - Torso: ${d.roupaCimaCorNum} / ${d.roupaCimaPadrao} (Var: ${d.roupaCimaVarPadrao})`);
+    console.log(`   - Perna: ${d.roupaBaixoCorNum} / ${d.roupaBaixoPadrao} (Var: ${d.roupaBaixoVarPadrao})`);
+    console.log(`   - Sapato Cor: ${d.sapatoCorNum}`);
+    console.log(`   - Arma Cor/Pad: ${d.armasCorNum} / ${d.armasPadrao}`);
+    console.log("====================================================\n");
     // ============================================================
     
     try {

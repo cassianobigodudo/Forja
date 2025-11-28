@@ -76,25 +76,29 @@ const criar = async (dados) => {
     // ============================================================
     console.log("🛠️ PREPARANDO INSERT SQL:");
 
-    // Vamos mapear os índices do array 'values' para os nomes das colunas
-    // Lembre-se: Array começa em 0, mas no SQL ($1) começa em 1.
-    const mapaDeDados = {
-        '01_UsuarioID': values[0],
-        '04_GeneroNome': values[3],
-        '05_GeneroNUM': values[4],       // <--- VERIFIQUE SE É NÚMERO
-        '18_RoupaCima': values[17],
-        '19_RoupaCimaCOR_NUM': values[18], // <--- IMPORTANTE
-        '20_RoupaCimaPADRAO': values[19],
-        '22_RoupaBaixo': values[21],
-        '23_RoupaBaixoCOR_NUM': values[22], // <--- IMPORTANTE
-        '30_ArmaNome': values[29],
-        '31_ArmaCOR_NUM': values[30]
+    const debugSQL = {
+        'GENERO_NUM': values[4],
+        'PELE_NUM': values[6],
+        'CABELO_NUM': values[8],
+        'COR_CABELO_NUM': values[10],
+        
+        'MARCAS_NUM': values[12],
+        'ACESS_CABECA_NUM': values[14], // Base (Capacete, etc)
+        'ACESS_PESCOCO_NUM': values[16],
+
+        'ROUPA_CIMA_COR': values[18],
+        'ROUPA_BAIXO_COR': values[22],
+        'SAPATO_COR': values[26],
+        'ARMA_COR': values[30]
     };
 
-    console.table(mapaDeDados); 
-    // Se aparecer algum "undefined" ou "NaN" na tabela acima, 
-    // o erro está no mapeamento da const values.
-    // ============================================================
+    console.log("🛠️ VALORES NUMÉRICOS FINAIS PARA O SQL:");
+    console.table(debugSQL);
+
+    // ALERTA DE ERRO: Se algum valor acima for undefined, o SQL vai falhar ou salvar errado.
+    Object.keys(debugSQL).forEach(key => {
+        if (debugSQL[key] === undefined) console.error(`🚨 ALERTA: ${key} ESTÁ UNDEFINED!`);
+    });
 
     const query = `
         INSERT INTO personagens (
