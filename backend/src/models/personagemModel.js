@@ -1,5 +1,3 @@
-const db = require('../config/database');
-
 // src/models/personagemModel.js
 const db = require('../config/database');
 
