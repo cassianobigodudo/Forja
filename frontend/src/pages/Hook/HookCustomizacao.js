@@ -374,55 +374,83 @@ export const useLogicaCustomizacao = () => {
   marcas: getCaminhoAcessorio(marcas, genero)
  };
 
- const adicionarPersonagemAoCarrinho = async (referenciaDoElemento) => {
-        
-        try {
-            // 1. Recuperar o ID do usuário logado
-            const usuarioId = localStorage.getItem('id_usuario');
+const adicionarPersonagemAoCarrinho = async (refElemento, dadosExtras = {}) => {
+  // refElemento: a referência do React (useRef) para tirar o print
+  // dadosExtras: objeto vindo da página { nome: "...", historia: "..." }
 
-            // 2. Trava de segurança: Se não houver login, interrompe o processo.
-            if (!usuarioId) {
-                alert("Você precisa estar logado para salvar o personagem e adicionar ao carrinho.");
-                // Opcional: window.location.href = '/login'; // Redirecionar se quiser
-                throw new Error("Usuário não autenticado.");
-            }
+  const usuarioId = localStorage.getItem('usuario_id');
+  
+  if (!usuarioId) {
+    throw new Error('Você precisa estar logado para salvar o personagem.');
+  }
 
-            // 3. Capturar a imagem
-            const canvas = await html2canvas(referenciaDoElemento.current, { backgroundColor: null, scale: 0.45 });
-            const imagemEmBase64 = canvas.toDataURL('image/png');
-            
-            // 4. Montar o objeto completo usando id_usuario
-            const personagemCompleto = { 
-                ...personagem, 
-                img: imagemEmBase64,
-                id_usuario: usuarioId // <--- Mudança aqui: usa o ID do usuário
-            };
-            
-            console.log("Enviando os seguintes dados para /personagens:", personagemCompleto);
+  try {
+    // 1. Gera a Imagem (Snapshot)
+    const canvas = await html2canvas(refElemento.current, { 
+      backgroundColor: null, 
+      scale: 0.5 // Scale menor para ficar leve no banco
+    });
+    const imgBase64 = canvas.toDataURL('image/png');
 
-            // 5. Salvar o personagem no banco (API Call 1)
-            const resposta = await axios.post('https://forja-qvex.onrender.com/api/personagens', personagemCompleto);
-            const novoPersonagemSalvo = resposta.data;
-            console.log("Personagem salvo com sucesso:", novoPersonagemSalvo);
-            
-            // 6. Adicionar o personagem recém-salvo ao carrinho (API Call 2)
-            await axios.post('https://forja-qvex.onrender.com/api/carrinho', {
-                id_usuario: usuarioId, // <--- Mudança aqui
-                personagem_id: novoPersonagemSalvo.id
-            });
-            console.log(`Personagem ID ${novoPersonagemSalvo.id} adicionado ao carrinho.`);
-
-            // 7. Retornar os dados do personagem salvo em caso de sucesso
-            return novoPersonagemSalvo;
-
-        } catch (erro) {
-            console.error('Erro no processo de adicionar ao carrinho:', erro);
-            // Verifica se foi erro do nosso "throw" manual ou erro de rede
-            const mensagemErro = erro.response?.data?.message || erro.message || "Erro ao adicionar ao carrinho";
-            alert(mensagemErro); 
-            throw erro;
-        }
+    // 2. Monta o Payload
+    // O Axios converte esse objeto para JSON automaticamente
+    const payload = {
+      ...personagem, // Espalha todo o estado (roupaCima, generonum, etc.)
+      usuario_id: usuarioId, // ID do localStorage
+      img: imgBase64,
+      nome: dadosExtras.nome || 'Aventureiro Sem Nome',
+      historia: dadosExtras.historia || ''
     };
+
+    // ============================================================
+    // 🔍 DEBUGGER VIZINHO: CHECKPOINT 1 (FRONTEND)
+    // ============================================================
+    console.group("%c 🛠️ FORJA DEBUG: Enviando Dados", "color: orange; font-weight: bold; font-size: 14px;");
+    console.log(`👤 ID Usuário: ${payload.usuario_id}`);
+    console.log(`📝 Nome Personagem: ${payload.nome}`);
+
+    console.log(`⚧️ Gênero: ${payload.genero} | Num: %c${payload.generoNum}`, "color: cyan; font-weight:bold");
+    console.log(`🎨 Pele: ${payload.corPele} | Num: %c${payload.corPeleNum}`, "color: cyan; font-weight:bold");
+
+    console.log("---------------- TORSO (Industrial) ----------------");
+    console.log(`👕 Peça: ${payload.roupaCima}`);
+    console.log(`🔢 Cor (Bloco): %c${payload.roupaCimaCorNum}`, "color: lime; font-weight:bold; font-size: 12px");
+    console.log(`🔢 Padrão (Frente): %c${payload.roupaCimaPadrao}`, "color: lime; font-weight:bold; font-size: 12px");
+    console.log(`🔢 Variante: ${payload.roupaCimaVariante} -> Padrão Var: %c${payload.roupaCimaVarPadrao}`, "color: lime; font-weight:bold");
+
+    console.log("---------------- PERNAS (Industrial) ----------------");
+    console.log(`👖 Peça: ${payload.roupaBaixo}`);
+    console.log(`🔢 Cor (Bloco): %c${payload.roupaBaixoCorNum}`, "color: lime; font-weight:bold; font-size: 12px");
+    console.log(`🔢 Padrão (Frente): %c${payload.roupaBaixoPadrao}`, "color: lime; font-weight:bold; font-size: 12px");
+    console.log(`🔢 Variante: ${payload.roupaBaixoVariante} -> Padrão Var: %c${payload.roupaBaixoVarPadrao}`, "color: lime; font-weight:bold");
+
+    console.log("---------------- PÉS & ARMAS ----------------");
+    console.log(`👟 Sapato: ${payload.sapato} | CorNum: ${payload.sapatoCorNum} | VarPadrao: ${payload.sapatoVarPadrao}`);
+    console.log(`⚔️ Arma: ${payload.armas} | CorNum: ${payload.armasCorNum} | Padrão: ${payload.armasPadrao}`);
+
+    console.groupEnd();
+    // ============================================================
+
+    const url = 'https://forja-qvex.onrender.com/api/personagens';
+    
+    const response = await axios.post(url, payload);
+
+    // Com Axios, a resposta já vem em response.data
+    console.log("Salvo com sucesso! ID:", response.data.id);
+    return response.data;
+
+  } catch (error) {
+    // Tratamento de erro específico do Axios
+    console.error("Erro ao salvar:", error);
+    
+    // Se o servidor respondeu com erro (ex: 400, 500), pegamos a mensagem
+    if (error.response && error.response.data) {
+        throw new Error(error.response.data.message || 'Erro no servidor ao salvar.');
+    }
+    
+    throw new Error('Erro de conexão ou falha ao gerar imagem.');
+  }
+};
 
  return { 
   personagem, 

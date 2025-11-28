@@ -83,10 +83,17 @@ function PaginaCustomizaçao() {
 
     setTimeout(async () => {
         try {
-            await adicionarPersonagemAoCarrinho(characterRef);
-            setMessage('Personagem adicionado com sucesso!');
+            // AQUI É A MUDANÇA:
+            // Passamos o Ref E um objeto com os dados da história
+            await adicionarPersonagemAoCarrinho(characterRef, {
+                nome: nomePersonagem,      // State da página
+                historia: historiaGerada || enredoHistoria // State da página
+            });
+
+            setMessage('Personagem forjado e salvo com sucesso!');
         } catch (error) {
-            setMessage('Falha ao adicionar. Tente novamente.');
+            console.error(error);
+            setMessage('Falha ao forjar. ' + error.message);
         } finally {
             setIsAdding(false);
         }

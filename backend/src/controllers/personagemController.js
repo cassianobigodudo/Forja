@@ -12,13 +12,41 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 // ===============================
 
 const criarPersonagem = async (req, res) => {
-    console.log("--- [DEBUG CONTROLLER] Criar Personagem - Início ---");
+    // ============================================================
+    // 🔍 DEBUGGER VIZINHO: CHECKPOINT 2 (CONTROLLER)
+    // ============================================================
+    console.log("\n================================================");
+    console.log("📡 RECEBIDO NO CONTROLLER PERSONAGEM (REQ.BODY)");
+    console.log("================================================");
+    
+    const d = req.body; // Atalho para leitura
+
+    console.log(`[BÁSICO] Usuário: ${d.usuario_id} | Nome: ${d.nome}`);
+    console.log(`[IMAGEM] Base64 recebida? ${d.img ? "SIM (Tamanho: " + d.img.length + ")" : "NÃO"}`);
+
+    console.log(`\n[INDUSTRIAL - GÊNERO/PELE]`);
+    console.log(` > Gênero: ${d.genero} (Num: ${d.generoNum})`);
+    console.log(` > Pele: ${d.corPele} (Num: ${d.corPeleNum})`);
+
+    console.log(`\n[INDUSTRIAL - TORSO]`);
+    console.log(` > Nome: ${d.roupaCima}`);
+    console.log(` > Cor ID: ${d.roupaCimaCorNum}`);
+    console.log(` > Padrão ID: ${d.roupaCimaPadrao}`);
+    console.log(` > Var ID: ${d.roupaCimaVarPadrao}`);
+
+    console.log(`\n[INDUSTRIAL - PERNAS]`);
+    console.log(` > Nome: ${d.roupaBaixo}`);
+    console.log(` > Cor ID: ${d.roupaBaixoCorNum}`);
+    console.log(` > Padrão ID: ${d.roupaBaixoPadrao}`);
+
+    console.log(`\n[INDUSTRIAL - EXTRAS]`);
+    console.log(` > Arma: ${d.armas} (Cor: ${d.armasCorNum}, Pad: ${d.armasPadrao})`);
+    console.log("================================================\n");
+    // ============================================================
     
     try {
         // Valida se o ID do usuário veio
         if (!req.body.id_usuario) {
-            console.error("--- [ERRO CONTROLLER] Falta id_usuario no corpo da requisição! ---");
-            console.log("Body recebido (sem img):", { ...req.body, img: "OMITIDO" });
             return res.status(400).json({ message: 'Usuário não identificado.' });
         }
 
