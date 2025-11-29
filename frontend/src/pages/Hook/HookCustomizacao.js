@@ -398,7 +398,7 @@ const adicionarPersonagemAoCarrinho = async (refElemento, dadosExtras = {}) => {
     // O Axios converte esse objeto para JSON automaticamente
     const payload = {
       ...personagem, // Espalha todo o estado (roupaCima, generonum, etc.)
-      usuario_id: usuarioId, // ID do localStorage
+      id_usuario: usuarioId, // ID do localStorage
       img: imgBase64,
       nome: dadosExtras.nome || 'Aventureiro Sem Nome',
       historia: dadosExtras.historia || ''
@@ -410,7 +410,7 @@ const adicionarPersonagemAoCarrinho = async (refElemento, dadosExtras = {}) => {
     console.group("%c 🛠️ FORJA DEBUG: Validação Industrial", "color: orange; font-weight: bold; font-size: 14px;");
 
     console.log(`👤 Identificação:`);
-    console.log(`   Nome: ${payload.nome} | ID User: ${payload.usuario_id}`);
+    console.log(`   Nome: ${payload.nome} | ID User: ${payload.id_usuario}`);
 
     console.log(`\n🧬 Genética (Base):`);
     console.log(`   Gênero:    "${payload.genero}"  -> Industrial: %c${payload.generoNum}`, "color: cyan; font-weight:bold");

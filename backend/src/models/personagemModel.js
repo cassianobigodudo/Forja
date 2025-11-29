@@ -12,7 +12,7 @@ const criar = async (dados) => {
         : dados.acessoriosCabeca || '';
 
     const values = [
-        dados.usuario_id,         // $1: id_usuario
+        dados.id_usuario,         // $1: id_usuario
         dados.img,                // $2: img
         dados.nome || 'Sem Nome', // $3: nome (Vem da tela de história)
         
