@@ -20,6 +20,7 @@ const criarPersonagem = async (req, res) => {
     console.log("================================================");
     const d = req.body;
 
+    console.log("ID Usuário:", d.id_usuario);
     console.log("1. DADOS DE CABELO E PELE:");
     console.log(`   - Cabelo: ${d.cabelo} (Num: ${d.cabeloNum})`);
     console.log(`   - Cor Cabelo: ${d.corCabelo} (Num: ${d.corCabeloNum})`);
