@@ -134,8 +134,6 @@ const criar = async (dados) => {
     }
 };
 
-module.exports = { criar };
-
 const buscar = async () => {
     console.log("--- [DEBUG MODEL] Iniciando busca no banco de dados...");
     
