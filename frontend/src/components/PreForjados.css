@@ -23,13 +23,29 @@
         .miniatura-container-pf{
             /* background-color: blue; */
             height: 78%;
-
+            display: flex;
+            justify-content: center;
         }
+
+            .img-personagem-render-preforjados{
+                height: 375px;
+                /* width: auto; */
+            }
 
         .nome-miniatura-container-pf{
             /* background-color: green; */
             height: 10%;
         }
+
+            .lbl-personagem-pre-forjados{
+                color: white;
+                font-family: 'fonte-titulos';
+                font-size: 24px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100%;
+            }
 
         .valor-vermais-carrinho-pf{
             display: flex;

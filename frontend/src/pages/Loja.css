@@ -6,9 +6,32 @@
     background-repeat: no-repeat;
 }
 
-.lbl-pre-forjados{
-    color: white;
-    font-family: 'fonte-titulos';
-    font-size: 50px;
+    .lbl-div{
+        height: 10vh;
+        width: 100vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-image: url('/fundo/fundo pre forjados titulo.png');
+        background-repeat: no-repeat;
+        background-position: center;
+        
+    }
 
-}
+
+    .lbl-pre-forjados{
+        color: white;
+        font-family: 'fonte-titulos';
+        font-size: 80px;
+
+    }
+
+    .container-pre-forjados{
+        /* background-color: red; */
+        height: 50vh;
+        width: 100vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        justify-content: space-evenly;
+    }

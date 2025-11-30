@@ -29,12 +29,11 @@ function Loja() {
   return (
     <div className='container-loja'>
         <Navbar/>
-        <div className="produtos-pre-forjados">
+        <div className="lbl-div">
             <label className='lbl-pre-forjados'>Produtos Pré-forjados</label>
-            
-            {/* AQUI A MÁGICA ACONTECE: Passamos o state como a prop "lista" */}
+        </div>
+        <div className="container-pre-forjados">
             <PreForjados lista={personagensLoja}/>
-            
         </div>
     </div>
   )

@@ -10,24 +10,25 @@ function PreForjados({ lista }) {
   }
 
   return (
-    <div className='pre-forjados-container'>
-      {/* 2. O .map() acontece AQUI, gerando vários cards */}
+    <>
       {lista.map((personagem) => (
+        <div className='pre-forjados-container'>
+      {/* 2. O .map() acontece AQUI, gerando vários cards */}
         
         <div key={personagem.id} className="espaco-trabalhado-pre-forjados">
           
           {/* IMAGEM: Vem do Base64 do banco */}
           <div className="miniatura-container-pf">
             {personagem.img ? (
-               <img src={personagem.img} alt={personagem.nome} className="img-personagem-render" />
+              <img src={personagem.img} alt={personagem.nome} className="img-personagem-render-preforjados" />
             ) : (
-               <div className="placeholder-img">Sem Imagem</div>
+              <div className="placeholder-img">Sem Imagem</div>
             )}
           </div>
 
           {/* NOME */}
           <div className="nome-miniatura-container-pf">
-            <label>{personagem.nome || 'Aventureiro Desconhecido'}</label>
+            <label className='lbl-personagem-pre-forjados'>{personagem.nome || 'Aventureiro Desconhecido'}</label>
           </div>
 
           {/* PREÇO E BOTÕES */}
@@ -42,20 +43,24 @@ function PreForjados({ lista }) {
             <div className="vermais-carrinho-pf">
               {/* Dica: No futuro, ao clicar em "Ver Mais", você pode acessar
                  `personagem.historia` que já está disponível aqui neste escopo.
-              */}
+                 */}
               <img 
                 src="/fundo/verMais.png" 
                 className='vermais' 
                 alt="Ver Mais" 
                 onClick={() => console.log("História:", personagem.historia)} 
-              />
-              <img src="/fundo/colocarCarrinho.png" className='colocarcarrinho' alt="Carrinho" />
+                />
+              <img 
+              src="/fundo/colocarCarrinho.png" 
+              className='colocarcarrinho' 
+              alt="Carrinho" />
             </div>
           </div>
         
         </div>
+        </div>
       ))}
-    </div>
+    </>
   );
 }
 
