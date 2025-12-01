@@ -77,10 +77,12 @@
 
                 .vermais{
                     width: 44px;
+                    cursor: pointer;
                 }
 
                 .colocarcarrinho{
                     width: 48px;
+                    cursor: pointer;
                 }
 
 /* --- FUNDO ESCURO (OVERLAY) --- */
@@ -199,7 +201,7 @@ background-image: url('/fundo/tim-mcburnie-completa.webp');
   
   /* Altura máxima relativa à tela do usuário (60% da altura do modal) */
   /* Se o texto passar disso, aí sim cria a barra de rolagem */
-  max-height: 50vh; 
+  max-height: 45vh; 
   overflow-y: auto;
   
   /* Estilizando a barra de rolagem para ficar bonita no Chrome/Edge */
