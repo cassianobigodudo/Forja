@@ -1,113 +1,121 @@
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-.container-menuSec-cabeca{
-    height: 100%;
-    width: 99%;
-    display: flex;
-    justify-content: start;
-    flex-direction: column;
-    color: var(--Texto);
-    font-family: "fonte-titulos";
-    animation: fadeIn 0.2s ease-out;
-    transition: 1s;
+.container-menuSec-cabeca {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: start;
+  flex-direction: column;
+  color: var(--Texto);
+  font-family: "fonte-titulos";
+  animation: fadeIn 0.2s ease-out;
 }
 
-
-.div-top-normal{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-    
-    border-width: 2px;
-    border-style: solid;
-    background-color: rgba(51, 37, 31, 0.8);
-    transition: 0.5s;
-}
-.div-top-encolhe{
+/* --- TOP MENU BAR --- */
+.div-top-normal, 
+.div-top-encolhe {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
   
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    height: 10%;
-    width: 100%;
-    
-    border-width: 2px;
-    border-style: solid;
-    background-color: rgba(51, 37, 31, 0.8);
-    transition: 0.5s;
+  height: 12%; 
+  width: 100%;
+  
+  /* Theme: Dark Brown Background + White Border */
+  border: 2px solid white;
+  background-color: rgba(51, 37, 31, 0.8); 
+  transition: 0.5s;
 }
 
-.btn-ativado{
-    display: flex;
-    flex-direction: row;
-    text-align: center;
-    font-family: "Fonte-Titulos";
-    width: 24%;
-    height: 41%;
-    text-align: center;
-    justify-content: center;
-    align-items: center;
-
-    border-style: solid;
-    border-width: 2px;
-    border-color: #fff;
-
-    font-size: 11px;
-    margin: 5%;
-    color: white;
-    cursor: pointer;
-    transition: 0.5S;
+/* --- BUTTONS (Common Styles) --- */
+.btn-ativado, 
+.btn-desativado {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-family: "fonte-titulos";
+  
+  width: 30%; 
+  height: 70%; 
+  margin: 0 5px;
+  
+  border: 2px solid white;
+  cursor: pointer;
+  
+  /* Theme Text Color */
+  color: var(--Texto, #ffffff); 
+  font-size: 14px;
+  letter-spacing: 1px;
+  transition: 0.3s;
 }
 
-
-.btn-desativado{
-    display: flex;
-    flex-direction: row;
-    text-align: center;
-    font-family: "Fonte-Titulos";
-    width: 24%;
-    height: 41%;
-    text-align: center;
-    justify-content: center;
-    align-items: center;
-
-    border-style: solid;
-    border-width: 2px;
-    border-color: #fff;
-
-    font-size:15px;
-    margin: 5%;
-    color: white;
-    cursor: pointer;
-    transition: 0.5S;
+/* --- ACTIVE BUTTON (Selected) --- */
+.btn-ativado {
+  /* THEME FIX: No white background. Use the Darker Brown from your hover states */
+  background-color: rgb(31, 19, 14); 
+  
+  /* Add a subtle glow/shadow to show it's active without changing color */
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.7);
+  opacity: 1;
 }
 
-.lbl {
-    margin-top: 2.5%;
-    font-size: 39px;
-    letter-spacing: 2px;
+/* --- INACTIVE BUTTON (Not Selected) --- */
+.btn-desativado {
+  background-color: transparent;
+  opacity: 0.6; /* Slightly see-through */
 }
 
+/* Hover Effect matches your .btn-tirar-zooms:hover */
+.btn-desativado:hover {
+  background-color: rgba(31, 19, 14, 0.6);
+  opacity: 1;
+}
 
+/* --- BOTTOM CONTENT BOX --- */
 .bottom {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 70%;
-    width: 100%;
-    margin-top: 2%;
-    background-color: rgba(51, 37, 31, 0.8);
-    border-width: 2px;
-    border-style: solid;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  height: 85%; 
+  width: 100%;
+  margin-top: 10px;
+  
+  /* Theme Background */
+  background-color: rgba(51, 37, 31, 0.9);
+  border: 2px solid white;
+  
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* --- SCROLLBAR (Copied from your theme) --- */
+.bottom::-webkit-scrollbar {
+  width: 20px; 
+  background-image: url(./fundo/TRACK.png);
+  background-size: contain;
+}
+
+.bottom::-webkit-scrollbar-track {
+  background-clip: content-box;
+}
+
+.bottom::-webkit-scrollbar-thumb {
+  border: 4px solid transparent;
+  background-image: url(./fundo/DRAG-HANDLE.png);
+  background-color: transparent;
+  background-clip: padding-box;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  cursor: pointer;
+}
+
+.bottom::-webkit-scrollbar-corner {
+  background-color: transparent;
 }
