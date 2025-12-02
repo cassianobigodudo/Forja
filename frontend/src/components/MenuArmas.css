@@ -1,0 +1,83 @@
+/* =========================================
+   Variáveis Globais & Configurações
+   ========================================= */
+:root {
+  --cor-destaque: #ffc107;
+  --cor-texto: white;
+  --cor-borda-padrao: white;
+  --cor-borda-inativa: #5a5a5a;
+  --bg-item: rgba(0, 0, 0, 0.2);
+  --bg-item-hover: rgba(255, 255, 255, 0.2);
+  --transicao-padrao: 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* =========================================
+   Container Principal
+   ========================================= */
+.container-menu-armas {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Alinhado ao topo, pois não tem variantes embaixo */
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  animation: fadeIn var(--transicao-padrao);
+}
+
+/* =========================================
+   Grid de Armas
+   ========================================= */
+.armas-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+  width: 90%;
+  margin-top: 20px;
+}
+
+.arma-opcao {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  aspect-ratio: 1 / 1;
+  padding: 5px;
+  overflow: hidden; 
+
+  background-color: var(--bg-item);
+  border: 2px solid var(--cor-borda-padrao);
+  background-color: rgb(17, 11, 6, 0.7);
+  cursor: pointer;
+  transition: background-color var(--transicao-padrao), 
+              border-color var(--transicao-padrao);
+}
+
+.arma-opcao img {
+  width: 90%;
+  height: 90%;
+  object-fit: contain;
+  pointer-events: none;
+  
+  /* --- AJUSTE DE ZOOM PARA ARMAS --- */
+  /* scale(1.1): Zoom leve, pois armas costumam ocupar todo o espaço diagonal */
+   transform: scale(5) translateY(35%)  translateX(6%); 
+  transition: transform var(--transicao-padrao);
+}
+
+.arma-opcao:hover {
+  background-color: var(--bg-item-hover);
+}
+
+.arma-opcao:hover img {
+   transform: scale(5.1) translateY(34%)  translateX(6%); 
+}
+
+.arma-opcao.ativada {
+  border-color: var(--cor-destaque);
+}

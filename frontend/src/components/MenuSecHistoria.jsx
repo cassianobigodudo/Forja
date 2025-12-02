@@ -21,7 +21,7 @@ function MenuSecHistoria({
             <input 
               type="text" 
               className="inputs-menus-superior" 
-              placeholder='ex.: Jaime'
+              placeholder='ex: Jaime'
               value={nomePersonagem}
               onChange={(e) => setNomePersonagem(e.target.value)}
               disabled={loading}
@@ -34,7 +34,7 @@ function MenuSecHistoria({
               type="text" 
               list='inspiracaoum'
               className="inputs-menus-superior" 
-              placeholder='ex.: abandonado(a) pela família'
+              placeholder='ex: abandonado(a) pela família'
               value={inspiracaoUm}
               onChange={(e) => setInspiracaoUm(e.target.value)}
               disabled={loading}
@@ -59,7 +59,7 @@ function MenuSecHistoria({
               type="text" 
               list='inspiracaodois'
               className="inputs-menus-superior" 
-              placeholder='ex.: viveu isolado da sociedade'
+              placeholder='ex: viveu isolado da sociedade'
               value={inspiracaoDois}
               onChange={(e) => setInspiracaoDois(e.target.value)}
               disabled={loading}
@@ -84,7 +84,7 @@ function MenuSecHistoria({
               type="text" 
               list='enredos'
               className="inputs-menus-superior" 
-              placeholder='ex.: triste'
+              placeholder='ex: triste'
               value={enredoHistoria}
               onChange={(e) => setEnredoHistoria(e.target.value)}
               disabled={loading}
@@ -137,7 +137,6 @@ function MenuSecHistoria({
             readOnly={loading}
           ></textarea>
 
-          <button className="botao-salvar-historia-personagem" onClick={() => alert("Botão para salvar a história gerada")}>SALVAR HISTÓRIA</button>
         </div>
 
       </div>

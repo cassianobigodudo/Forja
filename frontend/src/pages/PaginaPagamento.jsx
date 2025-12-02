@@ -8,7 +8,7 @@
     
     function PaginaPagamento() {
         const { usuarioId, isLoadingAuth } = useGlobalContext();
-        // 1. MUDANÇA: Pegar o usuario_id do localStorage em vez do con
+        // 1. MUDANÇA: Pegar o id_usuario do localStorage em vez do con
 
         // 2. Estados para gerenciar a página.
         const [cartItems, setCartItems] = useState([]); 
@@ -34,7 +34,7 @@
 
                 fetchCartItems();
             } else {
-                // Se não tiver usuario_id, para de carregar e avisa
+                // Se não tiver id_usuario, para de carregar e avisa
                 setIsLoading(false);
                 setStatusMessage("Você precisa estar logado para ver o carrinho.");
             }
@@ -51,9 +51,9 @@
             setStatusMessage('Finalizando sua compra e enviando para produção...');
 
             try {
-                // MUDANÇA: Envia usuario_id no corpo da requisição
+                // MUDANÇA: Envia id_usuario no corpo da requisição
                 const response = await axios.post('https://forja-qvex.onrender.com/api/pedidos', {
-                    usuario_id: usuarioId 
+                    id_usuario: usuarioId 
                 });
                 
                 const { sucessos, falhas } = response.data;
@@ -83,7 +83,7 @@
 
         // 5. O JSX final que renderiza o carrinho e o botão de checkout.
         return (
-            <div className="container-pagina"> 
+            <div className="container-paginaz"> 
                 <Navbar/>
                 <div className="container">
                     <main className='conteudo'>

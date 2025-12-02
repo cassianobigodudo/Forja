@@ -1,0 +1,128 @@
+/* =========================================
+   Variáveis Globais & Configurações
+   ========================================= */
+:root {
+  --cor-destaque: #ffc107;
+  --cor-texto: white;
+  --cor-borda-padrao: white;
+  --cor-borda-inativa: #5a5a5a;
+  --bg-item: rgba(0, 0, 0, 0.2);
+  --bg-item-hover: rgba(255, 255, 255, 0.2);
+  --transicao-padrao: 0.3s ease;
+  --transicao-rapida: 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* =========================================
+   Container Principal
+   ========================================= */
+.container-menu-pernas {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  animation: fadeIn var(--transicao-padrao);
+}
+
+/* =========================================
+   Grid de Pernas (Opções)
+   ========================================= */
+.pernas-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+  width: 90%;
+}
+
+.pernas-opcao {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  aspect-ratio: 1 / 1;
+  padding: 5px;
+  overflow: hidden; 
+
+  background-color: var(--bg-item);
+  border: 2px solid var(--cor-borda-padrao);
+  cursor: pointer;
+  transition: background-color var(--transicao-padrao), 
+              border-color var(--transicao-padrao);
+              background-color: rgb(17, 11, 6, 0.7);
+}
+
+.pernas-opcao img {
+  width: 90%;
+  height: 90%;
+  object-fit: contain;
+  pointer-events: none;
+  
+  /* --- AJUSTE DE ZOOM PARA PERNAS --- */
+  /* scale(1.2): Zoom leve para preencher melhor
+     translateY(-5%): Move a imagem um pouco para cima para centralizar calças */
+  transform: scale(2.5) translateY(-3%); 
+  transition: transform var(--transicao-padrao);
+}
+
+.pernas-opcao:hover {
+  background-color: var(--bg-item-hover);
+}
+
+.pernas-opcao:hover img {
+    /* Zoom extra no hover */
+    transform: scale(2.6) translateY(-5%);
+}
+
+.pernas-opcao.ativada {
+  border-color: var(--cor-destaque);
+}
+
+/* =========================================
+   Seção de Variantes
+   ========================================= */
+.variantes-pernas-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 15px;
+}
+
+.lbl-pernas {
+  font-family: "fonte-titulos", sans-serif;
+  font-size: 20px;
+  letter-spacing: 2px;
+  color: var(--cor-texto);
+}
+
+.variantes-pernas {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap; 
+}
+
+.variante-pernas {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 3px solid var(--cor-borda-inativa);
+  cursor: pointer;
+  transition: border-color var(--transicao-padrao), 
+              transform var(--transicao-rapida);
+}
+
+.variante-pernas:hover {
+  transform: scale(1.1);
+}
+
+.variante-pernas.ativada {
+  border-color: var(--cor-borda-padrao);
+}

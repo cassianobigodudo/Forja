@@ -7,33 +7,58 @@ require("dotenv").config();
 // Inicializa o cliente da IA. Ele automaticamente lerá a chave do process.env
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-const criarPersonagem = async (req, res) => {
-    console.log("--- [DEBUG] 1. Requisição chegou no Controller ---");
-    console.log("Dados recebidos:", JSON.stringify(req.body, null, 2));
+// ===============================
+// CRIAR PERSONAGEM
+// ===============================
 
+const criarPersonagem = async (req, res) => {
+    console.log("--- [DEBUG CONTROLLER] Criar Personagem - Início ---");
+    
     try {
-        // 1. Validação
-        if (!req.body.usuario_id) {
-            console.log("--- [ERRO] Falta usuario_id ---");
+        // Valida se o ID do usuário veio
+        if (!req.body.id_usuario) {
+            console.error("--- [ERRO CONTROLLER] Falta id_usuario no corpo da requisição! ---");
+            console.log("Body recebido (sem img):", { ...req.body, img: "OMITIDO" });
             return res.status(400).json({ message: 'Usuário não identificado.' });
         }
 
-        console.log("--- [DEBUG] 2. Dados validados. Chamando Model... ---");
+        // Verifica tamanho da imagem (Base64)
+        const imgSize = req.body.img ? req.body.img.length : 0;
+        console.log(`--- [DEBUG CONTROLLER] ID Usuário: ${req.body.id_usuario}`);
+        console.log(`--- [DEBUG CONTROLLER] Gênero: ${req.body.genero} (Num: ${req.body.generoNum})`);
+        console.log(`--- [DEBUG CONTROLLER] Tamanho da Imagem Recebida: ${imgSize} caracteres`);
 
-        // 2. Chama o Model (Onde costuma travar se o banco estiver ruim)
+        console.log("--- [DEBUG CONTROLLER] Chamando PersonagemModel.criar... ---");
         const novoPersonagem = await PersonagemModel.criar(req.body);
         
-        console.log("--- [DEBUG] 3. Model retornou com sucesso! ---");
-        console.log("ID Criado:", novoPersonagem.id);
+        console.log("--- [DEBUG CONTROLLER] Sucesso! ID do Novo Personagem:", novoPersonagem.id);
 
         res.status(201).json(novoPersonagem);
 
     } catch (err) {
-        console.error("--- [ERRO FATAL] No Controller ---");
+        console.error("--- [ERRO FATAL CONTROLLER] Erro ao salvar personagem: ---");
         console.error(err);
         res.status(500).json({ message: 'Erro ao salvar personagem.' });
     }
 };
+
+const buscarPersonagensLoja = async (req, res) => {
+    console.log("--- [DEBUG CONTROLLER] Requisição GET /buscar-loja recebida ---");
+
+    try {
+        // Chama o Model
+        const personagens = await PersonagemModel.buscar();
+        
+        console.log("--- [DEBUG CONTROLLER] Dados recebidos do Model. Enviando para o Frontend...");
+        
+        // Retorna o JSON
+        res.status(200).json(personagens);
+        
+    } catch (err) {
+        console.error("--- [ERRO CONTROLLER] Erro ao buscar personagens:", err);
+        res.status(500).json({ message: 'Erro interno ao buscar personagens da loja.' });
+    }
+}
 
 
 // ===============================
@@ -50,11 +75,21 @@ const gerarHistoria = async (req, res) => {
         }
 
         // 2. Remover cabeçalho da Base64
-        const base64Data = imageBase64.replace(/^data:image\/png;base64,/, "");
+        // const base64Data = imageBase64.replace(/^data:image\/png;base64,/, "");
+
+        let base64Data = imageBase64;
+
+        // Remove qualquer prefixo de base64
+        if (base64Data.includes(",")) {
+            base64Data = base64Data.split(",")[1];
+        }
+
+        // Remove espaços, quebras de linha e caracteres inválidos
+        base64Data = base64Data.trim().replace(/\s/g, "");
 
         // 3. Criar Prompt
         const prompt = `
-            Crie uma história original de RPG com aproximadamente 150 palavras.
+            Crie uma história de background para um boneco de RPG com aproximadamente 150 palavras, usando as informações abaixo como inspiração. Atenção aos elementos de inspiração, quero que você *CRIE* baseado nos elementos, e não dependa só deles. Análise a miniatura printada na imagem e pegue todos os detalhes dela, desde o cabelo, as roupas, suas armas (ou a falta de armas) e seus acessórios. Conecte esses elementos de forma criativa em uma narrativa coerente.
             Use as seguintes informações:
 
             - Nome: ${nome}
@@ -62,13 +97,11 @@ const gerarHistoria = async (req, res) => {
             - Inspiração 2: ${inspiracao2}
             - Tom / estilo da história: ${tonalidade}
 
-            Também analise a imagem fornecida para descrever aparência, expressão, roupas e possíveis pistas visuais.
-            Conecte esses elementos de forma criativa em uma narrativa coerente.
         `;
 
         // 4. Modelo
         const model = genAI.getGenerativeModel({
-            model: "gemini-1.5-flash"
+            model: "gemini-2.5-flash"
         });
 
         // 5. Enviar TEXTO + IMAGEM
@@ -80,7 +113,7 @@ const gerarHistoria = async (req, res) => {
                         { text: prompt },
                         {
                             inlineData: {
-                                mimeType: "image/png",
+                                mimeType: "image/jpeg",
                                 data: base64Data
                             }
                         }
@@ -107,5 +140,6 @@ const gerarHistoria = async (req, res) => {
 // ===============================
 module.exports = {
     criarPersonagem,
-    gerarHistoria
+    gerarHistoria,
+    buscarPersonagensLoja
 };

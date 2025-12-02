@@ -1,0 +1,144 @@
+/* =========================================
+   Variáveis Globais & Configurações
+   ========================================= */
+:root {
+  --cor-destaque: #ffc107;
+  --cor-texto: white;
+  --cor-borda-padrao: white;
+  --cor-borda-inativa: #5a5a5a;
+  --bg-item: rgba(0, 0, 0, 0.2);
+  --bg-item-hover: rgba(255, 255, 255, 0.2);
+  --transicao-padrao: 0.3s ease;
+  --transicao-rapida: 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* =========================================
+   Container Principal
+   ========================================= */
+.container-menu-sapatos {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  animation: fadeIn var(--transicao-padrao);
+}
+
+/* =========================================
+   Grid de Sapatos (Opções)
+   ========================================= */
+.sapatos-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+  width: 90%;
+}
+
+.sapatos-opcao {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  aspect-ratio: 1 / 1;
+  padding: 5px;
+  overflow: hidden; 
+
+  background-color: var(--bg-item);
+  border: 2px solid var(--cor-borda-padrao);
+  background-color: rgb(17, 11, 6, 0.7); /* Fundo escuro conforme seu pedido */
+  cursor: pointer;
+  transition: background-color var(--transicao-padrao), 
+              border-color var(--transicao-padrao);
+}
+
+.sapatos-opcao img {
+  width: 90%;
+  height: 90%;
+  object-fit: contain;
+  pointer-events: none;
+  
+  /* --- AJUSTE DE ZOOM PARA SAPATOS --- */
+  /* scale(2.5): Zoom alto para focar nos pés.
+     translateY(-10%): Puxa a imagem para cima, pois os pés estão no final da imagem */
+  transform: scale(3.2) translateY(-33%); 
+  transition: transform var(--transicao-padrao);
+}
+
+.sapatos-opcao:hover {
+  background-color: var(--bg-item-hover);
+}
+
+.sapatos-opcao:hover img {
+    /* Zoom extra no hover */
+    transform: scale(2.7) translateY(-10%);
+}
+
+.sapatos-opcao.ativada {
+  border-color: var(--cor-destaque);
+}
+
+/* =========================================
+   Seção de Variantes
+   ========================================= */
+.variantes-sapatos-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 15px;
+  /* Margem superior e borda visual para separar, se necessário */
+  margin-top: 15px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 10px;
+}
+
+.lbl-sapatos {
+  font-family: "fonte-titulos", sans-serif; /* Ou 'Cormorant Garamond' se preferir direto */
+  font-size: 0.9rem; /* Levemente menor conforme seu código original */
+  letter-spacing: 2px;
+  color: #ccc;
+  text-transform: uppercase;
+}
+
+.variantes-sapatos {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap; 
+}
+
+.variante-sapato {
+  width: 30px; /* Um pouco menor para sapatos, conforme seu React original */
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--cor-borda-inativa);
+  background-color: transparent;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: monospace;
+  font-size: 0.9rem;
+  
+  cursor: pointer;
+  transition: border-color var(--transicao-padrao), 
+              background-color var(--transicao-padrao),
+              transform var(--transicao-rapida);
+}
+
+.variante-sapato:hover {
+  transform: scale(1.1);
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.variante-sapato.ativada {
+  border: 2px solid var(--cor-destaque); /* Dourado */
+  background-color: #333;
+}
