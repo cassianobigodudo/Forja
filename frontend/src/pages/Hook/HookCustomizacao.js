@@ -10,6 +10,25 @@ const COR = { BRANCO: 1, PRETO: 2, VERDE: 3, AMARELO: 4, AZUL: 5, VERMELHO: 6, N
 const PAD = { CASA: '1', BARCO: '2', ESTRELA: '3', NULO: '4' };
 
 const DADOS_INDUSTRIAIS = {
+  // --- DADOS CORPORAIS (Mapeamento Simples: Nome -> Inteiro) ---
+  genero: { 'FEMININO': 2, 'MASCULINO': 3 },
+  corPele: { 'NEGRA': 0, 'PARDA': 1, 'LEITE': 2, 'BRANCA': 3, 'VERDE': 4, 'LARANJA': 5, 'CINZA': 6 },
+  cabelo: { 'CURTO': 0, 'LONGO': 1, 'AFRO': 2, 'DREAD': 3, 'LOCO': 4, 'RASPADO': 5 },
+  corCabelo: { 'PRETO': '1', 'VERMELHO': '2', 'LOIRO': '3', 'BRANCO': '4' },
+  
+  // --- ACESSÓRIOS & MARCAS (Mapeamento Simples) ---
+  marcas: { 'CICATRIZ-NARIZ': '1', 'CICATRIZ-OLHO': '2', 'SARDAS': '3' },
+  acessorioPescoco: { 'COLAR': 0 },
+
+  // Definições de Acessórios de Cabeça (Base = Numérico / Padrão = String)
+  acessCabecaBase: {
+    'CAPACETE-CAVALEIRO': 0, 'CAPACETE-DARK': 1, 'CAPACETE-TRIBAL-MASCARA': 2,
+    'MASCARA': 3, 'CAPACETE-MADEIRA': 4, 'CAPACETE-TRIBAL': 5,
+    'CHAPEU-SOL-TOPO': 6, 'CHAPEU-SOL-EMBAIXO': 6, 
+  },
+  acessCabecaPadrao: { 'ARGOLA': '1', 'OCULOS': '2' },
+
+  // --- ROUPAS & ITENS (Mapeamento Complexo: Item -> { cor, padrao }) ---
   roupaCima: {
     'Bikini':    { cor: COR.AMARELO,  padrao: PAD.CASA },
     'Besourto':  { cor: COR.AZUL,     padrao: PAD.ESTRELA },
@@ -275,14 +294,107 @@ export const useLogicaCustomizacao = () => {
   armas: getCaminhoArma(armas)
  };
 
- return {
-  personagem,
-  atualizarPersonagem,
-  salvarPersonagem,
+const adicionarPersonagemAoCarrinho = async (refElemento, dadosExtras = {}) => {
+  // refElemento: a referência do React (useRef) para tirar o print
+  // dadosExtras: objeto vindo da página { nome: "...", historia: "..." }
+
+  const usuarioId = localStorage.getItem('id_usuario');
+  
+  if (!usuarioId) {
+    throw new Error('Você precisa estar logado para salvar o personagem.');
+  }
+
+  try {
+    // 1. Gera a Imagem (Snapshot)
+    const canvas = await html2canvas(refElemento.current, { 
+      backgroundColor: null, 
+      scale: 0.5 // Scale menor para ficar leve no banco
+    });
+    const imgBase64 = canvas.toDataURL('image/png');
+
+    // 2. Monta o Payload
+    // O Axios converte esse objeto para JSON automaticamente
+    const payload = {
+      ...personagem, // Espalha todo o estado (roupaCima, generonum, etc.)
+      id_usuario: usuarioId, // ID do localStorage
+      img: imgBase64,
+      nome: dadosExtras.nome || 'Aventureiro Sem Nome',
+      historia: dadosExtras.historia || ''
+    };
+
+    // ============================================================
+    // 🔍 DEBUGGER VIZINHO: CHECKPOINT 1 (FRONTEND)
+    // ============================================================
+    console.group("%c 🛠️ FORJA DEBUG: Validação Industrial", "color: orange; font-weight: bold; font-size: 14px;");
+
+    console.log(`👤 Identificação:`);
+    console.log(`   Nome: ${payload.nome} | ID User: ${payload.id_usuario}`);
+
+    console.log(`\n🧬 Genética (Base):`);
+    console.log(`   Gênero:    "${payload.genero}"  -> Industrial: %c${payload.generoNum}`, "color: cyan; font-weight:bold");
+    console.log(`   Pele:      "${payload.corPele}" -> Industrial: %c${payload.corPeleNum}`, "color: cyan; font-weight:bold");
+    console.log(`   Cabelo:    "${payload.cabelo}"  -> Industrial: %c${payload.cabeloNum}`, "color: cyan; font-weight:bold");
+    console.log(`   Cor Cabelo:"${payload.corCabelo}"-> Industrial: %c${payload.corCabeloNum}`, "color: cyan; font-weight:bold");
+
+    console.log(`\n🧢 Acessórios & Detalhes:`);
+    console.log(`   Marcas:    "${payload.marcas}" -> Padrão ID: %c${payload.marcaspadrao}`, "color: yellow; font-weight:bold");
+    console.log(`   Pescoço:   "${payload.acessorioPescoco}" -> ID: %c${payload.acessPescocoNum}`, "color: yellow; font-weight:bold");
+    console.log(`   Cabeça Lista: [${payload.acessoriosCabeca}]`);
+    console.log(`   > Cabeça Base ID:   %c${payload.acessCabeca}`, "color: magenta; font-weight:bold");
+    console.log(`   > Cabeça Padrão ID: %c${payload.acessCabecapadrao}`, "color: magenta; font-weight:bold");
+
+    console.log(`\n👕 Torso (Indústria 4.0):`);
+    console.log(`   Peça:      "${payload.roupaCima}"`);
+    console.log(`   > Cor Bloco:    %c${payload.roupaCimaCorNum}`, "color: lime; font-weight:bold");
+    console.log(`   > Padrão Face:  %c${payload.roupaCimaPadrao}`, "color: lime; font-weight:bold");
+    console.log(`   > Var Símbolo:  %c${payload.roupaCimaVarPadrao} (Variante: ${payload.roupaCimaVariante})`, "color: lime; font-weight:bold");
+
+    console.log(`\n👖 Pernas (Indústria 4.0):`);
+    console.log(`   Peça:      "${payload.roupaBaixo}"`);
+    console.log(`   > Cor Bloco:    %c${payload.roupaBaixoCorNum}`, "color: lime; font-weight:bold");
+    console.log(`   > Padrão Face:  %c${payload.roupaBaixoPadrao}`, "color: lime; font-weight:bold");
+    console.log(`   > Var Símbolo:  %c${payload.roupaBaixoVarPadrao} (Variante: ${payload.roupaBaixoVariante})`, "color: lime; font-weight:bold");
+
+    console.log(`\n👟 Pés & ⚔️ Armas:`);
+    console.log(`   Sapato:    "${payload.sapato}" -> CorNum: %c${payload.sapatoCorNum}`, "color: white; background: blue");
+    console.log(`   Arma:      "${payload.armas}"  -> CorNum: %c${payload.armasCorNum} | Padrão: %c${payload.armasPadrao}`, "color: white; background: red");
+
+    console.groupEnd();
+    // ============================================================
+
+    const url = 'https://forja-qvex.onrender.com/api/personagens';
+    
+    const response = await axios.post(url, payload);
+
+    // Com Axios, a resposta já vem em response.data
+    console.log("Salvo com sucesso! ID:", response.data.id);
+    return response.data;
+
+  } catch (error) {
+    // Tratamento de erro específico do Axios
+    console.error("Erro ao salvar:", error);
+    
+    // Se o servidor respondeu com erro (ex: 400, 500), pegamos a mensagem
+    if (error.response && error.response.data) {
+        throw new Error(error.response.data.message || 'Erro no servidor ao salvar.');
+    }
+    
+    throw new Error('Erro de conexão ou falha ao gerar imagem.');
+  }
+};
+
+ return { 
+  personagem, 
+  atualizarPersonagem, 
+  handleAcessoriosCabecaChange, 
+  handleAcessorioPescocoChange, 
+  handleMarcasChange, 
+  salvarPersonagem, 
   caminhosDasImagens,
   opcoesDoPersonagem,
   handleAcessoriosCabecaChange,
   handleAcessorioPescocoChange,
-  handleMarcasChange
+  handleMarcasChange,
+  adicionarPersonagemAoCarrinho
  };
 };

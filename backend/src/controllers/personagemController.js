@@ -12,13 +12,38 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 // ===============================
 
 const criarPersonagem = async (req, res) => {
-    console.log("--- [DEBUG CONTROLLER] Criar Personagem - Início ---");
+    // ============================================================
+    // 🔍 DEBUGGER VIZINHO: CHECKPOINT 2 (CONTROLLER)
+    // ============================================================
+    console.log("\n================================================");
+    console.log("📡 RECEBIDO NO CONTROLLER PERSONAGEM (REQ.BODY)");
+    console.log("================================================");
+    const d = req.body;
+
+    console.log("ID Usuário:", d.id_usuario);
+    console.log("1. DADOS DE CABELO E PELE:");
+    console.log(`   - Cabelo: ${d.cabelo} (Num: ${d.cabeloNum})`);
+    console.log(`   - Cor Cabelo: ${d.corCabelo} (Num: ${d.corCabeloNum})`);
+    console.log(`   - Pele: ${d.corPele} (Num: ${d.corPeleNum})`);
+
+    console.log("2. ACESSÓRIOS:");
+    console.log(`   - Pescoço: ${d.acessorioPescoco} (Num: ${d.acessPescocoNum})`);
+    console.log(`   - Cabeça Array: ${JSON.stringify(d.acessoriosCabeca)}`);
+    console.log(`   - Cabeça Base Num: ${d.acessCabeca}`);
+    console.log(`   - Cabeça Padrão: ${d.acessCabecapadrao}`);
+    console.log(`   - Marcas: ${d.marcas} (Padrao: ${d.marcaspadrao})`);
+
+    console.log("3. ROUPAS INDUSTRIAIS (Cor/Padrão):");
+    console.log(`   - Torso: ${d.roupaCimaCorNum} / ${d.roupaCimaPadrao} (Var: ${d.roupaCimaVarPadrao})`);
+    console.log(`   - Perna: ${d.roupaBaixoCorNum} / ${d.roupaBaixoPadrao} (Var: ${d.roupaBaixoVarPadrao})`);
+    console.log(`   - Sapato Cor: ${d.sapatoCorNum}`);
+    console.log(`   - Arma Cor/Pad: ${d.armasCorNum} / ${d.armasPadrao}`);
+    console.log("====================================================\n");
+    // ============================================================
     
     try {
         // Valida se o ID do usuário veio
         if (!req.body.id_usuario) {
-            console.error("--- [ERRO CONTROLLER] Falta id_usuario no corpo da requisição! ---");
-            console.log("Body recebido (sem img):", { ...req.body, img: "OMITIDO" });
             return res.status(400).json({ message: 'Usuário não identificado.' });
         }
 
