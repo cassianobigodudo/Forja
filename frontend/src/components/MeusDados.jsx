@@ -62,6 +62,50 @@ function MeusDados() {
     setEditando((prev) => ({ ...prev, [campo]: false }));
   };
 
+  // 🟩 ESTADOS DO ENDEREÇO
+  const [endereco, setEndereco] = useState({
+    cep: "",
+    rua: "",
+    numero: "",
+    bairro: "",
+    cidade: "",
+    uf: "",
+    complemento: "",
+  });
+
+   // 🟨 BUSCAR CEP - VIA CEP API
+  async function buscarCEP() {
+    const cepLimpo = endereco.cep.replace(/\D/g, "");
+
+    if (cepLimpo.length !== 8) {
+      alert("Digite um CEP válido com 8 números.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`);
+      const data = await response.json();
+
+      if (data.erro) {
+        alert("CEP não encontrado!");
+        return;
+      }
+
+      // Preencher automaticamente
+      setEndereco((prev) => ({
+        ...prev,
+        rua: data.logradouro || "",
+        bairro: data.bairro || "",
+        cidade: data.localidade || "",
+        uf: data.uf || "",
+        complemento: data.complemento || "",
+      }));
+    } catch (err) {
+      console.error("Erro ao buscar CEP", err);
+      alert("Erro ao buscar CEP.");
+    }
+  }
+
   return (
     <div className="container-meus-dados">
       <div className="parte-inputs">
@@ -161,6 +205,7 @@ function MeusDados() {
               }
             />
           </div>
+
           <div className="inputs-parte-botao-editar">
             {!editando.senha ? (
               <button
@@ -190,6 +235,7 @@ function MeusDados() {
 
         {/* Endereço */}
         <div className="parte-inputs-endereco">
+
           <div className="input-partes-endereco-label">
             <label className="label-endereço">Endereço</label>
             <button
@@ -201,11 +247,47 @@ function MeusDados() {
           </div>
 
           <div className="inputs-parte-dados-endereco">
-            <div className="inputs-partes-enderecos"></div>
+
+              <div className="inputs-partes-enderecos">
+                <input
+                  type="password"
+                  className="inputs-dados"
+                  disabled={!editando.senha}
+                  value={usuario.senha || ""}
+                  onChange={(e) =>
+                    setUsuario({ ...usuario, senha: e.target.value })
+                  }
+                />
+              </div>
+
+              <div className="inputs-parte-botao-editar-endereco">
+              {!editando.senha ? (
+                <button
+                  className="botao-editar-dados"
+                  onClick={() => habilitarEdicao("senha")}
+                >
+                  ✏️
+                </button>
+              ) : (
+                <>
+                  <button
+                    className="botao-editar-dados"
+                    onClick={() => salvarCampo("senha")}
+                  >
+                    ✓
+                  </button>
+                  <button
+                    className="botao-editar-dados"
+                    onClick={() => cancelarEdicao("senha")}
+                  >
+                    ✗
+                  </button>
+                </>
+              )}
+            </div>
+
           </div>
-          <div className="parte-deletar-conta">
-            <button className="botao-salvar-edicao">Salvar</button>
-          </div>
+
         </div>
       </div>
 
@@ -218,13 +300,12 @@ function MeusDados() {
         <button className="botao-deletar-conta">Excluir Conta</button>
       </div>
 
-     
+      {/* DIALOG DE ENDEREÇO */}
       <dialog className="dialog-endereco" open={dialogAberto}>
         <div className="container-dialog-endereco">
           <div className="parte-fechar-dialog">
-            
             <h2 className="dialog-titulo">Adicionar Endereço</h2>
-            
+
             <button
               className="dialog-botao-fechar"
               onClick={() => setDialogAberto(false)}
@@ -239,10 +320,17 @@ function MeusDados() {
                 type="text"
                 className="input-buscar-cep"
                 placeholder="Digite o CEP para pesquisar..."
+                value={endereco.cep}
+                onChange={(e) =>
+                  setEndereco({ ...endereco, cep: e.target.value })
+                }
               />
-             
-              <button className="botao-pesquisar-cep">🔍</button>
+
+              <button className="botao-pesquisar-cep" onClick={buscarCEP}>
+                🔍
+              </button>
             </div>
+
             <div className="dados-endereco">
               <div className="dados-endereco-usuario">
                 <div className="endereco-casa">
@@ -250,14 +338,19 @@ function MeusDados() {
                     type="text"
                     className="input-endereco"
                     disabled
+                    value={endereco.rua}
                     placeholder="Rua..."
                   />
                 </div>
+
                 <div className="numero-casa">
                   <input
                     type="text"
                     className="input-numero-casa"
-                    disabled
+                    value={endereco.numero}
+                    onChange={(e) =>
+                      setEndereco({ ...endereco, numero: e.target.value })
+                    }
                     placeholder="Nº"
                   />
                 </div>
@@ -268,8 +361,9 @@ function MeusDados() {
                   <input
                     type="text"
                     className="input-uf-endereco"
-                    placeholder="UF"
                     disabled
+                    value={endereco.uf}
+                    placeholder="UF"
                   />
                 </div>
 
@@ -277,8 +371,9 @@ function MeusDados() {
                   <input
                     type="text"
                     className="input-cidade-endereco"
-                    placeholder="Cidade"
                     disabled
+                    value={endereco.cidade}
+                    placeholder="Cidade"
                   />
                 </div>
 
@@ -286,8 +381,9 @@ function MeusDados() {
                   <input
                     type="text"
                     className="input-bairro-endereco"
-                    placeholder="Bairro"
                     disabled
+                    value={endereco.bairro}
+                    placeholder="Bairro"
                   />
                 </div>
               </div>
@@ -297,21 +393,27 @@ function MeusDados() {
                   <input
                     type="text"
                     className="input-complemento"
-                    disabled
+                    value={endereco.complemento}
+                    onChange={(e) =>
+                      setEndereco({
+                        ...endereco,
+                        complemento: e.target.value,
+                      })
+                    }
                     placeholder="Complemento (opcional)"
                   />
                 </div>
+
                 <div className="cep-casa">
                   <input
                     type="text"
                     className="input-cep"
                     disabled
+                    value={endereco.cep}
                     placeholder="CEP"
                   />
                 </div>
               </div>
-
-              <div className="dados-endereco-usuario"></div>
             </div>
           </div>
 

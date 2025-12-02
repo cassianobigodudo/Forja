@@ -1,0 +1,145 @@
+/* =========================================
+   Variáveis Globais & Configurações
+   ========================================= */
+:root {
+  /* Cores */
+  --cor-destaque: #ffc107;      /* Amarelo do item ativado */
+  --cor-texto: white;
+  --cor-borda-padrao: white;
+  --cor-borda-inativa: #5a5a5a;
+  
+  /* Fundos */
+  --bg-item: rgba(0, 0, 0, 0.2);
+  --bg-item-hover: rgba(255, 255, 255, 0.2);
+
+  /* Transições */
+  --transicao-padrao: 0.3s ease;
+  --transicao-rapida: 0.2s ease;
+}
+
+/* Animações */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* =========================================
+   Container Principal
+   ========================================= */
+.container-menu-torso {
+  /* Layout */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 15px;
+
+  /* Dimensões */
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+
+  /* Animação */
+  animation: fadeIn var(--transicao-padrao);
+}
+
+/* =========================================
+   Grid de Torsos (Opções)
+   ========================================= */
+.torso-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+  width: 90%;
+}
+
+.torso-opcao {
+  /* Layout Interno */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  aspect-ratio: 1 / 1;
+  padding: 5px;
+  overflow: hidden; 
+
+  /* Estilo Visual */
+  background-color: var(--bg-item);
+  border: 2px solid var(--cor-borda-padrao);
+  background-color: rgb(14, 10, 9,0.7);
+  cursor: pointer;
+
+  /* Transição */
+  transition: background-color var(--transicao-padrao), 
+              border-color var(--transicao-padrao);
+}
+
+.torso-opcao img {
+  width: 90%;
+  height: 90%;
+  object-fit: contain;
+  pointer-events: none;
+  
+  /* --- AJUSTE DE ZOOM PARA TORSO --- */
+  /* Cabelo usava scale(5). Para Torso, geralmente 1.2 é suficiente. 
+     Aumente se as roupas ficarem muito pequenas. */
+  transform: scale(3) translateY(15%); 
+  transition: transform var(--transicao-padrao);
+}
+
+/* Estados Interativos (.torso-opcao) */
+.torso-opcao:hover {
+  background-color: var(--bg-item-hover);
+}
+
+/* Efeito de zoom extra ao passar o mouse (Opcional) */
+.torso-opcao:hover img {
+    transform: scale(3.1) translateY(15%);
+}
+
+.torso-opcao.ativada {
+  border-color: var(--cor-destaque);
+}
+
+/* =========================================
+   Seção de Variantes (Cores/Estilos)
+   ========================================= */
+.variantes-torso-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 15px;
+}
+
+.lbl-torso {
+  font-family: "fonte-titulos", sans-serif; /* Certifique-se que essa fonte existe ou mude para sans-serif */
+  font-size: 20px;
+  letter-spacing: 2px;
+  color: var(--cor-texto);
+}
+
+.variantes-torso {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap; 
+}
+
+.variante-torso {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 3px solid var(--cor-borda-inativa);
+  cursor: pointer;
+  transition: border-color var(--transicao-padrao), 
+              transform var(--transicao-rapida);
+}
+
+/* Estados Interativos (.variante-torso) */
+.variante-torso:hover {
+  transform: scale(1.1);
+}
+
+.variante-torso.ativada {
+  border-color: var(--cor-borda-padrao);
+}

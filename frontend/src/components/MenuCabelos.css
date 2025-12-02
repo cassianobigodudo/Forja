@@ -3,7 +3,7 @@
    ========================================= */
 :root {
   /* Cores */
-  --cor-destaque: #ffc107;       /* Amarelo do item ativado */
+  --cor-destaque: #ffc107;      /* Amarelo do item ativado */
   --cor-texto: white;
   --cor-borda-padrao: white;
   --cor-borda-inativa: #5a5a5a;
@@ -49,7 +49,7 @@
 .cabelos-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
+  gap: 30px;
   width: 90%;
 }
 
@@ -60,6 +60,8 @@
   align-items: center;
   aspect-ratio: 1 / 1;
   padding: 5px;
+  overflow: hidden; /* Added to ensure content doesn't spill out when scaled */
+
 
   /* Estilo Visual */
   background-color: var(--bg-item);
@@ -76,6 +78,13 @@
   height: 90%;
   object-fit: contain;
   pointer-events: none; /* Evita arrastar a imagem acidentalmente */
+  
+  /* --- MODIFICATIONS START HERE --- */
+  transform: scale(5) translateY(38%); /* Scale up by 30% and move down by 10% of its height */
+  /* You can adjust the scale and translateY values as needed: */
+  /* scale(1.5) for 50% bigger */
+  /* translateY(20%) for moving it further down */
+  /* --- MODIFICATIONS END HERE --- */
 }
 
 /* Estados Interativos (.cabelo-opcao) */
