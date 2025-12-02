@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import html2canvas from 'html2canvas';
-import axios from 'axios'
+import axios from 'axios';
 
 // =====================================================================
 // 1. CONSTANTES INDUSTRIAIS (A LINGUAGEM DA MÁQUINA)
@@ -40,11 +40,10 @@ const DADOS_INDUSTRIAIS = {
     'Aneis':       { cor: COR.VERDE },
     'DEFAULT':     { cor: COR.NULA }
   },
-  // --- NOVO: ARMAS (Definição para a Máquina) ---
   armas: {
     'Espada':  { cor: COR.BRANCO,   padrao: PAD.ESTRELA }, 
-    'Lanca':   { cor: COR.VERMELHO, padrao: PAD.BARCO },   
-    'Machado': { cor: COR.PRETO,    padrao: PAD.CASA },    
+    'Lanca':   { cor: COR.VERMELHO, padrao: PAD.BARCO },    
+    'Machado': { cor: COR.PRETO,    padrao: PAD.CASA },     
     'DEFAULT': { cor: COR.NULA,     padrao: PAD.NULO }
   },
   variantes: {
@@ -101,10 +100,13 @@ const MARCAS_MAPEADAS = {
 //Helpers
 const getPosicaoAcessorio = (nomeItem) => ACESSORIOS_CABECA_MAPEADOS[nomeItem]?.posicao || 'topo';
 
+// --- FIXED FUNCTION: Forces all genders to use the FEMALE folder for accessories ---
 const getCaminhoAcessorio = (nomeItem, genero) => {
   if (!nomeItem) return null; 
   const infoItem = ACESSORIOS_CABECA_MAPEADOS[nomeItem] || ACESSORIOS_PESCOCO_MAPEADOS[nomeItem] || MARCAS_MAPEADAS[nomeItem];
-  return infoItem ? `/personagem-${genero}/ACESSORIOS-${genero}S/${infoItem.categoria}/${infoItem.nome}.png` : null;
+  
+  // Hardcoded to FEMININO folder as requested, since files are shared
+  return infoItem ? `/personagem-FEMININO/ACESSORIOS-FEMININOS/${infoItem.categoria}/${infoItem.nome}.png` : null;
 };
 
 const getCaminhoRoupaCima = (nomeItem, variante, genero) => { if (!nomeItem) return null; let varSufixo = variante || 'top-1'; if (genero === 'FEMININO') return `/personagem-FEMININO/ROUPAS-TORSO/${nomeItem}-top-1.png`; if (genero === 'MASCULINO') { if (nomeItem === 'Besourto' && varSufixo === 'top-1') varSufixo = 'Top-1'; return `/personagem-MASCULINO/ROUPAS-TORSO/${nomeItem}-${varSufixo}.png`; } return null; };
@@ -114,7 +116,6 @@ const getCaminhoSapato = (nomeItem, variante, genero) => { if (!nomeItem) return
 // --- HELPER DE ARMAS ---
 const getCaminhoArma = (nomeItem) => {
     if (!nomeItem) return null;
-    // Assume que as imagens estão em /public/armas/Espada.png, etc.
     return `/armas/${nomeItem}.png`;
 };
 
@@ -136,7 +137,6 @@ const opcoesDoPersonagem = {
  roupaBaixoVariantes: ['1', '2', '3'], 
  sapato: ['Aneis', 'BotasAltas', 'BotasNeve', 'Sabatao', 'Sandalia', 'Sapatilha'],
  sapatoVariantes: ['1', '2', '3'],
- // --- OPÇÕES DE ARMAS ---
  armas: ['Espada', 'Lanca', 'Machado']
 };
 
@@ -166,9 +166,9 @@ const estadoInicialDoPersonagem = {
   sapato: 'Sandalia', sapatoCorNum: 4, 
   sapatoVariante: '1', sapatoVarPadrao: '1',
   
-  armas: null,            // Começa sem arma
-  armasCorNum: 7,         // 7: Nula (Sem Faceta)
-  armasPadrao: '4',       // '4': Nulo (Sem Ilustração)
+  armas: null,            
+  armasCorNum: 7,         
+  armasPadrao: '4',       
 
   img: '', historia: '', baseMini: ''
 };
@@ -191,7 +191,6 @@ export const useLogicaCustomizacao = () => {
    
    if (caracteristica === 'cabelo' && prev.cabelo === novoValor) valorFinal = null;
    
-   // Toggle Armas: Se clicar na mesma arma já selecionada, remove
    if (caracteristica === 'armas' && prev.armas === novoValor) valorFinal = null;
 
    novoEstado[caracteristica] = valorFinal;
@@ -206,14 +205,12 @@ export const useLogicaCustomizacao = () => {
    if (caracteristica === 'sapato' && valorFinal) { const dados = DADOS_INDUSTRIAIS.sapato[valorFinal] || DADOS_INDUSTRIAIS.sapato['DEFAULT']; novoEstado.sapatoCorNum = dados.cor; }
    if (caracteristica === 'sapatoVariante' && valorFinal) { novoEstado.sapatoVarPadrao = DADOS_INDUSTRIAIS.variantes[valorFinal] || '4'; }
 
-   // --- LÓGICA DE ARMAS ---
    if (caracteristica === 'armas') {
       if (valorFinal) {
           const dados = DADOS_INDUSTRIAIS.armas[valorFinal] || DADOS_INDUSTRIAIS.armas['DEFAULT'];
           novoEstado.armasCorNum = dados.cor;
           novoEstado.armasPadrao = dados.padrao;
       } else {
-          // Reset se remover a arma
           novoEstado.armasCorNum = COR.NULA;
           novoEstado.armasPadrao = PAD.NULO;
       }
@@ -233,7 +230,6 @@ export const useLogicaCustomizacao = () => {
      novoEstado.roupaBaixo = 'Grego'; novoEstado.roupaBaixoCorNum = DADOS_INDUSTRIAIS.roupaBaixo['Grego'].cor; novoEstado.roupaBaixoPadrao = DADOS_INDUSTRIAIS.roupaBaixo['Grego'].padrao;
      novoEstado.sapato = 'Sandalia'; novoEstado.sapatoCorNum = DADOS_INDUSTRIAIS.sapato['Sandalia'].cor;
      
-     // Reseta arma ao trocar de gênero (opcional, mas evita bugs visuais)
      novoEstado.armas = null; novoEstado.armasCorNum = COR.NULA; novoEstado.armasPadrao = PAD.NULO;
 
      if (novoValor === 'FEMININO') { novoEstado.roupaCima = 'Bikini'; novoEstado.roupaCimaCorNum = DADOS_INDUSTRIAIS.roupaCima['Bikini'].cor; novoEstado.roupaCimaPadrao = DADOS_INDUSTRIAIS.roupaCima['Bikini'].padrao; } 
@@ -259,13 +255,8 @@ export const useLogicaCustomizacao = () => {
   cabeloFrente: cabelo ? `/personagem-${genero}/CABELOS-${genero}/CABELO-${cabelo}/CABELO-${cabelo}-${corCabelo}.png` : null,
   cabeloFundo: (cabelo && opcoesDoPersonagem.estilosComCabeloFundo.includes(cabelo)) ? `/personagem-${genero}/CABELOS-${genero}/CABELO-FUNDO/CABELO-FUNDO-${corCabelo}.png` : null,
   
-  // --- CORREÇÃO AQUI ---
-  // Verifica se o item selecionado tem um parceiro (itemPar) que deve ir no fundo
   acessoriosCabecaFundo: acessoriosCabeca.map(n => {
-    // 1. Se o item já é de fundo
     if (getPosicaoAcessorio(n) === 'fundo') return getCaminhoAcessorio(n, genero);
-
-    // 2. Se o item tem um parceiro de fundo (Ex: Chapéu Topo -> Chapéu Embaixo)
     const info = ACESSORIOS_CABECA_MAPEADOS[n];
     if (info && info.itemPar) {
         const infoPar = ACESSORIOS_CABECA_MAPEADOS[info.itemPar];
@@ -281,70 +272,17 @@ export const useLogicaCustomizacao = () => {
   
   acessorioPescoco: getCaminhoAcessorio(acessorioPescoco, genero),
   marcas: getCaminhoAcessorio(marcas, genero),
-  
-  // --- EXPORTAR ARMA ---
   armas: getCaminhoArma(armas)
  };
 
- const adicionarPersonagemAoCarrinho = async (referenciaDoElemento) => {
-        
-        try {
-            // 1. Recuperar o ID do usuário logado
-            const usuarioId = localStorage.getItem('id_usuario');
-
-            // 2. Trava de segurança: Se não houver login, interrompe o processo.
-            if (!usuarioId) {
-                alert("Você precisa estar logado para salvar o personagem e adicionar ao carrinho.");
-                // Opcional: window.location.href = '/login'; // Redirecionar se quiser
-                throw new Error("Usuário não autenticado.");
-            }
-
-            // 3. Capturar a imagem
-            const canvas = await html2canvas(referenciaDoElemento.current, { backgroundColor: null, scale: 0.45 });
-            const imagemEmBase64 = canvas.toDataURL('image/png');
-            
-            // 4. Montar o objeto completo usando id_usuario
-            const personagemCompleto = { 
-                ...personagem, 
-                img: imagemEmBase64,
-                id_usuario: usuarioId // <--- Mudança aqui: usa o ID do usuário
-            };
-            
-            console.log("Enviando os seguintes dados para /personagens:", personagemCompleto);
-
-            // 5. Salvar o personagem no banco (API Call 1)
-            const resposta = await axios.post('https://forja-qvex.onrender.com/api/personagens', personagemCompleto);
-            const novoPersonagemSalvo = resposta.data;
-            console.log("Personagem salvo com sucesso:", novoPersonagemSalvo);
-            
-            // 6. Adicionar o personagem recém-salvo ao carrinho (API Call 2)
-            await axios.post('https://forja-qvex.onrender.com/api/carrinho', {
-                id_usuario: usuarioId, // <--- Mudança aqui
-                personagem_id: novoPersonagemSalvo.id
-            });
-            console.log(`Personagem ID ${novoPersonagemSalvo.id} adicionado ao carrinho.`);
-
-            // 7. Retornar os dados do personagem salvo em caso de sucesso
-            return novoPersonagemSalvo;
-
-        } catch (erro) {
-            console.error('Erro no processo de adicionar ao carrinho:', erro);
-            // Verifica se foi erro do nosso "throw" manual ou erro de rede
-            const mensagemErro = erro.response?.data?.message || erro.message || "Erro ao adicionar ao carrinho";
-            alert(mensagemErro); 
-            throw erro;
-        }
-    };
-
- return { 
-  personagem, 
-  atualizarPersonagem, 
-  handleAcessoriosCabecaChange, 
-  handleAcessorioPescocoChange, 
-  handleMarcasChange, 
-  salvarPersonagem, 
+ return {
+  personagem,
+  atualizarPersonagem,
+  salvarPersonagem,
   caminhosDasImagens,
   opcoesDoPersonagem,
-  adicionarPersonagemAoCarrinho
+  handleAcessoriosCabecaChange,
+  handleAcessorioPescocoChange,
+  handleMarcasChange
  };
 };
