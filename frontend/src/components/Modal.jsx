@@ -38,17 +38,16 @@ function Modal({ onClose }) {
                     <div className="lista-itens">
                         {/* LOOP PELOS ITENS DO CARRINHO */}
                         {carrinho.map((item) => (
-                            <div key={item.cartId} className="item-carrinho">
+        
+                            <div key={item.id_carrinho_item} className="item-carrinho">
                                 
-                                {/* IMAGEM CROPADA (Ver CSS) */}
                                 <div className="img-wrapper-carrinho">
                                     <img src={item.img} alt={item.nome} />
                                 </div>
                                 
                                 <div className="info-item-carrinho">
-                                    {/* 3. NOME COM FALLBACK */}
                                     <label className="nome-item">
-                                        {item.nome && item.nome.trim() !== "" ? item.nome : "Aventureiro sem nome"}
+                                        {item.nome || "Aventureiro"}
                                     </label>
                                     <label className="preco-item">
                                         {Number(item.valor || 84.90).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
@@ -57,7 +56,8 @@ function Modal({ onClose }) {
 
                                 <button 
                                     className="btn-remover-item" 
-                                    onClick={() => removerDoCarrinho(item.cartId)}
+                                    // AQUI: Passamos o ID único da linha do carrinho
+                                    onClick={() => removerDoCarrinho(item.id_carrinho_item)}
                                     title="Remover"
                                 >
                                     X

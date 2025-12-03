@@ -1,89 +1,166 @@
-// Seu arquivo GlobalContext.jsx - VERSÃO ATUALIZADA
-
-import { createContext, useState, useContext, useEffect } from "react"; // 1. Importar o useEffect
+import { createContext, useState, useContext, useEffect } from "react";
+import axios from 'axios';
 
 export const GlobalContext = createContext();
 
 export const GlobalContextProvider = ({ children }) => {
+  // --- ESTADOS ---
   const [dadosDoPersonagem, setDadosDoPersonagem] = useState(null);
   const [imagemPersonagem, setImagemPersonagem] = useState('');
+  
   const [usuarioId, setUsuarioId] = useState(null);
   const [usuarioNome, setUsuarioNome] = useState(null);
   const [isLoadingAuth, setIsLoadingAuth] = useState(true);
 
-  const [carrinho, setCarrinho] = useState([]); // Lista de itens
-  const [isCarrinhoAberto, setIsCarrinhoAberto] = useState(false); // Controle Global de abrir/fechar
+  const [carrinho, setCarrinho] = useState([]); 
+  const [isCarrinhoAberto, setIsCarrinhoAberto] = useState(false); 
 
-  // Função para adicionar (evita duplicatas se quiser, ou soma quantidade)
-  const adicionarAoCarrinho = (item) => {
-      // Adiciona um ID único temporário para o item no carrinho (caso adicione 2 iguais)
-      const itemComIdUnico = { ...item, cartId: Date.now() }; 
-      setCarrinho((prev) => [...prev, itemComIdUnico]);
-      setIsCarrinhoAberto(true); // Abre o carrinho automaticamente
+  const API_URL = 'https://forja-qvex.onrender.com/api/carrinho';
+
+  // =================================================================
+  // 1. FUNÇÃO MÁGICA: BUSCAR CARRINHO DO BANCO
+  // =================================================================
+  const atualizarCarrinho = async (idDoUsuario) => {
+      // Se não passar ID, tenta pegar do estado ou localStorage
+      const idFinal = idDoUsuario || usuarioId || localStorage.getItem('id_usuario');
+      
+      if (!idFinal) return; // Se não tem usuário, não tem o que buscar
+
+      try {
+          console.log(`--- [DEBUG CONTEXT] Buscando carrinho do User ID: ${idFinal}...`);
+          const response = await axios.get(`${API_URL}/${idFinal}`);
+          
+          // O backend retorna os itens. Salvamos no estado para o Modal ler.
+          setCarrinho(response.data); 
+          console.log("--- [DEBUG CONTEXT] Carrinho atualizado:", response.data.length, "itens.");
+
+      } catch (error) {
+          console.error("--- [ERRO CONTEXT] Falha ao buscar carrinho:", error);
+      }
   };
 
-  const removerDoCarrinho = (cartId) => {
-      setCarrinho((prev) => prev.filter(item => item.cartId !== cartId));
-  };
-
+  // =================================================================
+  // 2. INICIALIZAÇÃO (F5)
+  // =================================================================
   useEffect(() => {
     const idSalvo = localStorage.getItem('id_usuario');
     const nomeSalvo = localStorage.getItem('usuario_nome');
 
-    console.log("--- [DEBUG CONTEXT] Inicializando... LocalStorage tem ID?", idSalvo);
-
     if (idSalvo) {
         setUsuarioId(idSalvo);
         setUsuarioNome(nomeSalvo);
+        // AQUI ESTÁ O SEGREDO: Assim que restaurar o ID, busca o carrinho!
+        atualizarCarrinho(idSalvo);
     }
     
     setIsLoadingAuth(false);
-}, []);
+  }, []);
 
-const loginUsuario = (dadosUsuario) => {
-    console.log("--- [DEBUG CONTEXT] loginUsuario chamado com:", dadosUsuario);
+  // =================================================================
+  // 3. ADICIONAR (POST + ATUALIZAR)
+  // =================================================================
+  const adicionarAoCarrinho = async (item) => {
+    const idArmazenado = localStorage.getItem('id_usuario');
+    
+    if (!idArmazenado) {
+        alert("Você precisa entrar na sua conta para adicionar itens ao carrinho!");
+        return;
+    }
 
-    // FALLBACK: Se o backend mandar 'id' em vez de 'id_usuario', corrigimos aqui
+    try {
+        // Envia para o banco
+        await axios.post(API_URL, {
+            id_usuario: idArmazenado,
+            personagem_id: item.id 
+        });
+
+        // IMEDIATAMENTE busca do banco de novo para garantir que a lista está igual
+        await atualizarCarrinho(idArmazenado);
+        
+        setIsCarrinhoAberto(true); // Abre o modal
+        console.log("Item salvo e lista sincronizada!");
+
+    } catch (error) {
+        if (error.response && error.response.status === 409) {
+            alert("Este personagem já está no seu carrinho!");
+        } else {
+            console.error("Erro ao adicionar:", error);
+            alert("Erro ao conectar com a forja.");
+        }
+    }
+  };
+
+  // =================================================================
+  // 4. REMOVER (DELETE + ATUALIZAR)
+  // =================================================================
+  const removerDoCarrinho = async (idCarrinhoItem) => {
+    // 1. Remove visualmente usando o ID único
+    setCarrinho(prev => prev.filter(item => item.id_carrinho_item !== idCarrinhoItem));
+
+    // 2. Remove do banco
+    try {
+        // Chama a rota nova: DELETE /api/carrinho/55
+        await axios.delete(`${API_URL}/${idCarrinhoItem}`);
+        console.log("Item deletado do banco.");
+    } catch (error) {
+        console.error("Erro ao deletar:", error);
+        // Se der erro, recarrega a lista original
+        atualizarCarrinho(localStorage.getItem('id_usuario')); 
+    }
+  };
+
+
+  // =================================================================
+  // 5. LOGIN E LOGOUT
+  // =================================================================
+  const loginUsuario = (dadosUsuario) => {
     const idFinal = dadosUsuario.id_usuario || dadosUsuario.id; 
     const nomeFinal = dadosUsuario.nome_usuario || dadosUsuario.nome;
 
     if (!idFinal) {
-        console.error("--- [ERRO CRÍTICO] ID do usuário está undefined/null!");
+        console.error("--- [ERRO CRÍTICO] ID undefined no Login!");
+        return;
     }
 
     setUsuarioId(idFinal);
     setUsuarioNome(nomeFinal);
-
     localStorage.setItem('id_usuario', idFinal);
     localStorage.setItem('usuario_nome', nomeFinal);
     
-    console.log(`--- [DEBUG CONTEXT] Salvo no LocalStorage. ID: ${idFinal}`);
-};
+    // Assim que logar, busca o carrinho desse usuário!
+    atualizarCarrinho(idFinal);
+  };
 
-const logoutUsuario = () => {
-    console.log("--- [DEBUG CONTEXT] Logout efetuado.");
+  const logoutUsuario = () => {
     setUsuarioId(null);
     setUsuarioNome(null);
+    setCarrinho([]); // Limpa o carrinho da tela
     localStorage.removeItem('id_usuario');
     localStorage.removeItem('usuario_nome');
-};
+  };
 
   return (
     <GlobalContext.Provider value={{
-      dadosDoPersonagem,
-      setDadosDoPersonagem,
-      imagemPersonagem,
-      setImagemPersonagem,
+      // Auth
       usuarioId, 
       usuarioNome, 
       loginUsuario, 
       logoutUsuario,
       isLoadingAuth,
+      
+      // Carrinho
       carrinho,
       isCarrinhoAberto,
+      setIsCarrinhoAberto,
       adicionarAoCarrinho,
       removerDoCarrinho,
-      setIsCarrinhoAberto
+      atualizarCarrinho, // Exportando caso queira chamar manualmente em algum lugar
+      
+      // Customização
+      dadosDoPersonagem,
+      setDadosDoPersonagem,
+      imagemPersonagem,
+      setImagemPersonagem,
     }}>
       {children}
     </GlobalContext.Provider>
