@@ -47,6 +47,21 @@ const buscarPorSessao = async (id_usuario) => {
     }
 };
 
+const limparUnidade = async (id_usuario, personagem_id) => {
+    console.log(`--- [DEBUG MODEL CARRINHO] Executando DELETE para User: ${id_usuario}, Pers: ${personagem_id}`);
+    try {
+        const result = await db.query(
+            'DELETE FROM carrinho WHERE id_usuario = $1 AND personagem_id = $2 LIMIT 1',
+            [id_usuario, personagem_id]
+        );
+        console.log("--- [DEBUG MODEL] DELETE OK. Rows affected:", result.rowCount);
+        return result;
+    } catch (err) {
+        console.error("--- [ERRO MODEL] Falha no DELETE:", err.message);
+        throw err;
+    }
+};
+
 // Limpa o carrinho de uma sessão (será usado pelo controller de Pedidos)
 const limparPorSessao = async (client, id_usuario) => {
     console.log(`--- [DEBUG MODEL CARRINHO] Executando DELETE para User: ${id_usuario}`);
@@ -64,5 +79,6 @@ const limparPorSessao = async (client, id_usuario) => {
 module.exports = {
     adicionarItem,
     buscarPorSessao,
-    limparPorSessao,
+    limparUnidade,
+    limparPorSessao
 };
