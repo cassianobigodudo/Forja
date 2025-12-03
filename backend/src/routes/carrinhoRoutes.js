@@ -10,6 +10,6 @@ router.post('/', carrinhoController.adicionarItem);
 router.get('/:id_usuario', carrinhoController.getItens);
 
 // DELETE /api/carrinho/:id_usuario/:personagem_id
-router.delete('/:id_usuario/:personagem_id', carrinhoController.removerItem);
+router.delete('/:id_carrinho_item', carrinhoController.removerItem);
 
 module.exports = router;

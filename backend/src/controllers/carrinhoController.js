@@ -59,24 +59,15 @@ const getItens = async (req, res) => {
 };
 
 const removerItem = async (req, res) => {
-    console.log("--- [DEBUG CONTROLLER CARRINHO] DELETE /removerItem chamado ---");
-    
-    const { id_usuario, personagem_id } = req.params;
+    const { id_carrinho_item } = req.params;
 
-    if (!id_usuario || !personagem_id) {
-        console.warn("--- [AVISO CONTROLLER] Faltando dados obrigatórios (id_usuario ou personagem_id) ---");
-        return res.status(400).json({ message: 'ID de sessão e ID do personagem são obrigatórios.' });
-    }
+    console.log(`--- [CONTROLLER] Removendo item único do carrinho: ${id_carrinho_item}`);
 
     try {
-        console.log(`--- [DEBUG CONTROLLER] Chamando Model.limparUnidade(${id_usuario}, ${personagem_id})...`);
-        await CarrinhoModel.limparUnidade(id_usuario, personagem_id);
-        
-        console.log("--- [DEBUG CONTROLLER] Sucesso! Item removido.");
-        res.status(200).json({ message: 'Personagem removido do carrinho!' });
-
+        await CarrinhoModel.removerItem(id_carrinho_item);
+        res.status(200).json({ message: 'Item removido com sucesso.' });
     } catch (error) {
-        console.error("--- [ERRO CONTROLLER] Erro fatal ao remover item:", error);
+        console.error("Erro ao deletar:", error);
         res.status(500).json({ message: 'Erro ao remover do carrinho.' });
     }
 };

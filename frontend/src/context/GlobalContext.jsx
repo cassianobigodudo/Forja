@@ -93,28 +93,21 @@ export const GlobalContextProvider = ({ children }) => {
   // =================================================================
   // 4. REMOVER (DELETE + ATUALIZAR)
   // =================================================================
-  const removerDoCarrinho = async (idPersonagem) => {
-    const idArmazenado = localStorage.getItem('id_usuario');
-    
-    if (!idArmazenado) {
-        alert("Você precisa entrar na sua conta para remover itens do carrinho!");
-        return;
-    }
+  const removerDoCarrinho = async (idCarrinhoItem) => {
+    // 1. Remove visualmente usando o ID único
+    setCarrinho(prev => prev.filter(item => item.id_carrinho_item !== idCarrinhoItem));
 
+    // 2. Remove do banco
     try {
-        // Envia para o banco
-        await axios.delete(`${API_URL}/${idArmazenado}/${idPersonagem}`);
-
-        // IMEDIATAMENTE busca do banco de novo para garantir que a lista está igual
-        await atualizarCarrinho(idArmazenado);
-        
-        console.log("Item removido e lista sincronizada!");
-
+        // Chama a rota nova: DELETE /api/carrinho/55
+        await axios.delete(`${API_URL}/${idCarrinhoItem}`);
+        console.log("Item deletado do banco.");
     } catch (error) {
-        console.error("Erro ao remover:", error);
-        alert("Erro ao conectar com a forja.");
+        console.error("Erro ao deletar:", error);
+        // Se der erro, recarrega a lista original
+        atualizarCarrinho(localStorage.getItem('id_usuario')); 
     }
-  }
+  };
 
 
   // =================================================================
