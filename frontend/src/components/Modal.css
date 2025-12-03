@@ -1,102 +1,205 @@
-@keyframes slideIn {
-  from {
-    transform: translatey(-250px);
-    opacity: 0.9;
-  }
-  to {
-    transform: translatey(0);
-    opacity: 1;
-  }
+/* =========================================================
+   CARRINHO DROPDOWN (TEMA RPG - SEM DOURADO)
+========================================================= */
+
+/* 1. FUNDO INVISÍVEL (Para fechar ao clicar fora) */
+.modal-backdrop-transparent {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 998;
+    cursor: default;
+    background-color: transparent;
 }
 
-.modal-dropdown {
-  display: flex;
-  justify-content: center;
-  align-items: start;
-  flex-direction: column;
-  position: absolute;
-  top: 90px;
-  right: 31px;
-  background: #fff;
-  border: 2px solid #ccc;
-  border-radius: 8px;
-  min-width: 250px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  z-index: 1;
-  padding: 12px;
-  animation: slideIn 0.5s ease-in-out;
-  background-color: rgba(26, 21, 17, 0.96);
+/* O DROPDOWN EM SI */
+.modal-dropdown-carrinho {
+    position: absolute;
+    top: 70px; 
+    right: 150px; 
+    
+    width: 320px;
+    max-height: 70vh;
+    
+    /* TEMA DO PROJETO */
+    background-color: var(--FundoAlternativo); /* Marrom Escuro */
+    border: 1px solid var(--Texto); /* Borda Branca */
+    
+    border-radius: 2px; /* Cantos rústicos */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9);
+    
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: slideDown 0.3s ease;
 }
 
-.modal-content{
-  font-family: "fonte-subtitulos";
-  padding: 20px;
-  border-radius: 12px;
-  min-width: 300px;
-  max-width: 600px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  background-color: var(--Fundo);
+/* HEADER */
+.carrinho-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: rgba(0,0,0,0.3);
 }
 
-
-.titulo{
-  font-family: 'fonte-logo';
-  font-size: 28px;
-  margin-bottom: 22px;
-  text-indent: 10px;
-  margin-top: -52px; 
-  transition: 1s;
-  color: white;
+.titulo-carrinho {
+    font-family: "fonte-titulos", serif;
+    color: var(--Texto); /* Branco */
+    margin: 0;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    text-shadow: 0 0 5px rgba(0,0,0,0.5);
 }
 
-.exemploDeCompra{
-  font-family: 'fonte-subtitulo';
-  font-size: 18px;
-  margin-bottom: 25px;
-  color: white;
+.fechar-carrinho {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.5);
+    font-family: "fonte-numeros", sans-serif;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.fechar-carrinho:hover { color: var(--Texto); transform: scale(1.1); }
 
+/* CONTEÚDO (Lista) */
+.carrinho-content {
+    flex: 1;
+    overflow-y: auto;
 }
 
-.fechar{
-  transform: translateX(319px);
-  color: rgb(255, 255, 255);
-  font-family: 'fonte-subtitulo';
-  border: none;
-  background: none;
-  cursor: pointer;
-  font-size: 20px;
-  transition: 1s;
-  margin-top: 10px;
-  margin-bottom: 25px;
+.carrinho-vazio {
+    padding: 30px;
+    text-align: center;
+    color: rgba(255,255,255,0.6);
+    font-family: "fonte-paragrafos", serif;
 }
 
-.fechar:hover{
-  font-size: 25px;
-  transition: 1s;
+/* ITEM INDIVIDUAL */
+.item-carrinho {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    gap: 12px;
+    transition: 0.2s;
 }
 
-.btnIrParaPagamento{
-  color: white;
-  height: 20%;
-  width: 75%;
-  margin-left: 50px;
-  margin-top: 24px;
-  margin-bottom: 12px;
-  font-family: 'fonte-Titulos';
-  border-style: solid;
-  border-width: 2px;
-  border-color: white;
-  cursor: pointer;
-  transition: 1s;
-  background-color: rgb(41, 35, 24,0.4);
+.item-carrinho:hover { background-color: rgba(255,255,255,0.05); }
 
+/* 2. FOTO CROPADA NO ROSTO (Borda Branca Sutil) */
+.img-wrapper-carrinho {
+    width: 60px;
+    height: 60px;
+    border-radius: 2px;
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Borda branca transparente */
+    overflow: hidden;
+    flex-shrink: 0;
 }
-.lblPagamento{
-  font-size: 28px;
-  cursor: pointer;
+
+.img-wrapper-carrinho img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
 }
-.lblPedidos{
-  font-size: 28px;
-  color: white;
-  cursor: pointer;
+
+.info-item-carrinho {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.nome-item {
+    font-family: "fonte-subtitulos", serif;
+    color: var(--Texto);
+    font-size: 0.95rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.preco-item {
+    font-family: "fonte-numeros", serif;
+    color: var(--Texto); /* Branco */
+    opacity: 0.8;
+    font-size: 0.9rem;
+}
+
+.btn-remover-item {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.5); /* Branco apagado */
+    font-weight: bold;
+    font-size: 1rem;
+    transition: 0.2s;
+    padding: 5px;
+}
+.btn-remover-item:hover { 
+    color: var(--Texto); 
+    text-shadow: 0 0 5px white; 
+    transform: scale(1.1); 
+}
+
+/* FOOTER (Total e Botão) */
+.carrinho-footer {
+    padding: 15px;
+    background-color: rgba(0,0,0,0.4);
+    border-top: 1px solid rgba(255,255,255,0.2);
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    font-family: "fonte-titulos", serif;
+    color: var(--Texto);
+    font-size: 1.1rem;
+}
+
+.valor-total {
+    font-family: "fonte-numeros", sans-serif;
+    color: var(--Texto); /* Branco */
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.5); /* Brilho branco */
+}
+
+/* BOTÃO DE CHECKOUT (Estilo igual ao de navegação) */
+.btnIrParaPagamento {
+    width: 100%;
+    padding: 12px;
+    
+    background-color: rgba(255, 255, 255, 0.1); /* Fundo transparente */
+    color: var(--Texto);
+    border: 1px solid var(--Texto); /* Borda Branca */
+    
+    font-family: "fonte-titulos", serif;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btnIrParaPagamento:hover { 
+    background-color: var(--Texto); 
+    color: black; /* Inverte cores ao passar o mouse */
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+/* Barra de rolagem fina para o carrinho (Branca) */
+.carrinho-content::-webkit-scrollbar { width: 6px; }
+.carrinho-content::-webkit-scrollbar-thumb { 
+    background-color: rgba(255, 255, 255, 0.3); 
+    border-radius: 3px;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); scale: 0.95; }
+    to { opacity: 1; transform: translateY(0); scale: 1; }
 }

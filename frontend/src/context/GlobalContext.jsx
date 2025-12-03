@@ -11,6 +11,21 @@ export const GlobalContextProvider = ({ children }) => {
   const [usuarioNome, setUsuarioNome] = useState(null);
   const [isLoadingAuth, setIsLoadingAuth] = useState(true);
 
+  const [carrinho, setCarrinho] = useState([]); // Lista de itens
+  const [isCarrinhoAberto, setIsCarrinhoAberto] = useState(false); // Controle Global de abrir/fechar
+
+  // Função para adicionar (evita duplicatas se quiser, ou soma quantidade)
+  const adicionarAoCarrinho = (item) => {
+      // Adiciona um ID único temporário para o item no carrinho (caso adicione 2 iguais)
+      const itemComIdUnico = { ...item, cartId: Date.now() }; 
+      setCarrinho((prev) => [...prev, itemComIdUnico]);
+      setIsCarrinhoAberto(true); // Abre o carrinho automaticamente
+  };
+
+  const removerDoCarrinho = (cartId) => {
+      setCarrinho((prev) => prev.filter(item => item.cartId !== cartId));
+  };
+
   useEffect(() => {
     const idSalvo = localStorage.getItem('id_usuario');
     const nomeSalvo = localStorage.getItem('usuario_nome');
@@ -63,7 +78,12 @@ const logoutUsuario = () => {
       usuarioNome, 
       loginUsuario, 
       logoutUsuario,
-      isLoadingAuth
+      isLoadingAuth,
+      carrinho,
+      isCarrinhoAberto,
+      adicionarAoCarrinho,
+      removerDoCarrinho,
+      setIsCarrinhoAberto
     }}>
       {children}
     </GlobalContext.Provider>

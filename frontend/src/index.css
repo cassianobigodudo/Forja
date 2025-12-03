@@ -10,15 +10,15 @@ body, html {
   box-sizing: border-box;
 }
 
-
 *{
 
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  background-color: transparent;
   font-size: 24px;
   font-weight: 1;
-  background: transparent;
+  overflow: hidden;
   
 }
 
@@ -67,6 +67,18 @@ body, html {
 
 }
 
+
+
+
+:root{
+    
+  --Texto: rgb(255, 255, 255);
+  --Fundo: rgba(0, 0, 0, 0.5);
+  --FundoAlternativo: rgb(39, 30, 17, 0.7);
+  
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
 
 @font-face {
   font-family: "fonte-logo";

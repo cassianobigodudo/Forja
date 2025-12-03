@@ -68,3 +68,33 @@
     font-size: 50px;
     transition: 0.5s;
 }
+
+/* Wrapper para poder posicionar a bolinha */
+.icone-carrinho-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+/* A Bolinha do Contador */
+.contador-carrinho {
+    position: absolute;
+    top: -5px;
+    right: -8px;
+    
+    background-color: var(--FundoAlternativo); /* Marrom do tema */
+    color: var(--Texto);
+    border: 1px solid var(--Texto); /* Borda branca fina */
+    
+    font-family: "fonte-numeros", sans-serif;
+    font-size: 0.7rem;
+    font-weight: bold;
+    
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 5px rgba(0,0,0,0.8);
+}

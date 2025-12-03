@@ -16,19 +16,35 @@ const adicionarItem = async (id_usuario, personagem_id) => {
     }
 };
 
-// Busca todos os itens do carrinho de uma sessão
+// Busca os itens VISUAIS para o carrinho
 const buscarPorSessao = async (id_usuario) => {
-    console.log(`--- [DEBUG MODEL CARRINHO] Executando SELECT JOIN para User: ${id_usuario}`);
+    console.log(`--- [DEBUG MODEL CARRINHO] Buscando vitrine do carrinho para User: ${id_usuario}`);
     
-    const { rows } = await db.query(`
-        SELECT p.id, p.genero, p.corPele, p.img, p.generoNum, p.corPeleNum 
+    // AQUI ESTÁ A MÁGICA DO JOIN:
+    // c = tabela carrinho
+    // p = tabela personagens
+    // Estamos pegando apenas o que importa para a exibição
+    const query = `
+        SELECT 
+            p.id,           -- ID do Personagem (para linkar ou remover depois)
+            p.nome,         -- Nome (ex: "Ladino Sombrio")
+            p.valor,        -- Preço (ex: 84.90)
+            p.img,          -- A foto do rosto
+            c.adicionado_em -- Data (opcional, bom para ordenar)
         FROM carrinho c
-        JOIN personagens p ON c.personagem_id = p.id
+        INNER JOIN personagens p ON c.personagem_id = p.id
         WHERE c.id_usuario = $1
-    `, [id_usuario]);
+        ORDER BY c.adicionado_em DESC; 
+    `;
 
-    console.log(`--- [DEBUG MODEL] SELECT OK. Itens encontrados: ${rows.length}`);
-    return rows;
+    try {
+        const { rows } = await db.query(query, [id_usuario]);
+        console.log(`--- [DEBUG MODEL] Sucesso. ${rows.length} itens recuperados com dados visuais.`);
+        return rows;
+    } catch (err) {
+        console.error("--- [ERRO MODEL] Falha ao buscar itens visuais:", err.message);
+        throw err;
+    }
 };
 
 // Limpa o carrinho de uma sessão (será usado pelo controller de Pedidos)
