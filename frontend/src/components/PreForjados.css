@@ -9,6 +9,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    /* background-color: green; */
 }
 
     .espaco-trabalhado-pre-forjados{
@@ -25,11 +26,12 @@
             height: 78%;
             display: flex;
             justify-content: center;
+            align-items: center;
         }
 
             .img-personagem-render-preforjados{
-                height: 375px;
-                /* width: auto; */
+                height: 100%;
+                width: auto;
             }
 
         .nome-miniatura-container-pf{
@@ -76,234 +78,242 @@
             }
 
                 .vermais{
-                    width: 44px;
+                    width: 40%;
                     cursor: pointer;
                 }
 
                 .colocarcarrinho{
-                    width: 48px;
+                    width: 44%;
                     cursor: pointer;
                 }
 
-/* --- FUNDO ESCURO (OVERLAY) --- */
+                /* Classe nova para garantir que fiquem lado a lado */
+.vitrine-horizontal {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    justify-content: center; /* Centraliza o grupo de 4 */
+    width: 100%;
+}
+
+
+
+/* =========================================
+   ESTILIZAÇÃO DO MODAL (TEMA RPG)
+   ========================================= */
+
+/* Fundo escuro atrás do modal */
 .modal-overlay {
-  /* 1. Fixa na tela inteira, ignorando o scroll */
-  position: fixed; 
+  position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  
-  /* 2. Cor preta com 80% de opacidade */
-  background-color: rgba(0, 0, 0, 0.8); 
-  
-  /* 3. Garante que fique acima de TUDO (Navbar, menus, etc) */
-  z-index: 9999; 
-  
-  /* 4. Centraliza o modal na tela */
-  display: flex; 
+  background-color: rgba(0, 0, 0, 0.85); /* Bem escuro para foco total */
+  z-index: 9999;
+  display: flex;
   justify-content: center;
   align-items: center;
-  
-  /* Efeito de suavidade ao aparecer (opcional) */
+  backdrop-filter: blur(3px); /* Desfoque leve no fundo */
   animation: fadeIn 0.3s ease-in-out;
 }
 
-/* --- A CAIXA DO MODAL --- */
+/* A Caixa do Modal */
 .modal-content {
-  background-color: #1e1e1e; /* Cinza escuro/Preto */
-  color: white;
-  font-family: 'fonte-titulos';
+  /* Usa a cor do seu tema (versão sólida do FundoAlternativo) */
+  background-color: rgb(39, 30, 17); 
+  color: var(--Texto);
   
-  /* Tamanho e Bordas */
+  /* Bordas seguindo o padrão dos botões de navegação */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+  
   width: 90%;
-  max-width: 1000px; /* Largura máxima para não esticar demais */
-  border-radius: 10px;
-  padding: 20px;
-  
-  
-  position: relative; /* Para posicionar o botão X */
+  max-width: 800px;
+  border-radius: 4px; /* Cantos pouco arredondados (rústico) */
+  padding: 25px;
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 20px;
-  
-  /* Se a tela for pequena e o modal grande, permite scroll DENTRO do modal */
   max-height: 90vh;
   overflow-y: auto;
 }
 
-/* CABEÇALHO DO MODAL */
+/* --- CABEÇALHO --- */
 .modal-header h2 {
+  font-family: "fonte-titulos", serif; /* IM Fell English SC */
+  font-size: 2rem;
   text-align: center;
-  border-bottom: 1px solid #444;
-  padding-bottom: 10px;
+  color: var(--Texto);
   margin-top: 0;
-  font-size: 50px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 15px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 1);
 }
 
-/* CORPO (Imagem + Texto) */
 .modal-body {
   display: flex;
-  gap: 20px;
+  gap: 25px;
   align-items: flex-start;
 }
 
-/* IMAGEM NO MODAL */
+/* --- IMAGEM --- */
 .modal-img-wrapper img {
   width: 300px;
   max-width: 100%;
-  border-radius: 8px;
-  border: 1px solid #555;
-background-image: url('/fundo/tim-mcburnie-completa.webp');
-  background-size: cover;
-  background-position: -800px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
 }
 
-/* INFORMAÇÕES E HISTÓRIA */
+/* --- INFORMAÇÕES --- */
 .modal-info {
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 15px;
-  font-family: 'fonte-numeros';
 }
 
 .modal-info h3 {
-  /* color: #d4af37; */
+  font-family: "fonte-subtitulos", serif; /* Trykker */
+  font-size: 1.5rem;
+  color: var(--Texto);
   margin: 0;
-  font-family: 'fonte-paragrafos';
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-/* --- PreForjados.css --- */
-
+/* --- CAIXA DE HISTÓRIA (Scroll/Papiro) --- */
 .texto-historia {
-  /* 1. O SEGREDO DA FORMATAÇÃO: */
-  /* Isso faz o HTML respeitar os parágrafos/enter da IA */
-  white-space: pre-wrap; 
+  white-space: pre-wrap; /* Respeita parágrafos da IA */
   
-  /* 2. ESTILO E LEITURA: */
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fonte mais limpa para leitura */
-  font-style: italic;
-  line-height: 1.6; /* Aumenta o espaço entre as linhas (respiro) */
-  font-size: 1rem;
-  color: #e0e0e0;
-  text-align: left; /* Justificado as vezes cria buracos, esquerda é melhor pra leitura */
+  /* Fonte de parágrafo do seu tema */
+  font-family: "fonte-paragrafos", serif; /* IM Fell Double Pica */
+  font-size: 1.1rem; /* Um pouco maior para leitura confortável */
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.9);
   
-  /* 3. A CAIXA (Fundo e Bordas): */
-  background: rgba(255, 255, 255, 0.05);
-  padding: 15px 20px; /* Mais preenchimento nas laterais */
-  border-radius: 8px;
-  border: 1px solid #444;
+  /* Fundo escuro transparente */
+  background: rgba(0, 0, 0, 0.3);
+  padding: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
   
-  /* 4. TAMANHO ADAPTÁVEL: */
-  /* Altura mínima para ficar bonito mesmo com texto curto (aprox 150 caracteres) */
-  min-height: 150px; 
-  
-  /* Altura máxima relativa à tela do usuário (60% da altura do modal) */
-  /* Se o texto passar disso, aí sim cria a barra de rolagem */
-  max-height: 45vh; 
+  min-height: 150px;
+  max-height: 40vh;
   overflow-y: auto;
-  
-  /* Estilizando a barra de rolagem para ficar bonita no Chrome/Edge */
-  scrollbar-width: thin;
-  scrollbar-color: white #1e1e1e;
+  text-align: justify;
 }
 
-/* (Opcional) Estilo da barra de rolagem Webkit (Chrome/Safari) */
+/* Scrollbar da caixa de texto (seguindo seu padrão global) */
 .texto-historia::-webkit-scrollbar {
   width: 8px;
 }
-
-.texto-historia::-webkit-scrollbar-track {
-  background: #1e1e1e;
-  border-radius: 4px;
-}
-
 .texto-historia::-webkit-scrollbar-thumb {
-  background-color: #555;
-  border-radius: 4px;
-  border: 1px solid #1e1e1e;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 2px;
 }
 
-/* PREÇO */
+/* --- PREÇO --- */
 .modal-preco {
+  font-family: "fonte-subtitulos", serif;
   font-size: 1.2rem;
   text-align: right;
   margin-top: auto;
 }
 
 .modal-preco span {
-  color: #00ff00; /* Verde matrix/neon */
-  font-weight: bold;
-  font-size: 1.4rem;
+  font-family: "fonte-numeros", sans-serif; /* Donegal One */
+  color: #d4af37; /* Dourado para dinheiro */
+  font-size: 1.5rem;
   margin-left: 10px;
+  text-shadow: 1px 1px 2px black;
 }
 
-/* BOTÕES */
+/* --- BOTÃO FECHAR (X) --- */
 .btn-fechar-modal {
   position: absolute;
   top: 10px;
   right: 15px;
   background: none;
   border: none;
-  color: white;
+  font-family: "fonte-numeros", sans-serif;
+  color: rgba(255, 255, 255, 0.5);
   font-size: 1.5rem;
   cursor: pointer;
-  font-weight: bold;
+  transition: 0.3s;
 }
 
 .btn-fechar-modal:hover {
-  color: rgb(255, 222, 222);
+  color: var(--Texto);
+  transform: scale(1.1);
 }
 
-.btn-comprar-modal {
-  background-color: greenyellow;
-  color: #1a1a1a;
-  border: none;
-  padding: 15px;
-  font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
-  border-radius: 5px;
-  transition: 0.3s;
+/* =========================================
+   BOTÕES DO MODAL (Estilo Nav Buttons)
+   ========================================= */
+
+/* Padrão comum para ambos os botões */
+.btn-comprar-modal, 
+.btn-forjar-modal {
+  width: 100%;
+  padding: 12px;
+  font-family: "fonte-titulos", serif; /* IM Fell English SC */
+  font-size: 1.2rem;
   text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+  border-radius: 2px;
 }
-.btn-forjar-modal{
-  background-color: transparent;
-  color: white;
-  border: 1px solid white;
-  padding: 15px;
-  font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
-  border-radius: 5px;
-  transition: 0.3s;
-  text-transform: uppercase;
+
+/* BOTÃO 1: ADICIONAR AO CARRINHO (Destaque) */
+.btn-comprar-modal {
+  /* Fundo Marrom Escuro (Tema) */
+  background-color: var(--FundoAlternativo); 
+  color: var(--Texto);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
 }
 
 .btn-comprar-modal:hover {
-  background-color: rgb(191, 254, 96);
-  transform: scale(1.02);
-}
-.btn-forjar-modal:hover {
-  /* background-color: rgb(191, 254, 96); */
-  font-size: 1.01rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: var(--Texto);
+  text-shadow: 0 0 5px white;
+  transform: translateY(-2px);
 }
 
-/* RESPONSIVIDADE (Celular) */
+/* BOTÃO 2: LEVAR PARA FORJA (Secundário/Outline) */
+.btn-forjar-modal {
+  background-color: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-forjar-modal:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--Texto);
+  border-color: var(--Texto);
+  transform: translateY(-2px);
+}
+
+/* RESPONSIVIDADE */
 @media (max-width: 768px) {
   .modal-body {
     flex-direction: column;
     align-items: center;
   }
-  
   .modal-img-wrapper img {
     width: 100%;
     max-width: 250px;
   }
+  .modal-info {
+    width: 100%;
+  }
 }
 
-/* Animação simples de entrada */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }

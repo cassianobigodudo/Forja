@@ -36,3 +36,77 @@
         align-items: center;
         justify-content: space-evenly;
     }
+
+/* --- NAVEGAÇÃO DO CARROSSEL (Estilo RPG) --- */
+
+.container-botoes-navegacao {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px; /* Espaço entre botões e números */
+    margin-top: 15px;
+    padding: 10px;
+    
+    /* Opcional: Uma leve faixa de fundo para destacar a barra de navegação */
+    /* background-color: var(--Fundo); */
+    border-radius: 8px;
+}
+
+/* O Botão Base */
+.btn-navegacao {
+    /* Tipografia */
+    font-family: "fonte-titulos", serif; /* Usa a fonte Small Caps do seu tema */
+    font-size: 1.2rem; /* Um pouco menor que o global 24px para ficar elegante */
+    color: var(--Texto);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+
+    /* Cores e Bordas */
+    background-color: var(--FundoAlternativo); /* O marrom escuro (rgb 39, 30, 17) */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Borda branca sutil */
+    border-radius: 2px; /* Cantos levemente arredondados, mas ainda "rústicos" */
+    
+    /* Espaçamento */
+    padding: 8px 30px;
+    cursor: pointer;
+    
+    /* Efeitos */
+    transition: all 0.4s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    overflow: hidden; /* Respeitando seu reset global */
+}
+
+/* Estado: Hover (Mouse em cima) */
+.btn-navegacao:hover:not(:disabled) {
+    background-color: rgba(255, 255, 255, 0.1); /* Clareia levemente o fundo */
+    border-color: var(--Texto); /* Borda fica branco puro */
+    text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.8); /* Brilho no texto */
+    transform: translateY(-2px); /* Efeito de "levantar" o botão */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+}
+
+/* Estado: Active (Clicando) */
+.btn-navegacao:active:not(:disabled) {
+    transform: translateY(1px);
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+/* Estado: Desabilitado (Fim da lista ou começo) */
+.btn-navegacao:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    border-color: transparent;
+    box-shadow: none;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* O Indicador de Páginas (ex: 1 / 3) */
+.indicador-pagina {
+    font-family: "fonte-numeros", sans-serif; /* Usando sua fonte específica para números */
+    font-size: 1.5rem;
+    color: var(--Texto);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    background-color: transparent; /* Garante transparência */
+    min-width: 80px;
+    text-align: center;
+}
