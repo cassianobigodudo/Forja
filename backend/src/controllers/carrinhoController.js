@@ -64,7 +64,7 @@ const removerItem = async (req, res) => {
     console.log(`--- [CONTROLLER] Removendo item único do carrinho: ${id_carrinho_item}`);
 
     try {
-        await CarrinhoModel.removerItem(id_carrinho_item);
+        await CarrinhoModel.limparUnidade(id_carrinho_item);
         res.status(200).json({ message: 'Item removido com sucesso.' });
     } catch (error) {
         console.error("Erro ao deletar:", error);
