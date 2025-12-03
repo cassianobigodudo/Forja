@@ -6,17 +6,18 @@ import "./PaginaPagamento.css";
 import Navbar from '../components/Navbar';
 
 function PaginaPagamento() {
-    const { usuarioId } = useGlobalContext(); // Ou pegue do localStorage se preferir
+    const { usuarioId } = useGlobalContext();
     const navigate = useNavigate();
 
     const [cartItems, setCartItems] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
+    
+    // Inicia como TRUE, mas não vamos usar para bloquear a tela inteira
+    const [isLoading, setIsLoading] = useState(true); 
     const [isProcessing, setIsProcessing] = useState(false);
     const [statusMessage, setStatusMessage] = useState('');
 
-    // --- 1. BUSCAR ITENS DO CARRINHO ---
+    // --- 1. BUSCAR ITENS ---
     useEffect(() => {
-        // Se não tiver no contexto, tenta do localStorage
         const idParaBuscar = usuarioId || localStorage.getItem('usuario_id');
 
         if (idParaBuscar) {
@@ -28,7 +29,7 @@ function PaginaPagamento() {
                     console.error("Erro ao buscar o carrinho:", error);
                     setStatusMessage("Não foi possível carregar seu carrinho.");
                 } finally {
-                    setIsLoading(false);
+                    setIsLoading(false); // Só aqui os dados aparecem
                 }
             };
             fetchCartItems();
@@ -37,10 +38,10 @@ function PaginaPagamento() {
         }
     }, [usuarioId]);
 
-    // --- 2. CALCULAR TOTAL ---
-    // Soma todos os valores. Se não tiver valor, assume 84.90
+    // --- 2. CALCULAR TOTAIS ---
+    // Enquanto carrega, cartItems é [], então total é 0. O layout não quebra.
     const totalCarrinho = cartItems.reduce((acc, item) => acc + Number(item.valor || 84.90), 0);
-    const custoEnvio = 99.90; // Valor fixo do envio conforme seu layout
+    const custoEnvio = 99.90;
     const totalFinal = totalCarrinho + custoEnvio;
 
     // --- 3. FINALIZAR COMPRA ---
@@ -52,18 +53,12 @@ function PaginaPagamento() {
         setStatusMessage('Forjando seu pedido...');
 
         try {
-            // Chama a rota de Pedidos (que limpa o carrinho no banco)
             const response = await axios.post('https://forja-qvex.onrender.com/api/pedidos', {
                 id_usuario: idUsuario
             });
-            
             const { sucessos } = response.data;
-            setStatusMessage(`Sucesso! ${sucessos?.length || 0} itens enviados para produção.`);
-            setCartItems([]); // Limpa visualmente
-            
-            // Opcional: Redirecionar para uma tela de sucesso
-            // setTimeout(() => navigate('/sucesso'), 2000);
-
+            setStatusMessage(`Sucesso! Itens enviados para produção.`);
+            setCartItems([]); 
         } catch (error) {
             console.error(error);
             setStatusMessage('Erro ao processar o pagamento.');
@@ -72,7 +67,8 @@ function PaginaPagamento() {
         }
     };
 
-    if (isLoading) return <div className="container-loading">Carregando forja...</div>;
+    // REMOVI O IF (ISLOADING) RETURN AQUI.
+    // Agora o site renderiza direto.
 
     return (
         <div className="container-paginaz"> 
@@ -80,29 +76,36 @@ function PaginaPagamento() {
             <div className="container">
                 <main className='conteudo'>
                     
-                    {/* ESQUERDA: VOLTAR E DECORAÇÃO */}
+                    {/* ESQUERDA */}
                     <aside className='esquerda'>
                         <p className='continue'>Continuar comprando?</p>
                         <hr className='risco' />
                         <button className='btn-voltar' onClick={() => navigate('/loja')}>
                             VOLTAR<br/>PARA<br/>A FORJA
                         </button>
-                        <div className="figurina" /> {/* Se tiver imagem de fundo aqui */}
+                        <div className="figurina" />
                     </aside>
 
                     {/* CENTRO: LISTA DE ITENS */}
                     <section className='Checkout'>
                         <h2 className='titulo'>Itens na Forja:</h2>
                         <div className='lista'>
-                            {cartItems.length > 0 ? (
+                            
+                            {/* AQUI ESTÁ A MÁGICA: */}
+                            {/* Renderização Condicional DENTRO do container */}
+                            
+                            {isLoading ? (
+                                /* ESTADO DE CARREGAMENTO (SÓ NA LISTA) */
+                                <div className="loading-state">
+                                    <p>Consultando inventário...</p>
+                                </div>
+                            ) : cartItems.length > 0 ? (
+                                /* ESTADO COM ITENS */
                                 cartItems.map((item) => (
                                     <article className="item" key={item.id}>
-                                        {/* Imagem do Personagem */}
                                         <div className="thumb-wrapper">
                                             <img src={item.img} className='thumb' alt={item.nome} />
                                         </div>
-                                        
-                                        {/* Dados do Personagem */}
                                         <div className="detalhes-item">
                                             <h1>{item.nome || "Aventureiro"}</h1>
                                             <h2>
@@ -112,16 +115,18 @@ function PaginaPagamento() {
                                     </article>
                                 ))
                             ) : (
-                                <article className="item">
-                                    <label style={{width:'100%', textAlign:'center'}}>
+                                /* ESTADO VAZIO */
+                                <article className="item-vazio">
+                                    <label>
                                         {statusMessage || 'Seu carrinho está vazio.'}
                                     </label>
                                 </article>
                             )}
+
                         </div>
                     </section>
                     
-                    {/* DIREITA: PAGAMENTO E RESUMO */}
+                    {/* DIREITA */}
                     <aside className='direita'>
                         <div className='metodos'>
                             <button className="metodo-pix">Pix</button>
@@ -136,14 +141,17 @@ function PaginaPagamento() {
                             <hr className='risco'/>
                             <p className="total-label">Total:</p>
                             <p className="total">
-                                {totalFinal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                                {isLoading 
+                                    ? "..." 
+                                    : totalFinal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+                                }
                             </p>
                         </aside>
                         
                         <button 
                             className="btn-prosseguir" 
                             onClick={handleFinalizarCompra}
-                            disabled={isProcessing || cartItems.length === 0}
+                            disabled={isProcessing || cartItems.length === 0 || isLoading}
                         >
                             {isProcessing ? 'FORJANDO...' : 'PAGAR'}
                         </button>

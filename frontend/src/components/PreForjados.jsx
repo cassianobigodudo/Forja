@@ -112,7 +112,10 @@ function PreForjados({ lista }) {
                  {/* Botão Grande de Comprar (Dentro do Modal) */}
                  <button 
                     className="btn-comprar-modal"
-                    onClick={() => lidarComCompra(personagemSelecionado, true)}
+                    onClick={() => {
+                      lidarComCompra(personagemSelecionado);
+                      setPersonagemSelecionado(null); // Fecha o modal de detalhes
+                    }}
                  >
                     Adicionar ao Carrinho
                  </button>

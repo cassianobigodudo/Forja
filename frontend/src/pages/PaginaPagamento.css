@@ -331,3 +331,39 @@
     color: rgba(255, 255, 255, 0.8);
     font-style: italic;
 }
+
+/* Estado de Loading dentro da lista */
+.loading-state {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loading-state p {
+    font-family: 'fonte-subtitulos', serif;
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.6);
+    animation: pulsar 1.5s infinite;
+}
+
+/* Estado de Carrinho Vazio */
+.item-vazio {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'fonte-paragrafos', serif;
+    color: rgba(255, 255, 255, 0.5);
+    font-style: italic;
+    font-size: 1.2rem;
+}
+
+/* Animação simples de pulsar */
+@keyframes pulsar {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+}
