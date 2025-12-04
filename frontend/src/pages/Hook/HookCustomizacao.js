@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import html2canvas from 'html2canvas';
 import axios from 'axios';
+import { useGlobalContext } from '../../context/GlobalContext';
+
 
 // =====================================================================
 // 1. CONSTANTES INDUSTRIAIS (A LINGUAGEM DA MÁQUINA)
@@ -197,7 +199,93 @@ const estadoInicialDoPersonagem = {
 // =====================================================================
 
 export const useLogicaCustomizacao = () => {
- const [personagem, setPersonagem] = useState(estadoInicialDoPersonagem);
+  // 1. Pegar dados vindos da Loja (Contexto)
+  const { dadosDoPersonagem, setDadosDoPersonagem, adicionarAoCarrinho } = useGlobalContext();
+
+  // 2. Definir estado inicial com MAPEAMENTO INTELIGENTE
+  const [personagem, setPersonagem] = useState(() => {
+      
+      // Se tiver dados vindos do banco (via Loja), fazemos o DE-PARA
+      if (dadosDoPersonagem && Object.keys(dadosDoPersonagem).length > 0) {
+          console.log("🛠️ Carregando dados da Forja:", dadosDoPersonagem);
+          
+          // Função auxiliar para evitar quebra se o array vier como string do banco
+          const parseArray = (str) => {
+              try { return typeof str === 'string' ? JSON.parse(str) : str; } 
+              catch (e) { return []; }
+          };
+
+          return {
+              ...estadoInicialDoPersonagem, // Mantém defaults para o que faltar
+
+              // --- CORPO ---
+              genero:      dadosDoPersonagem.genero,
+              generoNum:   dadosDoPersonagem.generonum,
+              
+              corPele:     dadosDoPersonagem.corpele,
+              corPeleNum:  dadosDoPersonagem.corpelenum,
+              
+              cabelo:      dadosDoPersonagem.cabelo,
+              cabeloNum:   dadosDoPersonagem.cabelonum,
+              
+              corCabelo:    dadosDoPersonagem.corcabelo,
+              corCabeloNum: dadosDoPersonagem.corcabelonum, // String '1','2'...
+
+              // --- ACESSÓRIOS ---
+              // Banco salva como String JSON, React precisa de Array
+              acessoriosCabeca: parseArray(dadosDoPersonagem.acesscabeca),
+              acessCabeca:      dadosDoPersonagem.acesscabecanum,
+              // Nota: O banco não tem 'acesscabecapadrao' explícito na lista que vc mandou,
+              // então ele vai pegar do estadoInicialDoPersonagem ou ser null.
+              
+              acessorioPescoco: dadosDoPersonagem.acesspescoco,
+              acessPescocoNum:  dadosDoPersonagem.acesspescoconum,
+
+              marcas:       dadosDoPersonagem.marcas,
+              marcaspadrao: dadosDoPersonagem.marcasnum, // Mapeado para marcasnum do banco
+
+              // --- ROUPA CIMA (TORSO) ---
+              roupaCima:           dadosDoPersonagem.roupacima,
+              roupaCimaCorNum:     dadosDoPersonagem.roupacimanum,
+              roupaCimaVariante:   dadosDoPersonagem.roupacimavariante,
+              roupaCimaVarPadrao:  dadosDoPersonagem.roupacimavariantenum,
+              // O 'roupaCimaPadrao' (ilustração frontal) não tem coluna dedicada no seu banco atual,
+              // então ele ficará como padrão ou você precisará recalcular se necessário.
+
+              // --- ROUPA BAIXO (PERNAS) ---
+              roupaBaixo:          dadosDoPersonagem.roupabaixo,
+              roupaBaixoCorNum:    dadosDoPersonagem.roupabaixonum,
+              roupaBaixoVariante:  dadosDoPersonagem.roupabaixovariante,
+              roupaBaixoVarPadrao: dadosDoPersonagem.roupabaixovariantenum,
+
+              // --- SAPATOS ---
+              sapato:          dadosDoPersonagem.sapato,
+              sapatoCorNum:    dadosDoPersonagem.sapatonum,
+              sapatoVariante:  dadosDoPersonagem.sapatovariante,
+              sapatoVarPadrao: dadosDoPersonagem.sapatovariantenum,
+
+              // --- ARMAS ---
+              armas:        dadosDoPersonagem.armas,
+              armasCorNum:  dadosDoPersonagem.armasnum,
+              // Idem: armasPadrao não tem coluna, usará default.
+
+              // --- EXTRAS ---
+              baseMini: dadosDoPersonagem.basemini,
+              
+              // Mantém a imagem e história se quiser mostrar, mas o hook gera novos ao salvar
+              historia: dadosDoPersonagem.historia || '',
+          };
+      }
+      
+      // Se não veio nada da loja, começa do zero
+      return estadoInicialDoPersonagem;
+  });
+
+  useEffect(() => {
+      if (dadosDoPersonagem) {
+          setDadosDoPersonagem(null);
+      }
+  }, []);
 
  const atualizarPersonagem = (caracteristica, novoValor) => {
   setPersonagem(prev => {
@@ -294,7 +382,7 @@ export const useLogicaCustomizacao = () => {
   armas: getCaminhoArma(armas)
  };
 
-const adicionarPersonagemAoCarrinho = async (refElemento, dadosExtras = {}) => {
+const salvarPersonagemAdicionarCarrinho = async (refElemento, dadosExtras = {}) => {
   // refElemento: a referência do React (useRef) para tirar o print
   // dadosExtras: objeto vindo da página { nome: "...", historia: "..." }
 
@@ -366,9 +454,13 @@ const adicionarPersonagemAoCarrinho = async (refElemento, dadosExtras = {}) => {
     
     const response = await axios.post(url, payload);
 
+    const novoPersonagemSalvo = response.data;
+
+    console.log("Novo personagem salvo com sucesso! ID:", response.data.id);
     // Com Axios, a resposta já vem em response.data
-    console.log("Salvo com sucesso! ID:", response.data.id);
-    return response.data;
+
+    await adicionarAoCarrinho(novoPersonagemSalvo);
+    return novoPersonagemSalvo;
 
   } catch (error) {
     // Tratamento de erro específico do Axios
@@ -395,6 +487,6 @@ const adicionarPersonagemAoCarrinho = async (refElemento, dadosExtras = {}) => {
   handleAcessoriosCabecaChange,
   handleAcessorioPescocoChange,
   handleMarcasChange,
-  adicionarPersonagemAoCarrinho
+  salvarPersonagemAdicionarCarrinho
  };
 };

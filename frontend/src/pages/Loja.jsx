@@ -7,13 +7,17 @@ import PreForjados from '../components/PreForjados'
 function Loja() {
   const [personagensLoja, setPersonagensLoja] = useState([]);
   
-  // --- NOVO: Estado para controle do carrossel ---
+  // 1. ESTADO DE CARREGAMENTO
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Estados do Carrossel
   const [startIndex, setStartIndex] = useState(0);
-  const ITEMS_PER_PAGE = 4; // Limite de 4 por vez
+  const ITEMS_PER_PAGE = 4;
 
   useEffect(() => {
     const getPersonagensLoja = async () => {
       try {
+        // Tenta buscar
         const response = await axios.get('https://forja-qvex.onrender.com/api/personagens/buscar-loja');
         
         if (Array.isArray(response.data)) {
@@ -24,17 +28,18 @@ function Loja() {
 
       } catch (error) {
         console.error('Erro na requisição:', error);
+      } finally {
+        // 2. FINALIZA O CARREGAMENTO (Independente se deu erro ou sucesso)
+        setIsLoading(false);
       }
     }
 
     getPersonagensLoja()
   }, [])
 
-  // --- LÓGICA DE FATIAMENTO ---
-  // Cria uma nova lista contendo APENAS os 4 itens da vez
+  // Lógica de Fatiamento (só funciona se tiver itens)
   const itensVisiveis = personagensLoja.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
-  // --- HANDLERS DOS BOTÕES ---
   const handleNext = () => {
     if (startIndex + ITEMS_PER_PAGE < personagensLoja.length) {
       setStartIndex(startIndex + ITEMS_PER_PAGE);
@@ -55,14 +60,23 @@ function Loja() {
             <label className='lbl-pre-forjados'>Produtos Pré-forjados</label>
         </div>
         
-        {/* AREA DOS CARDS */}
+        {/* 3. RENDERIZAÇÃO CONDICIONAL */}
         <div className="container-pre-forjados">
-            {/* O Filho recebe apenas a lista já cortada com 4 itens */}
-            <PreForjados lista={itensVisiveis}/>
+            
+            {isLoading ? (
+                /* TELA DE CARREGAMENTO (IGUAL AO PAGAMENTO) */
+                <div className="loading-state-loja">
+                    <p>Consultando o estoque da forja...</p>
+                </div>
+            ) : (
+                /* LISTA DE PRODUTOS */
+                <PreForjados lista={itensVisiveis}/>
+            )}
+
         </div>
 
-        {/* AREA DOS BOTÕES (Separada, abaixo dos cards) */}
-        {personagensLoja.length > ITEMS_PER_PAGE && (
+        {/* SÓ MOSTRA OS BOTÕES SE JÁ CARREGOU E TIVER MAIS DE 4 ITENS */}
+        {!isLoading && personagensLoja.length > ITEMS_PER_PAGE && (
             <div className="container-botoes-navegacao">
                 <button 
                     className="btn-navegacao prev" 

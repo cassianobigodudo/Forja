@@ -50,13 +50,14 @@
     width: 60px;;
     margin-right: 30px;
     cursor: pointer;
+    margin-bottom: 14px;
 }
 
 .btn-carrinho{
     background: none;
     border: none;
     cursor: pointer;
-    position: relative;
+
 }
 
 .label-navbar{
@@ -78,8 +79,8 @@
 /* A Bolinha do Contador */
 .contador-carrinho {
     position: absolute;
-    top: -5px;
-    right: -8px;
+    top:0px;
+    right: 8px;
     
     background-color: var(--FundoAlternativo); /* Marrom do tema */
     color: var(--Texto);
@@ -98,3 +99,10 @@
     align-items: center;
     box-shadow: 0 0 5px rgba(0,0,0,0.8);
 }
+
+.lbl-bemvindo{
+    font-size: 18px;
+    /* margin-right: 20px; */
+    /* font-family: 'fonte-texto'; */
+    /* margin-right: -10px; */
+    }

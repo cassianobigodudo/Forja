@@ -13,7 +13,7 @@ function MenuSecHistoria({
 
   return (
     <div className="container-menuSec-corpo">
-      <div className="top-menuSec">
+      <div className="top-menuSec-historia">
         <div className="container-top-menuSec">
 
           <div className="parte-menus-superior">
@@ -117,7 +117,7 @@ function MenuSecHistoria({
         </div>
       </div>
 
-      <div className="bottom">
+      <div className="bottom-historia">
 
         <div className="container-bottom">
 

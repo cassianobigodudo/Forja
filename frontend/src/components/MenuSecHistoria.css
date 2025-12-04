@@ -1,128 +1,204 @@
+/* Animação de entrada suave */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- CONTAINER PRINCIPAL --- */
+.container-menuSec-corpo {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 15px; /* Espaço entre o painel de cima e de baixo */
+  color: var(--Texto, #fff); /* Fallback para branco se a var não existir */
+  font-family: "fonte-titulos", serif;
+  animation: fadeIn 0.4s ease-out;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+/* --- PAINEL SUPERIOR (Inputs) --- */
+.top-menuSec-historia{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex: 0 0 auto; /* Não estica, usa o tamanho do conteúdo */
+  width: 100%;
+  height: 45%;
+  padding: 15px 0;
+
+  /* Estilo RPG: Fundo escuro translúcido com borda sutil */
+  background-color: rgba(51, 37, 31, 0.8);
+  border: 2px solid white;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.container-top-menuSec {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 95%;
+  height: 100%;
+  /* gap: 8px; */
+}
+
+/* Linhas individuais (Label + Input) */
+.parte-menus-superior {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr; /* Label ocupa 1 parte, Input 1.5 partes */
+  align-items: center;
+  width: 100%;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05); /* Linha divisória sutil */
+}
+
+.label-menus-superior {
+  font-size: 14px;
+  text-align: right;
+  padding-right: 15px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* Estilização dos Inputs */
+.inputs-menus-superior {
+  background-color: rgba(0, 0, 0, 0.3);
+  border: 1px solid #5a4a42;
+  border-radius: 4px;
+  color: #e0e0e0;
+  padding: 5px 10px;
+  height: 35px;
+  width: 100%;
+  font-size: 16px;
+  font-family: 'fonte-subtitulos', sans-serif;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.inputs-menus-superior::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+  font-style: italic;
+}
+
+/* Container do Botão */
+.parte-gerar-historia {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Botão GERAR HISTÓRIA */
+.botao-gerar-historia {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  font-family: "fonte-titulos", serif;
+  font-size: 18px;
+  letter-spacing: 2px;
+  color: white; /* Texto escuro */
+  
+  border: 2px solid white;
+  border-radius: 4px;
+  
+  height: 40px;
+  width: 250px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.botao-gerar-historia:hover:not(:disabled) {
+  transform: scale(1.05);
+}
+
+.botao-gerar-historia:disabled {
+  background: #5a4a42;
+  color: #888;
+  border-color: #333;
+  cursor: wait;
+}
+
+/* --- PAINEL INFERIOR (Textarea) --- */
+.bottom-historia {
+  flex: 1; /* Ocupa o resto do espaço disponível */
+  width: 100%;
+  background-color: rgba(51, 37, 31, 0.8);
+  border: 2px solid white;
+  /* border-radius: 8px; */
+  padding: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+.container-bottom {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* A Caixa de Texto da História */
+.campo-historia-personagem {
+  width: 100%;
+  height: 100%;
+  resize: none; /* Impede o usuário de redimensionar e quebrar o layout */
+  
+  /* Visual de Papel/Pergaminho Escuro ou Vidro */
+  background-color: rgba(0, 0, 0, 0.4);
+  color: #f0e6d2; /* Cor de pergaminho claro para o texto */
+  
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding: 20px;
+  
+  font-family: 'fonte-subtitulos', sans-serif;
+  font-size: 18px;
+  line-height: 1.6;
+  text-align: justify;
+  
+  outline: none;
+  overflow-y: auto;
+}
+
+/* Scrollbar personalizada para o textarea */
+.campo-historia-personagem::-webkit-scrollbar {
+  width: 8px;
+}
+
+.campo-historia-personagem::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+}
+
+.campo-historia-personagem::-webkit-scrollbar-thumb {
+  background-color: #5a4a42;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.campo-historia-personagem::-webkit-scrollbar-thumb:hover {
+  background-color: white;
+}
+
+/* Responsividade básica para telas menores */
+@media (max-height: 800px) {
+  .parte-menus-superior {
+    padding: 2px 0; /* Mais compacto em telas baixas */
   }
-  to {
-    opacity: 1;
+  .inputs-menus-superior {
+    height: 30px;
+    font-size: 14px;
+  }
+  .botao-gerar-historia {
+    height: 35px;
+    font-size: 16px;
   }
 }
-
-.container-menuSec-corpo{
-    height: 100%;
-    width: 99%;
-    display: flex;
-    justify-content: start;
-    flex-direction: column;
-    color: var(--Texto);
-    font-family: "fonte-titulos";
-    animation: fadeIn 0.2s ease-out;
-    transition: 1s;
-}
-
-.top-menuSec {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 30%;
-    width: 100%;
-    
-    border-width: 2px;
-    border-style: solid;
-    background-color: rgba(51, 37, 31, 0.8);
-}
-  .container-top-menuSec{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-    background-color: transparent;
-  }
-    .parte-menus-superior{
-      display: flex;
-      justify-content: start;
-      align-items: center;
-      padding: 10px;
-      gap: 10px;
-      height: 20%;
-      width: 100%;
-      background-color: transparent;
-    }
-    .parte-gerar-historia{
-      display: flex;
-      justify-content: start;
-      align-items: center;
-      padding: 10px;
-      height: 20%;
-      width: 100%;
-      background-color: transparent;
-    }
-      .label-menus-superior{
-        font-size: 15px;
-      }
-      .inputs-menus-superior{
-        color: white;
-        border: solid 1px #fff;
-        padding-left: 5px;
-        height: 30px;
-        width: 300px;
-        font-size: 15px;
-        font-family: 'fonte-subtitulos';
-      }
-
-      .inputs-menus-superior::placeholder {
-        color: rgb(194, 194, 194); /* Coloque sua cor aqui */
-        opacity: 1; /* Importante para o Firefox */
-      }
-      .botao-gerar-historia{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 14px;
-        color: #fff;
-        height: 25px;
-        width: 150px;
-        border: solid 1px #fff;
-        cursor: pointer;
-      }
-
-.lbl {
-    margin-top: 2.5%;
-    font-size: 39px;
-    letter-spacing: 2px;
-}
-
-
-.bottom {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 70%;
-    width: 100%;
-    margin-top: 2%;
-    background-color: rgba(51, 37, 31, 0.8);
-    border-width: 2px;
-    border-style: solid;
-    gap: 10px;
-}
-  .container-bottom{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    height: 100%;
-    width: 100%;
-    background-color: transparent;
-    gap: 10px;
-  }
-    .campo-historia-personagem{
-      min-height: 90%;
-      min-width: 95%;
-      max-height: 90%;
-      max-width: 95%;
-      background-color: whitesmoke;
-      padding: 5px;
-      overflow-y: auto;
-    }

@@ -308,6 +308,24 @@
   transition: 1s;
 }
 
+.menu-primario-custom-mensagem{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  flex-direction: column;
+  height: 15%;
+  width: 100%;
+  margin-top: 5%;
+}
+
+.mensagem-adicionar-carrinho{
+  color: var(--Texto);
+  font-family: "fonte-subtitulos";
+  font-size: 18px;
+  margin-bottom: 5%;
+}
+
 .menu-secundario-custom {
   display: flex;
   justify-content: center;
