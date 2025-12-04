@@ -104,7 +104,7 @@ export const useLogicaCustomizacao = () => {
         });
     };
 
-    const adicionarPersonagemAoCarrinho = async (referenciaDoElemento) => {
+    const salvarPersonagemAdicionarCarrinho = async (referenciaDoElemento) => {
         
         try {
             // 1. Recuperar o ID do usuário logado
@@ -194,7 +194,7 @@ export const useLogicaCustomizacao = () => {
     return { 
         personagem, 
         atualizarPersonagem, 
-        adicionarPersonagemAoCarrinho, 
+        salvarPersonagemAdicionarCarrinho, 
         caminhosDasImagens, 
         opcoesDoPersonagem,
 

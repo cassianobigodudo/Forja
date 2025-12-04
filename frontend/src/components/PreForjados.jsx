@@ -1,16 +1,13 @@
 import React, { useState } from 'react';
 import { useGlobalContext } from '../context/GlobalContext'; // 1. IMPORTANTE: Importar o Contexto
+import { useNavigate } from 'react-router-dom';
 import './PreForjados.css';
 
 function PreForjados({ lista }) {
   // 2. IMPORTANTE: Pegar a função de adicionar do contexto global
-  const { adicionarAoCarrinho } = useGlobalContext(); 
-  
+  const { adicionarAoCarrinho, setDadosDoPersonagem } = useGlobalContext(); 
+  const navigate = useNavigate();
   const [personagemSelecionado, setPersonagemSelecionado] = useState(null);
-
-  if (!lista || lista.length === 0) {
-    return <div className="aviso-vazio">Nenhum item forjado encontrado nesta vitrine.</div>;
-  }
 
   const abrirModal = (personagem) => setPersonagemSelecionado(personagem);
   const fecharModal = () => setPersonagemSelecionado(null);
@@ -25,6 +22,12 @@ function PreForjados({ lista }) {
           setPersonagemSelecionado(null);
       }
   };
+
+  const LevarParaForja = (personagem) => () => {
+    setDadosDoPersonagem(personagem)
+    navigate('/custom');
+
+  }
 
   return (
     <>
@@ -120,7 +123,8 @@ function PreForjados({ lista }) {
                     Adicionar ao Carrinho
                  </button>
 
-                 <button className="btn-forjar-modal">
+                 <button className="btn-forjar-modal"
+                  onClick={LevarParaForja(personagemSelecionado)}>
                     Levar para a Forja
                  </button>
 

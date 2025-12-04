@@ -110,3 +110,32 @@
     min-width: 80px;
     text-align: center;
 }
+
+/* --- LOJA.CSS --- */
+
+/* Estado de Loading na Loja */
+.loading-state-loja {
+    width: 100%;
+    min-height: 400px; /* Altura mínima para não ficar espremido */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loading-state-loja p {
+    font-family: 'fonte-subtitulos', serif; /* Sua fonte padrão */
+    font-size: 1.8rem;
+    color: rgba(255, 255, 255, 0.7); /* Branco levemente transparente */
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    
+    /* A Animação */
+    animation: pulsarLoja 1.5s infinite ease-in-out;
+}
+
+/* Animação de Pulsar */
+@keyframes pulsarLoja {
+    0% { opacity: 0.4; transform: scale(0.98); }
+    50% { opacity: 1; transform: scale(1.02); text-shadow: 0 0 10px rgba(0, 0, 0, 0.5); }
+    100% { opacity: 0.4; transform: scale(0.98); }
+}

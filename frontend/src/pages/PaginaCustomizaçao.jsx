@@ -28,7 +28,7 @@ function PaginaCustomizaçao() {
     personagem, 
     atualizarPersonagem, 
     salvarPersonagem,
-    adicionarPersonagemAoCarrinho,
+    salvarPersonagemAdicionarCarrinho,
     caminhosDasImagens, 
     opcoesDoPersonagem,
     handleAcessoriosCabecaChange, 
@@ -87,7 +87,7 @@ function PaginaCustomizaçao() {
         try {
             // AQUI É A MUDANÇA:
             // Passamos o Ref E um objeto com os dados da história
-            await adicionarPersonagemAoCarrinho(characterRef, {
+            await salvarPersonagemAdicionarCarrinho(characterRef, {
                 nome: nomePersonagem,      // State da página
                 historia: historiaGerada || enredoHistoria // State da página
             });
@@ -251,7 +251,10 @@ function PaginaCustomizaçao() {
               <button onClick={handleAdicionarClick} className='btn-tirar-zooms' disabled={isAdding}>
                  {isAdding ? 'ADICIONANDO...' : 'Adicionar ao carrinho'}
               </button>
-              {message && <span style={{fontSize: '0.8rem', marginLeft: '10px'}}>{message}</span>}
+            </div>
+
+            <div className="menu-primario-custom-mensagem">
+              <span className="mensagem-adicionar-carrinho">{message}</span>
             </div>
         </div>  
 
