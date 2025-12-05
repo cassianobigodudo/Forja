@@ -1,68 +1,30 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useGlobalContext } from "../context/GlobalContext";
 import "./MeusDados.css";
 
 function MeusDados() {
-  const [dialogAberto, setDialogAberto] = useState(false);
+  const { idUsuario } = useGlobalContext(); // Pega ID do contexto global
+  const API_URL = "https://forja-qvex.onrender.com/api";
 
+  const [dialogAberto, setDialogAberto] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  // Estado do Usuário
   const [usuario, setUsuario] = useState({
-    apelido: "",
+    nome: "", // Mudei de apelido para nome (padrão do banco)
     email: "",
-    senha: "",
+    senha: "", // Cuidado: Senhas geralmente não retornam do banco por segurança
   });
 
-  // controla edição de cada campo
+  // Controle de Edição
   const [editando, setEditando] = useState({
-    apelido: false,
+    nome: false,
     email: false,
     senha: false,
   });
 
-  // busca dados iniciais do usuário
-  useEffect(() => {
-    async function fetchUsuario() {
-      try {
-        const resposta = await axios.get("http://localhost:3000/usuarios/1");
-        setUsuario(resposta.data);
-      } catch (erro) {
-        console.error("Erro ao buscar usuário:", erro);
-      }
-    }
-    fetchUsuario();
-  }, []);
-
-  // habilita edição de um campo
-  const habilitarEdicao = (campo) => {
-    setEditando((prev) => ({ ...prev, [campo]: true }));
-  };
-
-  // salvar edição de um campo
-  const salvarCampo = async (campo) => {
-    try {
-      const resposta = await axios.patch(
-        "http://localhost:3000/usuarios/1",
-        { [campo]: usuario[campo] }
-      );
-
-      setUsuario((prev) => ({
-        ...prev,
-        [campo]: resposta.data[campo] || prev[campo],
-      }));
-
-      setEditando((prev) => ({ ...prev, [campo]: false }));
-      alert(`${campo} atualizado com sucesso!`);
-    } catch (erro) {
-      console.error("Erro ao salvar campo:", erro);
-      alert(`Erro ao salvar ${campo}`);
-    }
-  };
-
-  // cancelar edição (restaura valor original do banco)
-  const cancelarEdicao = (campo) => {
-    setEditando((prev) => ({ ...prev, [campo]: false }));
-  };
-
-  // 🟩 ESTADOS DO ENDEREÇO
+  // Estado do Endereço (Novo)
   const [endereco, setEndereco] = useState({
     cep: "",
     rua: "",
@@ -73,7 +35,59 @@ function MeusDados() {
     complemento: "",
   });
 
-   // 🟨 BUSCAR CEP - VIA CEP API
+  // 1. BUSCAR DADOS AO CARREGAR
+  useEffect(() => {
+    async function fetchUsuario() {
+      // Se não tiver ID (ex: deslogou), não busca
+      const idParaBuscar = idUsuario || localStorage.getItem('id_usuario');
+      
+      if (!idParaBuscar) return;
+
+      try {
+        const resposta = await axios.get(`${API_URL}/usuarios/${idParaBuscar}`);
+        setUsuario(resposta.data);
+      } catch (erro) {
+        console.error("Erro ao buscar usuário:", erro);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchUsuario();
+  }, [idUsuario]);
+
+  // 2. FUNÇÕES DE EDIÇÃO DE CAMPO
+  const habilitarEdicao = (campo) => {
+    setEditando((prev) => ({ ...prev, [campo]: true }));
+  };
+
+  const cancelarEdicao = (campo) => {
+    setEditando((prev) => ({ ...prev, [campo]: false }));
+    // Idealmente, reverteria para o valor original do banco aqui se tivesse backup
+  };
+
+  const salvarCampo = async (campo) => {
+    const idParaSalvar = idUsuario || localStorage.getItem('id_usuario');
+    try {
+      // PATCH para atualizar apenas 1 campo
+      const resposta = await axios.patch(
+        `${API_URL}/usuarios/${idParaSalvar}`,
+        { [campo]: usuario[campo] }
+      );
+
+      setUsuario((prev) => ({
+        ...prev,
+        [campo]: resposta.data[campo] || prev[campo],
+      }));
+
+      setEditando((prev) => ({ ...prev, [campo]: false }));
+      alert(`${campo.toUpperCase()} atualizado com sucesso!`);
+    } catch (erro) {
+      console.error("Erro ao salvar campo:", erro);
+      alert(`Erro ao salvar ${campo}`);
+    }
+  };
+
+  // 3. LÓGICA DE ENDEREÇO (VIA CEP)
   async function buscarCEP() {
     const cepLimpo = endereco.cep.replace(/\D/g, "");
 
@@ -91,7 +105,6 @@ function MeusDados() {
         return;
       }
 
-      // Preencher automaticamente
       setEndereco((prev) => ({
         ...prev,
         rua: data.logradouro || "",
@@ -102,327 +115,202 @@ function MeusDados() {
       }));
     } catch (err) {
       console.error("Erro ao buscar CEP", err);
-      alert("Erro ao buscar CEP.");
     }
   }
 
+  // 4. SALVAR ENDEREÇO NO BANCO
+  const salvarNovoEndereco = async () => {
+    const idParaSalvar = idUsuario || localStorage.getItem('id_usuario');
+    if (!idParaSalvar) return alert("Erro de autenticação");
+
+    try {
+        await axios.post(`${API_URL}/enderecos`, {
+            id_usuario: idParaSalvar,
+            ...endereco
+        });
+        alert("Endereço salvo na sua conta!");
+        setDialogAberto(false);
+        // Limpar form
+        setEndereco({ cep: "", rua: "", numero: "", bairro: "", cidade: "", uf: "", complemento: "" });
+    } catch (error) {
+        console.error(error);
+        alert("Erro ao salvar endereço.");
+    }
+  }
+
+  if (loading) return <div className="loading-profile">Carregando dados...</div>;
+
   return (
     <div className="container-meus-dados">
+      
+      {/* --- COLUNA DA ESQUERDA: INPUTS --- */}
       <div className="parte-inputs">
-        {/* Apelido */}
-        <div className="inputs">
-          <div className="inputs-parte-dados">
-            <label className="label-dados">Apelido</label>
+        
+        {/* Campo: NOME/APELIDO */}
+        <div className="grupo-input">
+          <label className="label-dados">Nome / Apelido</label>
+          <div className="input-wrapper">
             <input
               type="text"
-              className="inputs-dados"
-              disabled={!editando.apelido}
-              value={usuario.apelido || ""}
-              onChange={(e) =>
-                setUsuario({ ...usuario, apelido: e.target.value })
-              }
+              className={`inputs-dados ${editando.nome ? 'editavel' : ''}`}
+              disabled={!editando.nome}
+              value={usuario.nome || ""}
+              onChange={(e) => setUsuario({ ...usuario, nome: e.target.value })}
             />
-          </div>
-          <div className="inputs-parte-botao-editar">
-            {!editando.apelido ? (
-              <button
-                className="botao-editar-dados"
-                onClick={() => habilitarEdicao("apelido")}
-              >
-                ✏️
-              </button>
-            ) : (
-              <>
-                <button
-                  className="botao-editar-dados"
-                  onClick={() => salvarCampo("apelido")}
-                >
-                  ✓
-                </button>
-                <button
-                  className="botao-editar-dados"
-                  onClick={() => cancelarEdicao("apelido")}
-                >
-                  ✗
-                </button>
-              </>
-            )}
+            
+            <div className="botoes-acao">
+                {!editando.nome ? (
+                <button className="btn-editar" onClick={() => habilitarEdicao("nome")}>✎</button>
+                ) : (
+                <>
+                    <button className="btn-salvar" onClick={() => salvarCampo("nome")}>✔</button>
+                    <button className="btn-cancelar" onClick={() => cancelarEdicao("nome")}>✖</button>
+                </>
+                )}
+            </div>
           </div>
         </div>
 
-        {/* E-mail */}
-        <div className="inputs">
-          <div className="inputs-parte-dados">
-            <label className="label-dados">E-mail</label>
+        {/* Campo: EMAIL */}
+        <div className="grupo-input">
+          <label className="label-dados">E-mail</label>
+          <div className="input-wrapper">
             <input
               type="email"
-              className="inputs-dados"
+              className={`inputs-dados ${editando.email ? 'editavel' : ''}`}
               disabled={!editando.email}
               value={usuario.email || ""}
-              onChange={(e) =>
-                setUsuario({ ...usuario, email: e.target.value })
-              }
+              onChange={(e) => setUsuario({ ...usuario, email: e.target.value })}
             />
-          </div>
-          <div className="inputs-parte-botao-editar">
-            {!editando.email ? (
-              <button
-                className="botao-editar-dados"
-                onClick={() => habilitarEdicao("email")}
-              >
-                ✏️
-              </button>
-            ) : (
-              <>
-                <button
-                  className="botao-editar-dados"
-                  onClick={() => salvarCampo("email")}
-                >
-                  ✓
-                </button>
-                <button
-                  className="botao-editar-dados"
-                  onClick={() => cancelarEdicao("email")}
-                >
-                  ✗
-                </button>
-              </>
-            )}
+             <div className="botoes-acao">
+                {!editando.email ? (
+                <button className="btn-editar" onClick={() => habilitarEdicao("email")}>✎</button>
+                ) : (
+                <>
+                    <button className="btn-salvar" onClick={() => salvarCampo("email")}>✔</button>
+                    <button className="btn-cancelar" onClick={() => cancelarEdicao("email")}>✖</button>
+                </>
+                )}
+            </div>
           </div>
         </div>
 
-        {/* Senha */}
-        <div className="inputs">
-          <div className="inputs-parte-dados">
-            <label className="label-dados">Senha</label>
+        {/* Campo: SENHA */}
+        <div className="grupo-input">
+          <label className="label-dados">Senha</label>
+          <div className="input-wrapper">
             <input
               type="password"
-              className="inputs-dados"
+              className={`inputs-dados ${editando.senha ? 'editavel' : ''}`}
               disabled={!editando.senha}
-              value={usuario.senha || ""}
-              onChange={(e) =>
-                setUsuario({ ...usuario, senha: e.target.value })
-              }
+              value={usuario.senha || "********"} // Mascara senha
+              onChange={(e) => setUsuario({ ...usuario, senha: e.target.value })}
             />
-          </div>
-
-          <div className="inputs-parte-botao-editar">
-            {!editando.senha ? (
-              <button
-                className="botao-editar-dados"
-                onClick={() => habilitarEdicao("senha")}
-              >
-                ✏️
-              </button>
-            ) : (
-              <>
-                <button
-                  className="botao-editar-dados"
-                  onClick={() => salvarCampo("senha")}
-                >
-                  ✓
-                </button>
-                <button
-                  className="botao-editar-dados"
-                  onClick={() => cancelarEdicao("senha")}
-                >
-                  ✗
-                </button>
-              </>
-            )}
-          </div>
-        </div>
-
-        {/* Endereço */}
-        <div className="parte-inputs-endereco">
-
-          <div className="input-partes-endereco-label">
-            <label className="label-endereço">Endereço</label>
-            <button
-              className="botao-adicionar-endereco"
-              onClick={() => setDialogAberto(true)}
-            >
-              ➕
-            </button>
-          </div>
-
-          <div className="inputs-parte-dados-endereco">
-
-              <div className="inputs-partes-enderecos">
-                <input
-                  type="password"
-                  className="inputs-dados"
-                  disabled={!editando.senha}
-                  value={usuario.senha || ""}
-                  onChange={(e) =>
-                    setUsuario({ ...usuario, senha: e.target.value })
-                  }
-                />
-              </div>
-
-              <div className="inputs-parte-botao-editar-endereco">
-              {!editando.senha ? (
-                <button
-                  className="botao-editar-dados"
-                  onClick={() => habilitarEdicao("senha")}
-                >
-                  ✏️
-                </button>
-              ) : (
+             <div className="botoes-acao">
+                {!editando.senha ? (
+                <button className="btn-editar" onClick={() => habilitarEdicao("senha")}>✎</button>
+                ) : (
                 <>
-                  <button
-                    className="botao-editar-dados"
-                    onClick={() => salvarCampo("senha")}
-                  >
-                    ✓
-                  </button>
-                  <button
-                    className="botao-editar-dados"
-                    onClick={() => cancelarEdicao("senha")}
-                  >
-                    ✗
-                  </button>
+                    <button className="btn-salvar" onClick={() => salvarCampo("senha")}>✔</button>
+                    <button className="btn-cancelar" onClick={() => cancelarEdicao("senha")}>✖</button>
                 </>
-              )}
+                )}
             </div>
-
           </div>
-
         </div>
-      </div>
 
-      <div className="editar-imagem">
-        <div className="parte-foto"></div>
-
-        <h1>ESCOLHA SUA FOTO DE PERFIL</h1>
-        <input className="input-arquivo-perfil" type="file" />
-
-        <button className="botao-deletar-conta">Excluir Conta</button>
-      </div>
-
-      {/* DIALOG DE ENDEREÇO */}
-      <dialog className="dialog-endereco" open={dialogAberto}>
-        <div className="container-dialog-endereco">
-          <div className="parte-fechar-dialog">
-            <h2 className="dialog-titulo">Adicionar Endereço</h2>
-
-            <button
-              className="dialog-botao-fechar"
-              onClick={() => setDialogAberto(false)}
-            >
-              &times;
+        {/* BOTÃO ADICIONAR ENDEREÇO */}
+        <div className="grupo-endereco">
+            <label className="label-dados">Endereços Cadastrados</label>
+            <button className="btn-add-endereco" onClick={() => setDialogAberto(true)}>
+                ➕ Novo Endereço
             </button>
-          </div>
-
-          <div className="parte-pegar-endereco">
-            <div className="buscar-cep">
-              <input
-                type="text"
-                className="input-buscar-cep"
-                placeholder="Digite o CEP para pesquisar..."
-                value={endereco.cep}
-                onChange={(e) =>
-                  setEndereco({ ...endereco, cep: e.target.value })
-                }
-              />
-
-              <button className="botao-pesquisar-cep" onClick={buscarCEP}>
-                🔍
-              </button>
-            </div>
-
-            <div className="dados-endereco">
-              <div className="dados-endereco-usuario">
-                <div className="endereco-casa">
-                  <input
-                    type="text"
-                    className="input-endereco"
-                    disabled
-                    value={endereco.rua}
-                    placeholder="Rua..."
-                  />
-                </div>
-
-                <div className="numero-casa">
-                  <input
-                    type="text"
-                    className="input-numero-casa"
-                    value={endereco.numero}
-                    onChange={(e) =>
-                      setEndereco({ ...endereco, numero: e.target.value })
-                    }
-                    placeholder="Nº"
-                  />
-                </div>
-              </div>
-
-              <div className="dados-endereco-usuario">
-                <div className="uf-endereco">
-                  <input
-                    type="text"
-                    className="input-uf-endereco"
-                    disabled
-                    value={endereco.uf}
-                    placeholder="UF"
-                  />
-                </div>
-
-                <div className="cidade-endereco">
-                  <input
-                    type="text"
-                    className="input-cidade-endereco"
-                    disabled
-                    value={endereco.cidade}
-                    placeholder="Cidade"
-                  />
-                </div>
-
-                <div className="bairro-endereco">
-                  <input
-                    type="text"
-                    className="input-bairro-endereco"
-                    disabled
-                    value={endereco.bairro}
-                    placeholder="Bairro"
-                  />
-                </div>
-              </div>
-
-              <div className="dados-endereco-usuario">
-                <div className="complemento-casa">
-                  <input
-                    type="text"
-                    className="input-complemento"
-                    value={endereco.complemento}
-                    onChange={(e) =>
-                      setEndereco({
-                        ...endereco,
-                        complemento: e.target.value,
-                      })
-                    }
-                    placeholder="Complemento (opcional)"
-                  />
-                </div>
-
-                <div className="cep-casa">
-                  <input
-                    type="text"
-                    className="input-cep"
-                    disabled
-                    value={endereco.cep}
-                    placeholder="CEP"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="parte-salvar-endereco">
-            <button className="botao-salvar-endereco">Salvar Endereço</button>
-          </div>
         </div>
-      </dialog>
-     
+
+      </div>
+
+      {/* --- COLUNA DA DIREITA: FOTO E EXCLUIR --- */}
+      <div className="editar-imagem">
+        <h1>FOTO DE PERFIL</h1>
+        {/* Placeholder ou Foto Real */}
+        <div 
+            className="preview-foto"
+            style={{ 
+                backgroundImage: usuario.img ? `url(${usuario.img})` : 'none',
+                backgroundColor: usuario.img ? 'transparent' : 'whitesmoke'
+            }}
+        >
+            {!usuario.img && <span style={{color:'black', fontSize:'30px'}}>👤</span>}
+        </div>
+
+        <label htmlFor="file-upload" className="custom-file-upload">
+            Escolher Arquivo
+        </label>
+        <input id="file-upload" type="file" />
+
+        <button className="botao-deletar-conta" onClick={() => alert("Função em desenvolvimento no backend!")}>
+            Excluir Conta
+        </button>
+      </div>
+
+      {/* --- DIALOG (MODAL) DE ENDEREÇO --- */}
+      {dialogAberto && (
+        <div className="dialog-overlay">
+            <div className="dialog-box">
+                <div className="dialog-header">
+                    <h2>Adicionar Endereço</h2>
+                    <button className="btn-fechar-dialog" onClick={() => setDialogAberto(false)}>×</button>
+                </div>
+
+                <div className="dialog-body">
+                    {/* BUSCA CEP */}
+                    <div className="row-cep">
+                        <input 
+                            type="text" 
+                            placeholder="CEP (somente números)" 
+                            value={endereco.cep}
+                            onChange={(e) => setEndereco({...endereco, cep: e.target.value})}
+                            maxLength={9}
+                        />
+                        <button onClick={buscarCEP}>🔍</button>
+                    </div>
+
+                    {/* CAMPOS PREENCHIDOS */}
+                    <div className="grid-endereco">
+                        <input type="text" placeholder="Rua" value={endereco.rua} disabled className="full-width" />
+                        
+                        <input 
+                            type="text" 
+                            placeholder="Número" 
+                            value={endereco.numero} 
+                            onChange={(e) => setEndereco({...endereco, numero: e.target.value})}
+                        />
+                        
+                        <input type="text" placeholder="Bairro" value={endereco.bairro} disabled />
+                        
+                        <input type="text" placeholder="Cidade" value={endereco.cidade} disabled />
+                        
+                        <input type="text" placeholder="UF" value={endereco.uf} disabled style={{width: '60px'}} />
+                        
+                        <input 
+                            type="text" 
+                            placeholder="Complemento" 
+                            value={endereco.complemento} 
+                            onChange={(e) => setEndereco({...endereco, complemento: e.target.value})}
+                            className="full-width"
+                        />
+                    </div>
+                </div>
+
+                <div className="dialog-footer">
+                    <button className="btn-salvar-endereco" onClick={salvarNovoEndereco}>
+                        Confirmar Endereço
+                    </button>
+                </div>
+            </div>
+        </div>
+      )}
+
     </div>
   );
 }

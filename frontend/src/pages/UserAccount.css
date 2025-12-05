@@ -1,12 +1,6 @@
 @keyframes slideInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  from { opacity: 0; transform: translateX(-30px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
 .container-user-account {
@@ -16,9 +10,12 @@
   flex-direction: column;
   height: 100vh;
   width: 100vw;
-  background-image: url(/public/fundo/tim-mcburnie-illustrationtutorial-theentrance2.jpg);
+  /* Certifique-se que esse caminho está certo na sua pasta public */
+  background-image: url("/fundo/tim-mcburnie-illustrationtutorial-theentrance2.jpg");
   background-size: cover;
-  font-family: "fonte-titulos";
+  background-position: center;
+  font-family: "fonte-titulos", serif;
+  overflow: hidden; /* Evita barras de rolagem indesejadas */
 }
 
 .container-principal {
@@ -27,30 +24,37 @@
   align-items: center;
   text-align: center;
   height: 85%;
-  width: 99vw;
-  background-color: rgba(0, 0, 0, 0.1);
+  width: 95vw; /* Reduzi um pouco para não colar na borda */
+  background-color: rgba(0, 0, 0, 0.2); /* Um pouco mais escuro para leitura */
+  border-radius: 8px;
+  backdrop-filter: blur(3px); /* Efeito vidro opcional */
 }
 
+/* --- MENU LATERAL --- */
 .container-principal-menu {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 87.5%;
+  height: 90%;
   width: 30%;
   background-color: transparent;
-  margin-top: -53px;
 }
 
 .parte-menu {
   display: flex;
-  justify-content: center;
+  justify-content: space-between; /* Distribui melhor o espaço vertical */
   align-items: center;
   flex-direction: column;
   height: 100%;
-  width: 80%;
-  border: solid 2px #fff;
-  background-color: var(--Fundo);
+  width: 85%;
+  border: solid 2px rgba(255, 255, 255, 0.3);
+  
+  /* Usa var(--Fundo) se existir, senão usa fallback */
+  background-color: var(--Fundo, rgba(30, 20, 15, 0.85)); 
+  
   animation: slideInLeft 0.6s ease-out forwards;
+  padding-bottom: 20px;
+  box-shadow: 5px 0 15px rgba(0,0,0,0.5);
 }
 
 .menu-parte-foto {
@@ -59,30 +63,30 @@
   align-items: center;
   flex-direction: column;
   gap: 15px;
-  height: 42%;
+  margin-top: 30px;
   width: 100%;
-  background-color: transparent;
 }
 
 .parte-foto {
-  margin-top: 15px;
-  height: 110px;
-  width: 110px;
+  height: 120px;
+  width: 120px;
   border-radius: 50%;
-  background-color: whitesmoke;
+  background-color: #ddd; /* Cor placeholder se não tiver foto */
+  border: 3px solid #d4af37; /* Borda Dourada */
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .parte-foto:hover {
   transform: scale(1.05);
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
 }
 
 .label-nome-usuario {
   color: #fff;
-  font-size: 26px;
-  text-decoration: underline;
-  margin-bottom: -5px;
+  font-size: 24px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
 }
 
 .menu-parte-botoes {
@@ -90,97 +94,86 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  gap: 20px;
-  height: 50%;
+  gap: 15px;
   width: 100%;
-  background-color: transparent;
 }
 
 .botoes-menu {
   display: block;
-  width: 320px;
-  height: 60px;
+  width: 90%;
+  padding: 15px 0;
   border: none;
-  background-color: rgba(0, 0, 0, 0.7);
-  font-size: 25px;
+  background-color: rgba(0, 0, 0, 0.5);
+  font-size: 22px;
   cursor: pointer;
-  font-weight: bolder;
-  font-family: "fonte-titulos";
-  margin-bottom: 4px;
-  color: #8e9d41;
-  transition: font-size 0.3s ease,
-              transform 0.3s ease,
-              box-shadow 0.3s ease,
-              background-color 0.3s ease,
-              color 0.3s ease;
+  font-family: "fonte-titulos", serif;
+  color: #aeb575; /* Verde musgo claro */
+  transition: all 0.3s ease;
+  border-left: 3px solid transparent;
 }
 
 .botoes-menu:hover {
-  font-size: 30px;
-  transform: translateY(-3px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-.botoes-menu:active {
-  font-size: 31px;
-  transition: 0.1s;
-  transform: translateY(-1px);
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #d4af37;
+  padding-left: 10px; /* Efeito de movimento */
 }
 
 .botoes-menu.ativo {
-  font-size: 30px;
-  background-color: rgb(90, 94, 28, 0.8);
-  border-style: solid;
-  border-width: 2px;
-  border-color: white;
+  background-color: rgba(90, 94, 28, 0.6);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-left: 5px solid #d4af37; /* Indicador lateral */
   color: white;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transform: scale(1.02);
 }
 
 .menu-parte-sair {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 10%;
   width: 100%;
-  padding-left: 210px;
-  transition: 1s;
+  display: flex;
+  justify-content: flex-end; /* Botão sair na direita */
+  padding-right: 20px;
 }
 
 .botao-deslogar {
-  height: 27px;
-  width: 50px;
-  background-color: rgba(0, 0, 0, 0.7);
+  background: none;
   border: none;
-  border-radius: 3px;
   cursor: pointer;
-  color: rgba(255, 255, 255, 0.4);
-  font-family: "fonte-paragrafos";
-  font-size: 20px;
-  font-weight: bolder;
-  transition: color 0.5s, transform 0.3s ease-out;
+  color: rgba(255, 100, 100, 0.6);
+  font-family: "fonte-paragrafos", serif;
+  font-size: 18px;
+  font-weight: bold;
+  transition: 0.3s;
 }
 
 .botao-deslogar:hover {
-  color: rgba(255, 255, 255, 0.9);
-  transform: translateY(-2px);
+  color: rgb(255, 80, 80);
+  text-shadow: 0 0 5px rgba(255,0,0,0.5);
+  transform: scale(1.1);
 }
 
+/* --- ÁREA DO COMPONENTE (DIREITA) --- */
 .container-principal-componente {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 96.1%;
+  height: 90%;
   width: 70%;
-  background-color: transparent;
 }
 
 .parte-componente {
-  height: 91%;
+  height: 100%;
   width: 95%;
-  margin-top: -49px;
-  border: solid 2px #fff;
-  background-color: var(--Fundo);
+  border: solid 2px rgba(255, 255, 255, 0.3);
+  background-color: var(--Fundo, rgba(30, 20, 15, 0.85));
   animation: slideInLeft 0.6s 0.1s ease-out forwards;
-  opacity: 0;
+  opacity: 0; /* Começa invisível para animação funcionar */
+  
+  /* Permite scroll dentro do componente se for muito grande */
+  overflow-y: auto; 
+  padding: 20px;
+  box-sizing: border-box;
 }
+
+/* Scrollbar Bonita */
+.parte-componente::-webkit-scrollbar { width: 8px; }
+.parte-componente::-webkit-scrollbar-thumb { background-color: #5a4a42; border-radius: 4px; }

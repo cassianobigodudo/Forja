@@ -1,566 +1,355 @@
-/* Animação de fade-in para a página */
-@keyframes fadeInPage {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-/* Animação de fade-in e slide para o diálogo */
-@keyframes fadeInDialog {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -45%); /* Começa um pouco acima */
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%); /* Termina no centro */
-  }
-}
-
-
-.container-meus-dados{
-    height: 100%;
+/* =========================================================
+   CONTAINER PRINCIPAL
+========================================================= */
+.container-meus-dados {
     width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    gap: 30px;
+    animation: fadeInPage 0.8s ease-out;
+    color: var(--Texto);
+}
+
+/* Coluna da Esquerda (Inputs) */
+.parte-inputs {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.grupo-input {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+/* Labels: Branco com leve transparência */
+.label-dados {
+    font-family: "fonte-subtitulos", serif;
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.8); 
+    margin-left: 5px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+/* INPUTS: Fundo Escuro + Borda Branca Sutil */
+.inputs-dados {
+    flex: 1;
+    height: 45px;
+    background-color: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--Texto);
+    font-family: "fonte-paragrafos", sans-serif;
+    font-size: 1.1rem;
+    padding: 0 15px;
+    border-radius: 2px;
+    transition: 0.3s;
+}
+
+.inputs-dados:disabled {
+    opacity: 0.6;
+    cursor: default;
+    border-color: transparent;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Foco na Edição: Borda Branca Forte */
+.inputs-dados.editavel {
+    border-color: #fff;
+    background-color: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+/* BOTÕES DE AÇÃO (Lápis, Check, X) */
+.botoes-acao {
+    display: flex;
+    gap: 5px;
+}
+
+.btn-editar, .btn-salvar, .btn-cancelar {
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    border-radius: 2px;
+    font-size: 1.2rem;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-editar:hover { 
+    border-color: #fff; 
+    color: #fff; 
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.btn-salvar:hover { 
+    border-color: #fff; 
+    color: #fff; 
+    background-color: rgba(255, 255, 255, 0.2); 
+}
+
+.btn-cancelar:hover { 
+    border-color: rgba(255, 100, 100, 0.5); 
+    color: rgba(255, 100, 100, 0.8); 
+    background-color: rgba(255, 0, 0, 0.1); 
+}
+
+/* =========================================================
+   COLUNA DA DIREITA (FOTO E EXCLUIR)
+========================================================= */
+.editar-imagem {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    padding-left: 20px;
+    gap: 20px;
+}
+
+.editar-imagem h1 {
+    font-family: "fonte-titulos";
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 10px;
+}
+
+/* FOTO: Borda Branca Simples */
+.preview-foto {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    background-size: cover;
+    background-position: center;
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: row;
-    gap: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.8);
+}
+
+/* Botão Upload (Input File) */
+input[type="file"] { display: none; }
+
+.custom-file-upload {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    display: inline-block;
+    padding: 8px 20px;
+    cursor: pointer;
+    font-family: "fonte-subtitulos";
+    color: var(--Texto);
+    transition: 0.3s;
+    background: rgba(0,0,0,0.3);
+    border-radius: 2px;
+}
+.custom-file-upload:hover { 
+    background: rgba(255,255,255,0.1); 
+    border-color: #fff; 
+}
+.botao-deletar-conta {
+    margin-top: auto;
+    background: transparent;
+    border: 1px solid rgba(255, 0, 0, 0.4);
+    color: rgba(255, 100, 100, 0.8);
+    padding: 10px 20px;
+    font-family: "fonte-titulos";
+    cursor: pointer;
+    transition: 0.3s;
+}
+.botao-deletar-conta:hover { background: rgba(255,0,0,0.1); border-color: red; color: red; }
+
+/* =========================================================
+   BOTÕES EXTRAS (Endereço e Cartão)
+========================================================= */
+.grupo-botoes-extras {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 20px;
+}
+
+/* Estilo unificado para botões de adicionar */
+.btn-add-endereco, .btn-add-cartao {
     background-color: transparent;
-        font-family: "fonte-titulos";
-    /* Aplica a animação de fade-in da página */
-    animation: fadeInPage 1s ease-out;
+    color: var(--Texto);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 10px 15px;
+    font-family: "fonte-titulos";
+    cursor: pointer;
+    transition: 0.3s;
+    width: fit-content;
+    text-transform: uppercase;
 }
 
-    .label-dados{
-        font-size: 22px;
-        margin-left: 20px;
-        letter-spacing: 2px;
-        font-family: "fonte-titulos";
-        color: #fff;
-        transition: 1s;
-    }
-
-    .parte-inputs{
-        display: flex;
-        justify-content: start;
-        align-items: center;
-        flex-direction: column;
-        gap: 2px;
-        padding-left: 10px;
-        padding-top: 20px;
-        height: 90%;
-        width: 100%;
-        background-color: transparent;   
-    }
-        .inputs{
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 19%;
-            width: 100%;
-            background-color: transparent;  
-        }
-            .inputs-parte-dados{
-                display: flex;
-                justify-content: center;
-                align-items: start;
-                flex-direction: column;
-                height: 100%;
-                width: 90%;
-                background-color: transparent;
-            }
-
-                .inputs-dados{
-                    height: 40px;
-                    width: 605px;
-                    background-color: rgb(91, 94, 28, 0.8);
-                    opacity: 80%;
-                    color: #fff;
-                    font-family: "fonte-paragrafos";
-                    font-size: 25px;
-                    border-style: solid;
-                    border-width: 2px;
-                    border-color: rgb(255, 255, 255, 0.4);
-                    outline: none;
-                    transition: 1s;
-                    margin-left: 20px;
-                }
-              .inputs-dados:hover{
-                    background-color: rgb(39, 41, 10);
-                    transition: 1s;
-              }
-
-                
-
-            .inputs-parte-botao-editar{
-                display: flex;
-                justify-content: start;
-                align-items: center;
-                height: 100%;
-                width: 10%;
-                background-color: transparent;
-                padding-top: 25px;
-            }
-                .botao-editar-dados{
-                    height: 40px;
-                    width: 40px;
-                    border: solid 1px #fff;
-                    opacity: 80%;
-                    cursor: pointer;
-                    box-shadow: 0px 0px 2px 1px #fff inset;
-                }
-        
-        .parte-inputs-endereco{
-            display: flex;
-            justify-content: start;
-            align-items: start;
-            flex-direction: column;
-            height: 42%;
-            width: 100%;
-            background-color: transparent;
-        }
-            .input-partes-endereco-label{
-                display: flex;
-                justify-content: start;
-                align-items: center;
-                padding-right: 20px;
-                gap: 10px;
-                height: 21%;
-                width: 100%;
-                background-color: transparent;
-            }
-                .botao-adicionar-endereco{
-                    height: 20px;
-                    width: 20px;
-                    border: solid 1px #fff;
-                    opacity: 80%;
-                    cursor: pointer;
-                    box-shadow: 0px 0px 2px 1px #fff inset;
-                    font-size: 10px;
-                }
-              
-            .inputs-parte-dados-endereco{
-              display: flex;
-              justify-content: center;
-              align-items: center;
-            }
-              .input-partes-endereco{
-                display: flex;
-                height: 100%;
-                width: 90%;
-                background-color: transparent;
-              }
-              .input-parte-botao-editar-endereco{
-                display: flex;
-                justify-content: start;
-                align-items: center;
-                height: 100%;
-                width: 10%;
-                background-color: transparent;
-                padding-top: 25px;
-              }
-              
-      .label-endereço{
-        font-size: 22px;
-        margin-left: 20px;
-        letter-spacing: 2px;
-        font-family: "fonte-titulos";
-        color: #fff;
-        transition: 1s;
-      }
-                
-
-    .parte-salvar-dados{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 10%;
-        width: 95%;
-        background-color: transparent;
-    }
-        .parte-deletar-conta{
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100%;
-            width: 56.2%;
-            background-color: transparent;
-            font-family: "fonte-titulos";
-            margin-bottom: 2%;
-        }
-            .botao-deletar-conta{
-                margin-bottom: 3px;
-                opacity: 70%;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 35px;
-                width: 180px;
-                border: none;
-                background-color: transparent;
-                cursor: pointer;
-                font-size: 20px;
-                font-family: "fonte-titulos";
-                letter-spacing: 1px;
-                color: rgb(255, 255, 255, 0.7);
-                transition: 1s;
-                border-style: solid;
-                border-color: white;
-                border-width: 2px;
-                background-color: var(--Fundo);
-            }
-                .botao-deletar-conta:hover{
-                opacity: 100%;
-                    background-color: rgb(24, 4, 4);
-                    color: #fff;
-                    letter-spacing: 1.5px;
-                    transition: 1s;
-                }
-                .botao-deletar-conta:active{
-                    background-color: rgb(104, 0, 0);
-                    transition: 0.01s;
-                }
-
-        .parte-salvar-edicao{
-            display: flex;
-            justify-content: end;
-            align-items: center;
-            height: 100%;
-            width: 60%;
-            background-color: transparent;
-            transition: 1s;
-        }
-            .botao-salvar-edicao{
-                height: 30px;
-                width: 120px;
-                border: solid 2px #fff;
-                font-size: 20px;
-                cursor: pointer;
-                background-color: var(--Fundo);
-        font-family: "fonte-titulos";
-                font-weight: bolder;
-                color: #fff;
-                margin-right: 250px;
-                margin-top: 115px;
-                transition: 1s;
-            }
-            .botao-salvar-edicao:hover{
-                letter-spacing: 2px;
-                transition: 1s;
-                background-color: #5B5E1C;
-            }
-            .botao-salvar-edicao:active{
-                background-color: #8f8a40;
-                transition: 0.001s;
-            }
-
-.dialog-endereco {
-  height: auto; /* Ajustado para auto */
-  background-color: transparent;
-  border: none;
-  width: 650px; /* Largura fixa para melhor controle */
-  position: fixed;
-  top: 50%; /* Centralizado */
-  left: 50%;
-  transform: translate(-50%, -50%); /* Centralizado */
-  padding: 0; /* Remover padding do dialog wrapper */
-  /* Aplica a animação de fade-in do diálogo */
-  animation: fadeInDialog 0.4s ease-out;
+.btn-add-endereco:hover, .btn-add-cartao:hover { 
+    border-color: #fff; 
+    background-color: rgba(255, 255, 255, 0.1);
+    text-shadow: 0 0 5px white;
 }
 
-.container-dialog-endereco {
-  display: flex;
-  flex-direction: column;
-  height: 100%; /* Ocupa todo o dialog */
-  width: 100%; /* Ocupa todo o dialog */
-  /* Estilo principal: fundo escuro e borda clara, como os inputs */
-  background-color: rgba(20, 15, 15, 0.8); /* Um cinza escuro neutro */
-  border: 2px solid rgb(255, 255, 255, 0.4);
-  border-radius: 3px;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.7);
-  overflow: hidden; /* Para conter os cantos arredondados */
+/* =========================================================
+   DIALOG / MODAL (Padrão para Endereço e Cartão)
+========================================================= */
+.dialog-overlay {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.9); /* Fundo bem escuro */
+    display: flex; justify-content: center; align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(2px);
 }
 
-.parte-fechar-dialog {
-  display: flex;
-  justify-content: space-between; /* Alinha título e botão */
-  align-items: center;
-  padding: 15px 20px;
-  height: auto; /* Altura automática */
-  width: 100%;
-  background-color: rgba(0, 0, 0, 0.3); /* Fundo sutil para o header */
-  border-bottom: 1px solid rgb(255, 255, 255, 0.2);
-  box-sizing: border-box;
+.dialog-box {
+    /* Fundo Marrom Escuro Sólido */
+    background-color: rgb(30, 25, 20); 
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    width: 500px;
+    padding: 20px;
+    border-radius: 2px;
+    box-shadow: 0 0 40px rgba(0,0,0,1);
+    display: flex; flex-direction: column; gap: 20px;
 }
 
-/* Título adicionado ao JSX */
-.dialog-titulo {
-  font-family: "fonte-titulos";
-  color: #fff;
-  font-size: 24px;
-  margin: 0;
-  letter-spacing: 1px;
-}
+.cartao-box { width: 450px; }
 
-/* Botão de fechar estilizado (era ❌) */
-.dialog-botao-fechar {
-  background: transparent;
-  border: none;
-  color: #fff;
-  font-size: 30px; /* Tamanho maior para '×' */
-  cursor: pointer;
-  transition: color 0.3s;
-  line-height: 1;
-  padding: 0;
-  opacity: 0.7;
+.dialog-header {
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;
 }
+.dialog-header h2 { 
+    color: #fff; 
+    font-family: "fonte-titulos"; 
+    margin: 0; 
+    text-transform: uppercase;
+}
+.btn-fechar-dialog { background: none; border: none; font-size: 1.5rem; color: #aaa; cursor: pointer; }
+.btn-fechar-dialog:hover { color: #fff; }
 
-.dialog-botao-fechar:hover {
-  color: #ff6b6b; /* Vermelho para ação de fechar */
-  opacity: 1;
-}
+.dialog-body { display: flex; flex-direction: column; gap: 15px; }
 
-.parte-pegar-endereco {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  background-color: transparent;
-  padding: 20px; /* Espaçamento interno */
-  gap: 20px; /* Espaço entre a busca e os dados */
-  box-sizing: border-box;
-}
-
-.buscar-cep {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  background-color: transparent;
-}
-
-/* Botão de pesquisa estilizado (era 🔍) */
-.botao-pesquisar-cep {
-  height: 40px;
-  width: 40px;
-  flex-shrink: 0; /* Impede que o botão encolha */
-  border: solid 1px #fff;
-  opacity: 0.8;
-  cursor: pointer;
-  box-shadow: 0px 0px 2px 1px #fff inset;
-  background-color: rgb(91, 94, 28, 0.8);
-  color: #fff;
-  font-size: 20px;
-  transition: background-color 0.3s, opacity 0.3s;
-  padding: 0;
-}
-
-.botao-pesquisar-cep:hover {
-  background-color: rgb(39, 41, 10);
-  opacity: 1;
-}
-
-.dados-endereco {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  background-color: transparent;
-  gap: 15px; /* Espaço entre as linhas de inputs */
-}
-
-.dados-endereco-usuario {
-  display: flex;
-  height: auto; /* Altura automática */
-  width: 100%;
-  background-color: transparent;
-  gap: 10px; /* Espaço entre inputs na mesma linha */
-}
-
-/* Regra unificada para todos os inputs do dialog
-  Substitui todos os blocos .input-endereco, .input-numero-casa, etc.
-*/
-.input-buscar-cep,
-.input-endereco,
-.input-numero-casa,
-.input-uf-endereco,
-.input-cidade-endereco,
-.input-bairro-endereco,
-.input-complemento,
-.input-cep {
-  height: 40px;
-  width: 100%; /* Ocupa o espaço do container pai */
-  background-color: rgb(91, 94, 28, 0.8);
-  border: 2px solid rgb(255, 255, 255, 0.4);
-  outline: none;
-  color: #fff;
-  padding-left: 10px;
-  font-family: "fonte-paragrafos";
-  font-size: 16px;
-  box-sizing: border-box;
-  transition: background-color 0.3s, border-color 0.3s;
-  border-radius: 4px; /* Leve arredondamento */
-}
-
-/* Estilo para placeholders */
-.input-buscar-cep::placeholder,
-.input-endereco::placeholder,
-.input-numero-casa::placeholder,
-.input-uf-endereco::placeholder,
-.input-cidade-endereco::placeholder,
-.input-bairro-endereco::placeholder,
-.input-complemento::placeholder,
-.input-cep::placeholder {
-  color: #bbb;
-  font-style: italic;
-  opacity: 0.7;
-}
-
-/* Efeito de hover para inputs habilitados */
-.input-buscar-cep:hover:not(:disabled),
-.input-endereco:hover:not(:disabled),
-.input-numero-casa:hover:not(:disabled),
-.input-uf-endereco:hover:not(:disabled),
-.input-cidade-endereco:hover:not(:disabled),
-.input-bairro-endereco:hover:not(:disabled),
-.input-complemento:hover:not(:disabled),
-.input-cep:hover:not(:disabled) {
-  background-color: rgb(39, 41, 10); /* Cor de hover dos inputs principais */
-}
-
-/* Efeito de foco */
-.input-buscar-cep:focus,
-.input-endereco:focus,
-.input-numero-casa:focus,
-.input-uf-endereco:focus,
-.input-cidade-endereco:focus,
-.input-bairro-endereco:focus,
-.input-complemento:focus,
-.input-cep:focus {
-  border-color: rgb(255, 255, 255, 0.8); /* Borda mais clara no foco */
-}
-
-/* Estilo para inputs desabilitados */
-.input-endereco:disabled,
-.input-numero-casa:disabled,
-.input-uf-endereco:disabled,
-.input-cidade-endereco:disabled,
-.input-bairro-endereco:disabled,
-.input-complemento:disabled,
-.input-cep:disabled {
-  background-color: rgb(50, 52, 15, 0.7); /* Verde mais escuro e opaco */
-  color: #aaa;
-  cursor: not-allowed;
-}
-
-/* Containers de largura flexível para os inputs */
-.endereco-casa {
-  width: 75%;
-}
-.numero-casa {
-  width: 25%;
-}
-.uf-endereco {
-  width: 20%;
-}
-.cidade-endereco {
-  width: 40%;
-}
-.bairro-endereco {
-  width: 40%;
-}
-.complemento-casa {
-  width: 70%;
-}
-.cep-casa {
-  width: 30%;
-}
-
-/* Footer do Dialog com o botão Salvar */
-.parte-salvar-endereco {
-  display: flex;
-  justify-content: flex-end; /* Alinha botão à direita */
-  padding: 20px;
-  background-color: rgba(0, 0, 0, 0.3);
-  border-top: 1px solid rgb(255, 255, 255, 0.2);
-}
-
-/* Botão Salvar (estilo baseado no .botao-salvar-edicao) */
-.botao-salvar-endereco {
-  height: 40px;
-  width: auto; /* Largura automática baseada no texto */
-  padding: 0 30px;
-  border: solid 2px #fff;
-  font-size: 20px;
-  cursor: pointer;
-  background-color: rgb(15, 15, 10, 0.8); /* Cor verde/oliva do tema */
-  font-family: "fonte-titulos";
-  font-weight: bolder;
-  color: #fff;
-  transition: 1s;
-}
-
-.botao-salvar-endereco:hover {
-  letter-spacing: 1px;
-  background-color: rgb(39, 41, 10);
-}
-
-.botao-salvar-endereco:active {
-  background-color: #8f8a40;
-  transition: 0.001s;
-}
-
-
- .editar-imagem{
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        height: 90%;
-        width: 40%;
-    }
-    .parte-foto {
-        margin-top: 15px;
-        height: 110px;
-        width: 110px;
-        border-radius: 50%;
-        background-color: whitesmoke;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        margin-bottom: 10px;
-                        }
-        .parte-foto:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.6); }
-            
-   .input-arquivo-perfil{
-                margin-top: 15px;
-                margin-bottom: 210px;
-                opacity: 70%;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 35px;
-                width: 280px;
-                border: none;
-                background-color: transparent;
-                cursor: pointer;
-                font-size: 20px;
-                font-family: "fonte-titulos";
-                color: rgb(255, 255, 255, 0.7);
-                transition: 1s;
-                border-style: solid;
-                border-color: white;
-                border-width: 2px;
-                background-color: var(--Fundo);
-            }
-
-
-h1{
-
-    font-family: "fonte-titulo";
+/* INPUTS DENTRO DO MODAL */
+.dialog-box input {
+    height: 40px;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.2);
     color: white;
+    padding: 0 10px;
+    font-family: "fonte-paragrafos";
+}
+.dialog-box input:focus { border-color: #fff; }
+.dialog-box input:disabled { background: rgba(255,255,255,0.05); color: #aaa; border-color: transparent; }
+
+/* BUSCA CEP */
+.row-cep { display: flex; gap: 10px; }
+.row-cep input { flex: 1; }
+.row-cep button { 
+    width: 40px; cursor: pointer; 
+    background: rgba(255, 255, 255, 0.1); 
+    border: 1px solid rgba(255,255,255,0.3); 
+    color: #fff; font-size: 1.2rem; 
+}
+.row-cep button:hover { background: rgba(255,255,255,0.2); border-color: #fff; }
+
+.grid-endereco { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.full-width { grid-column: span 2; }
+
+/* BOTÃO SALVAR (Marrom/Branco) */
+.btn-salvar-endereco {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--FundoAlternativo); /* Marrom */
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.3);
+    font-family: "fonte-titulos";
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    text-transform: uppercase;
+    transition: 0.3s;
+}
+.btn-salvar-endereco:hover { 
+    background-color: rgba(255,255,255,0.1); 
+    border-color: #fff; 
+    text-shadow: 0 0 5px white;
+}
+
+/* =========================================================
+   CARTÃO DE CRÉDITO VISUAL (PRETO E PRATA)
+========================================================= */
+.cartao-preview {
+    width: 100%;
+    height: 200px;
+    /* Gradiente Preto/Cinza Metálico */
+    background: linear-gradient(135deg, #111, #333);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    margin-bottom: 20px;
+    padding: 20px;
+    position: relative;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.8);
+    display: flex; flex-direction: column; justify-content: flex-end;
+    font-family: "Courier New", monospace;
+}
+
+/* Chip Prateado */
+.chip {
+    width: 50px;
+    height: 35px;
+    background: linear-gradient(135deg, #e0e0e0, #999);
+    border-radius: 6px;
+    position: absolute;
+    top: 50px; left: 20px;
+    border: 1px solid rgba(0,0,0,0.5);
+}
+
+.cartao-numero {
+    font-size: 1.6rem;
+    color: #fff;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 2px black;
+    margin-bottom: 20px;
+}
+
+.cartao-footer {
+    display: flex; justify-content: space-between;
+    color: rgba(255,255,255,0.7);
+    text-transform: uppercase;
+}
+
+.form-cartao { display: flex; flex-direction: column; gap: 12px; }
+.row-cartao { display: flex; gap: 10px; }
+
+.input-cartao {
+    height: 45px;
+    background-color: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 0 15px;
+    font-family: "fonte-paragrafos";
+    border-radius: 2px;
+    width: 100%;
+}
+.input-cartao:focus { border-color: #fff; }
+
+@keyframes fadeInPage {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }

@@ -21,8 +21,17 @@ const buscarEmail = async (email) => {
     return result.rows[0]
 }
 
+const salvarCartao = async (id_usuario, numero, nome, validade, cvv) => {
+    const query = `
+        INSERT INTO cartoes_credito (id_usuario, numero_cartao, nome_titular, validade, cvv)
+        VALUES ($1, $2, $3, $4, $5)
+    `;
+    return db.query(query, [id_usuario, numero, nome, validade, cvv]);
+};
+
 // Exportamos a função para que o Controller possa usá-la
 module.exports = {
     criarUsuario,
-    buscarEmail
+    buscarEmail,
+    salvarCartao
 };

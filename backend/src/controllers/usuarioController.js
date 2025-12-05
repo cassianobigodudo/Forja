@@ -61,7 +61,21 @@ const login = async(req, res) =>{
 
 }
 
+const adicionarCartao = async (req, res) => {
+    const { id_usuario, numero_cartao, nome_titular, validade, cvv } = req.body;
+    
+    try {
+        // Aqui chamamos o Model (veja abaixo)
+        await UsuarioModel.salvarCartao(id_usuario, numero_cartao, nome_titular, validade, cvv);
+        res.status(201).json({ message: "Cartão vinculado com sucesso!" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Erro ao salvar cartão." });
+    }
+};
+
 module.exports = { 
 cadastrar, 
-login 
+login,
+adicionarCartao 
 };
