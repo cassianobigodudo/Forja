@@ -2,26 +2,30 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { useGlobalContext } from '../context/GlobalContext';
-import BoxItem from './BoxItem'; // Reutilizamos seu componente de pedidos
+import BoxItem from './BoxItem'; // Seu componente existente
 import './HistoricoPedidos.css';
 
 function HistoricoPedidos() {
   const navigate = useNavigate();
   
-  // 1. DADOS DO CARRINHO (Contexto Global)
+  // 1. DADOS DO CONTEXTO
   const { carrinho, removerDoCarrinho, idUsuario } = useGlobalContext();
 
-  // 2. DADOS DOS PEDIDOS (Banco de Dados)
+  // 2. ESTADOS LOCAIS
   const [pedidosAntigos, setPedidosAntigos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const API_URL = "https://forja-qvex.onrender.com/api"; 
 
-  // Busca o histórico no banco assim que o usuario logado for identificado
+  // Função auxiliar para formatar BRL
+  const formatarMoeda = (valor) => {
+    return Number(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  };
+
+  // Busca histórico
   useEffect(() => {
     const fetchPedidos = async () => {
       if (!idUsuario) return;
-
       try {
         const response = await axios.get(`${API_URL}/pedidos/por-sessao/${idUsuario}`);
         setPedidosAntigos(response.data); 
@@ -31,50 +35,58 @@ function HistoricoPedidos() {
         setIsLoading(false);
       }
     };
-
     fetchPedidos();
   }, [idUsuario]);
 
-  // Função para ir pro pagamento (caso tenha itens no carrinho)
   const irParaPagamento = () => {
     navigate('/pagamento');
   };
 
   return (
-    <div className='container-historico-geral'>
+    <div className="conteudo-historico-rpg">
       
-      <h1 className="titulo-pagina-historico">📜 Diário de Aventuras</h1>
+      <header className="header-historico">
+        <h1 className="titulo-rpg">📜 Diário de Aventuras</h1>
+        <p className="subtitulo-rpg">Gerencie seus espólios e reveja suas conquistas passadas.</p>
+      </header>
 
       {/* --- SEÇÃO 1: O CARRINHO (MOCHILA) --- */}
-      <section className="secao-historico">
+      <section className="secao-rpg">
         <div className="cabecalho-secao">
-          <h2>🎒 Mochila (Carrinho Atual)</h2>
+          <h2>🎒 Mochila de Equipamentos <span className="contador-item">({carrinho.length})</span></h2>
+          
           {carrinho.length > 0 && (
-            <button onClick={irParaPagamento} className="btn-finalizar-sessao">
-              Finalizar Compra ⚔️
+            <button onClick={irParaPagamento} className="btn-rpg-acao principal">
+              Finalizar Missão (Pagar) ⚔️
             </button>
           )}
         </div>
 
-        <div className="lista-cards-carrinho">
+        <div className="grid-cards-rpg">
           {carrinho.length === 0 ? (
-            <p className="texto-vazio">Sua mochila está vazia. Visite a loja para equipar-se.</p>
+            <div className="card-vazio">
+              <p>Sua mochila está leve... Talvez leve demais.</p>
+              <small>Visite a loja para se equipar.</small>
+            </div>
           ) : (
             carrinho.map((item) => (
-              <div key={item.id_carrinho_item} className="card-carrinho-historico">
-                <img src={item.img} alt={item.nome} className="img-carrinho-historico" />
-                <div className="info-carrinho-historico">
-                  <h3>{item.nome || "Aventureiro Desconhecido"}</h3>
-                  <p className="preco-carrinho">
-                    {Number(item.valor || 84.90).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+              <div key={item.id_carrinho_item} className="card-item-rpg">
+                <div className="img-wrapper">
+                    <img src={item.img} alt={item.nome} />
+                </div>
+                <div className="info-item">
+                  <h3>{item.nome || "Item Misterioso"}</h3>
+                  <p className="preco-item">
+                    {formatarMoeda(item.valor || 84.90)}
                   </p>
-                  <span className="status-badge-carrinho">Em Planejamento</span>
+                  <span className="badge-status">Na Mochila</span>
                 </div>
                 <button 
-                  className="btn-remover-historico"
+                  className="btn-remover-item"
                   onClick={() => removerDoCarrinho(item.id_carrinho_item)}
+                  title="Descartar Item"
                 >
-                  🗑️
+                  ✕
                 </button>
               </div>
             ))
@@ -82,25 +94,32 @@ function HistoricoPedidos() {
         </div>
       </section>
 
-      <div className="divisor-secoes"></div>
+      <hr className="divisor-rpg" />
 
-      {/* --- SEÇÃO 2: HISTÓRICO DE PEDIDOS (FORJA) --- */}
-      <section className="secao-historico">
+      {/* --- SEÇÃO 2: HISTÓRICO (FORJA) --- */}
+      <section className="secao-rpg">
         <div className="cabecalho-secao">
-          <h2>⚒️ Histórico da Forja (Pedidos Realizados)</h2>
+          <h2>⚒️ Registros da Forja</h2>
         </div>
 
         {isLoading ? (
-          <p className="carregando-texto">Consultando os livros antigos...</p>
+          <div className="loading-rpg">
+            <div className="spinner-rune"></div>
+            <p>Consultando os pergaminhos antigos...</p>
+          </div>
         ) : (
           <div className="lista-pedidos-antigos">
             {pedidosAntigos.length === 0 ? (
-              <p className="texto-vazio">Nenhum pedido foi forjado anteriormente.</p>
+              <div className="card-vazio">
+                <p>Nenhum pedido forjado anteriormente.</p>
+              </div>
             ) : (
-              // AQUI REUTILIZAMOS O SEU BOXITEM QUE JÁ ESTÁ PRONTO
-              pedidosAntigos.map(pedido => (
-                <BoxItem key={pedido.pedido_id || pedido.id} pedido={pedido} />
-              ))
+              // O Container do BoxItem deve respeitar a largura
+              <div className="wrapper-pedidos">
+                 {pedidosAntigos.map(pedido => (
+                    <BoxItem key={pedido.pedido_id || pedido.id} pedido={pedido} />
+                 ))}
+              </div>
             )}
           </div>
         )}

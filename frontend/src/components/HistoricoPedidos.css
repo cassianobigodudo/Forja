@@ -1,0 +1,211 @@
+/* --- CONFIGURAÇÕES GERAIS INTERNAS --- */
+.conteudo-historico-rpg {
+  width: 100%;
+  color: #e0e0e0;
+  font-family: "fonte-paragrafos", serif; /* Fallback se não definida globalmente */
+}
+
+/* Títulos */
+.header-historico {
+  margin-bottom: 30px;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+  padding-bottom: 15px;
+}
+
+.titulo-rpg {
+  font-family: "fonte-titulos", serif;
+  color: #d4af37; /* Dourado */
+  font-size: 2.5rem;
+  margin: 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  letter-spacing: 1px;
+}
+
+.subtitulo-rpg {
+  color: #aeb575; /* Verde Musgo Claro */
+  font-size: 1rem;
+  margin-top: 5px;
+  font-style: italic;
+}
+
+/* --- SEÇÕES --- */
+.secao-rpg {
+  margin-bottom: 40px;
+}
+
+.cabecalho-secao {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.cabecalho-secao h2 {
+  font-family: "fonte-titulos", serif;
+  color: #fff;
+  font-size: 1.5rem;
+  border-left: 4px solid #d4af37;
+  padding-left: 10px;
+}
+
+.contador-item {
+  color: #aeb575;
+  font-size: 0.8em;
+}
+
+/* --- BOTÕES RPG --- */
+.btn-rpg-acao {
+  background-color: rgba(90, 94, 28, 0.8); /* Verde Musgo Fundo */
+  border: 1px solid #d4af37;
+  color: #fff;
+  padding: 10px 20px;
+  font-family: "fonte-titulos", serif;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+.btn-rpg-acao:hover {
+  background-color: #d4af37;
+  color: #1e140f; /* Marrom escuro */
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+}
+
+/* --- CARDS DA MOCHILA (GRID) --- */
+.grid-cards-rpg {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Responsivo */
+  gap: 20px;
+}
+
+.card-item-rpg {
+  background-color: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-item-rpg:hover {
+  border-color: #d4af37;
+  background-color: rgba(0, 0, 0, 0.6);
+  transform: translateX(5px); /* Move levemente para direita */
+}
+
+/* Imagem do Item */
+.img-wrapper {
+  width: 70px;
+  height: 70px;
+  border: 2px solid #5a4a42;
+  border-radius: 4px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Infos do Item */
+.info-item {
+  flex-grow: 1;
+}
+
+.info-item h3 {
+  margin: 0 0 5px 0;
+  font-size: 1.1rem;
+  color: #f0f0f0;
+}
+
+.preco-item {
+  color: #d4af37;
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.badge-status {
+  display: inline-block;
+  font-size: 0.7rem;
+  background: rgba(174, 181, 117, 0.2);
+  color: #aeb575;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-top: 5px;
+  border: 1px solid rgba(174, 181, 117, 0.3);
+}
+
+/* Botão Remover (X) */
+.btn-remover-item {
+  background: transparent;
+  border: none;
+  color: #ff6464;
+  font-size: 1.2rem;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: 0.2s;
+  padding: 5px;
+}
+
+.btn-remover-item:hover {
+  opacity: 1;
+  text-shadow: 0 0 8px rgba(255, 100, 100, 0.6);
+  transform: scale(1.1);
+}
+
+/* --- ESTADOS VAZIOS E LOADING --- */
+.card-vazio {
+  text-align: center;
+  padding: 40px;
+  border: 2px dashed rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #888;
+  width: 100%;
+}
+
+.divisor-rpg {
+  border: 0;
+  height: 1px;
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(212, 175, 55, 0.5), rgba(0, 0, 0, 0));
+  margin: 40px 0;
+}
+
+/* Animação de Loading Simples */
+.loading-rpg {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #aeb575;
+  gap: 15px;
+}
+
+.spinner-rune {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(212, 175, 55, 0.3);
+  border-top-color: #d4af37;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* BoxItem Wrapper (para garantir que seus componentes antigos se adaptem) */
+.wrapper-pedidos {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
