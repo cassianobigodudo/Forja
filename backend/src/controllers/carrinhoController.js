@@ -58,7 +58,22 @@ const getItens = async (req, res) => {
     }
 };
 
+const removerItem = async (req, res) => {
+    const { id_carrinho_item } = req.params;
+
+    console.log(`--- [CONTROLLER] Removendo item único do carrinho: ${id_carrinho_item}`);
+
+    try {
+        await CarrinhoModel.limparUnidade(id_carrinho_item);
+        res.status(200).json({ message: 'Item removido com sucesso.' });
+    } catch (error) {
+        console.error("Erro ao deletar:", error);
+        res.status(500).json({ message: 'Erro ao remover do carrinho.' });
+    }
+};
+
 module.exports = {
     adicionarItem,
     getItens,
+    removerItem
 };

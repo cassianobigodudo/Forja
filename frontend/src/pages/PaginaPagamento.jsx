@@ -6,47 +6,66 @@ import "./PaginaPagamento.css";
 import Navbar from '../components/Navbar';
 
 function PaginaPagamento() {
+    // Pegamos a função removerDoCarrinho do contexto para garantir sincronia global
+    // Se o contexto não tiver essa função exposta ou se preferir fazer local, a gente faz local.
+    // Vou fazer local para garantir que funcione com o estado 'cartItems' desta página.
     const { usuarioId } = useGlobalContext();
     const navigate = useNavigate();
 
     const [cartItems, setCartItems] = useState([]);
-    
-    // Inicia como TRUE, mas não vamos usar para bloquear a tela inteira
     const [isLoading, setIsLoading] = useState(true); 
     const [isProcessing, setIsProcessing] = useState(false);
     const [statusMessage, setStatusMessage] = useState('');
 
     // --- 1. BUSCAR ITENS ---
     useEffect(() => {
-        const idParaBuscar = usuarioId || localStorage.getItem('usuario_id');
+        const idParaBuscar = usuarioId || localStorage.getItem('id_usuario'); // Use 'id_usuario' padronizado
 
         if (idParaBuscar) {
-            const fetchCartItems = async () => {
-                try {
-                    const response = await axios.get(`https://forja-qvex.onrender.com/api/carrinho/${idParaBuscar}`);
-                    setCartItems(response.data);
-                } catch (error) {
-                    console.error("Erro ao buscar o carrinho:", error);
-                    setStatusMessage("Não foi possível carregar seu carrinho.");
-                } finally {
-                    setIsLoading(false); // Só aqui os dados aparecem
-                }
-            };
-            fetchCartItems();
+            fetchCartItems(idParaBuscar);
         } else {
             setIsLoading(false);
         }
     }, [usuarioId]);
 
+    const fetchCartItems = async (idUser) => {
+        try {
+            const response = await axios.get(`https://forja-qvex.onrender.com/api/carrinho/${idUser}`);
+            setCartItems(response.data);
+        } catch (error) {
+            console.error("Erro ao buscar o carrinho:", error);
+            setStatusMessage("Não foi possível carregar seu carrinho.");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     // --- 2. CALCULAR TOTAIS ---
-    // Enquanto carrega, cartItems é [], então total é 0. O layout não quebra.
     const totalCarrinho = cartItems.reduce((acc, item) => acc + Number(item.valor || 84.90), 0);
-    const custoEnvio = 99.90;
+    const custoEnvio = 34.90;
     const totalFinal = totalCarrinho + custoEnvio;
 
-    // --- 3. FINALIZAR COMPRA ---
+    // --- 3. FUNÇÃO DE REMOVER ITEM ---
+    const handleRemoveItem = async (idCarrinhoItem) => {
+        // Remove visualmente primeiro (Optimistic Update)
+        setCartItems(prev => prev.filter(item => item.id_carrinho_item !== idCarrinhoItem));
+
+        try {
+            // Chama a rota de delete
+            await axios.delete(`https://forja-qvex.onrender.com/api/carrinho/${idCarrinhoItem}`);
+            console.log("Item removido com sucesso.");
+        } catch (error) {
+            console.error("Erro ao remover item:", error);
+            alert("Erro ao remover item. Atualizando carrinho...");
+            // Se der erro, recarrega a lista original
+            const idUser = usuarioId || localStorage.getItem('id_usuario');
+            if(idUser) fetchCartItems(idUser);
+        }
+    };
+
+    // --- 4. FINALIZAR COMPRA ---
     const handleFinalizarCompra = async () => {
-        const idUsuario = usuarioId || localStorage.getItem('usuario_id');
+        const idUsuario = usuarioId || localStorage.getItem('id_usuario');
         if (!idUsuario) return alert("Erro de login.");
 
         setIsProcessing(true);
@@ -66,9 +85,6 @@ function PaginaPagamento() {
             setIsProcessing(false);
         }
     };
-
-    // REMOVI O IF (ISLOADING) RETURN AQUI.
-    // Agora o site renderiza direto.
 
     return (
         <div className="container-paginaz"> 
@@ -91,31 +107,36 @@ function PaginaPagamento() {
                         <h2 className='titulo'>Itens na Forja:</h2>
                         <div className='lista'>
                             
-                            {/* AQUI ESTÁ A MÁGICA: */}
-                            {/* Renderização Condicional DENTRO do container */}
-                            
                             {isLoading ? (
-                                /* ESTADO DE CARREGAMENTO (SÓ NA LISTA) */
                                 <div className="loading-state">
                                     <p>Consultando inventário...</p>
                                 </div>
                             ) : cartItems.length > 0 ? (
-                                /* ESTADO COM ITENS */
                                 cartItems.map((item) => (
-                                    <article className="item" key={item.id}>
+                                    <article className="item" key={item.id_carrinho_item}>
                                         <div className="thumb-wrapper">
                                             <img src={item.img} className='thumb' alt={item.nome} />
                                         </div>
+                                        
                                         <div className="detalhes-item">
                                             <h1>{item.nome || "Aventureiro"}</h1>
                                             <h2>
                                                 {Number(item.valor || 84.90).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                                             </h2>
                                         </div>
+
+                                        {/* BOTÃO REMOVER (NOVO) */}
+                                        <button 
+                                            className="btn-remover-pagamento"
+                                            onClick={() => handleRemoveItem(item.id_carrinho_item)}
+                                            title="Remover este item"
+                                        >
+                                            X
+                                        </button>
+
                                     </article>
                                 ))
                             ) : (
-                                /* ESTADO VAZIO */
                                 <article className="item-vazio">
                                     <label>
                                         {statusMessage || 'Seu carrinho está vazio.'}
@@ -128,6 +149,7 @@ function PaginaPagamento() {
                     
                     {/* DIREITA */}
                     <aside className='direita'>
+                        {/* ... (Resumo e Botões de Pagamento iguais) ... */}
                         <div className='metodos'>
                             <button className="metodo-pix">Pix</button>
                             <button className="metodo-cartao">Cartão</button>

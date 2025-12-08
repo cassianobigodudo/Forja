@@ -7,7 +7,7 @@ import Modal from './Modal';
 function Navbar() {
   const navigate = useNavigate();
   // Pegamos o carrinho do contexto para saber o tamanho dele
-  const { isCarrinhoAberto, setIsCarrinhoAberto, carrinho } = useGlobalContext();
+  const { isCarrinhoAberto, setIsCarrinhoAberto, carrinho, usuarioNome, usuarioId } = useGlobalContext();
 
   return (
     <div className="container-componente-navbar">
@@ -21,16 +21,17 @@ function Navbar() {
         </div>
 
         <div className="container-carrinho-usuario">
+            {usuarioId && <label className='lbl-bemvindo'>{usuarioNome}</label>}
             
             <button className="btn-carrinho" onClick={() => setIsCarrinhoAberto(!isCarrinhoAberto)}>
               {/* Wrapper para posicionar a bolinha relativa ao ícone */}
               <div className="icone-carrinho-wrapper">
                   <img src="/icones/Carrinho.svg" alt="Carrinho" className='carrinho-navbar'/>
-                  
-                  {/* SÓ MOSTRA SE TIVER ITENS */}
                   {carrinho.length > 0 && (
                     <span className="contador-carrinho">{carrinho.length}</span>
                   )}
+                  
+                  {/* SÓ MOSTRA SE TIVER ITENS */}
               </div>
             </button>
             

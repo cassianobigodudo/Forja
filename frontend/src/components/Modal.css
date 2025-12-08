@@ -134,7 +134,10 @@
 
 .btn-remover-item {
     background: none;
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.5);
+    
+    border-radius: 4px;
     cursor: pointer;
     color: rgba(255, 255, 255, 0.5); /* Branco apagado */
     font-weight: bold;
@@ -143,9 +146,12 @@
     padding: 5px;
 }
 .btn-remover-item:hover { 
-    color: var(--Texto); 
-    text-shadow: 0 0 5px white; 
-    transform: scale(1.1); 
+    background-color: rgba(255, 0, 0, 0.2); /* Fundo vermelho suave */
+    border-color: rgba(255, 0, 0, 0.5);
+    color: white;
+    transform: scale(1.1);
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+
 }
 
 /* FOOTER (Total e Botão) */
