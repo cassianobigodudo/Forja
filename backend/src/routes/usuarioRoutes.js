@@ -7,5 +7,7 @@ router.post('/cadastro', usuarioController.cadastrar);
 
 // Rota para LOGIN (POST /api/usuarios/login)
 router.post('/login', usuarioController.login);
-
+//
+// Rota para CADASTRO DE CARTÃO (POST /api/usuarios/cartoes)
+router.post('/cartoes', usuarioController.adicionarCartao);
 module.exports = router;
