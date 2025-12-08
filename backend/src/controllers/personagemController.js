@@ -160,11 +160,26 @@ const gerarHistoria = async (req, res) => {
     }
 };
 
-// ===============================
-// EXPORTAÇÃO FINAL
-// ===============================
+const listarPorUsuario = async (req, res) => {
+    const { id_usuario } = req.params;
+    console.log(`--- [CONTROLLER] Buscando personagens do usuario: ${id_usuario} ---`);
+
+    try {
+        if (!id_usuario) return res.status(400).json({ error: "ID do usuário obrigatório" });
+
+        // Chama o model passando o ID
+        const personagens = await PersonagemModel.buscarPorUsuario(id_usuario);
+        
+        return res.status(200).json(personagens);
+    } catch (error) {
+        console.error("Erro ao buscar personagens do usuário:", error);
+        return res.status(500).json({ error: "Erro interno ao buscar personagens." });
+    }
+};
+
 module.exports = {
     criarPersonagem,
     gerarHistoria,
-    buscarPersonagensLoja
+    buscarPersonagensLoja,
+    listarPorUsuario // <--- NÃO ESQUEÇA DE EXPORTAR
 };

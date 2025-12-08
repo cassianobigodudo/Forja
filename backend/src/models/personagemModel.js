@@ -154,7 +154,22 @@ const buscar = async () => {
     }
 }
 
+const buscarPorUsuario = async (idUsuario) => {
+    try {
+        // Seleciona tudo onde o id_usuario bate com o parametro
+        const query = `SELECT * FROM personagens WHERE id_usuario = $1 ORDER BY id DESC`;
+        const values = [idUsuario];
+        
+        const result = await db.query(query, values);
+        return result.rows;
+    } catch (error) {
+        console.error("--- [ERRO MODEL] Falha ao buscar por usuário:", error);
+        throw error;
+    }
+};
+
 module.exports = {
     criar,
-    buscar
+    buscar,
+    buscarPorUsuario // <--- ADICIONE ESTE
 };

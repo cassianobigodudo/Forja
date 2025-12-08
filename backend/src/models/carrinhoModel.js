@@ -9,22 +9,54 @@ const adicionarItem = async (id_usuario, personagem_id) => {
     return result;
 };
 
-// 2. BUSCAR (Agora traz o id_carrinho_item)
 const buscarPorSessao = async (id_usuario) => {
     const query = `
         SELECT 
-            c.id_carrinho_item, -- O NOVO ID ÚNICO
-            p.id AS personagem_id,
-            p.nome, 
-            p.valor, 
-            p.img
-        FROM carrinho c
-        INNER JOIN personagens p ON c.personagem_id = p.id
+            c.id_carrinho_item,   -- PK correta da tabela carrinho
+            c.personagem_id,      -- FK correta (antes eu chamei de id_personagem)
+            
+            -- Dados da tabela personagens (Join)
+            p.id as id_original_personagem,
+            p.nome,
+            p.valor,
+            p.img,
+            p.historia,
+            
+            -- DADOS INDUSTRIAIS (Necessários para a máquina)
+            p.generonum, 
+            p.corpelenum, 
+            p.marcasnum,
+            p.cabelonum, 
+            p.corcabelonum,
+            p.acesscabecanum, 
+            p.acesspescoconum,
+            p.roupacimanum, 
+            p.roupacimavariantenum,
+            p.armasnum, 
+            p.basemininum,
+            p.roupabaixonum, 
+            p.roupabaixovariantenum,
+            p.sapatonum, 
+            p.sapatovariantenum
+
+        FROM carrinho c -- Assumindo que o nome da tabela é 'carrinho'
+        JOIN personagens p ON c.personagem_id = p.id
         WHERE c.id_usuario = $1
-        ORDER BY c.adicionado_em DESC
     `;
-    const { rows } = await db.query(query, [id_usuario]);
-    return rows;
+    
+    try {
+        const { rows } = await db.query(query, [id_usuario]);
+        return rows;
+    } catch (error) {
+        console.error("Erro no SQL do Carrinho:", error.message);
+        throw error;
+    }
+};
+
+const limparPorSessao = async (client, id_usuario) => {
+    const executor = client || db;
+    // Ajustado para o nome da tabela 'carrinho'
+    await executor.query('DELETE FROM carrinho WHERE id_usuario = $1', [id_usuario]);
 };
 
 // 3. REMOVER (Muito mais simples e seguro)
@@ -35,21 +67,6 @@ const limparUnidade = async (id_carrinho_item) => {
     const result = await db.query(query, [id_carrinho_item]);
     return result;
 };
-
-// Limpa o carrinho de uma sessão (será usado pelo controller de Pedidos)
-const limparPorSessao = async (client, id_usuario) => {
-    console.log(`--- [DEBUG MODEL CARRINHO] Executando DELETE para User: ${id_usuario}`);
-    // Usamos o 'client' da transação para garantir consistência
-    // Nota: Se 'client' não for passado (uso fora de transação), isso vai quebrar.
-    // Se for usar sem transação, use db.query direto.
-    if (client) {
-         return client.query('DELETE FROM carrinho WHERE id_usuario = $1', [id_usuario]);
-    } else {
-         console.warn("--- [AVISO MODEL] limparPorSessao chamado sem client de transação. Usando db pool.");
-         return db.query('DELETE FROM carrinho WHERE id_usuario = $1', [id_usuario]);
-    }
-};
-
 module.exports = {
     adicionarItem,
     buscarPorSessao,
