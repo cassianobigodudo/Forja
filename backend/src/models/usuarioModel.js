@@ -1,3 +1,4 @@
+// backend/src/models/usuarioModel.js
 
 const db = require('../config/database');
 
@@ -29,9 +30,21 @@ const salvarCartao = async (id_usuario, numero, nome, validade, cvv) => {
     return db.query(query, [id_usuario, numero, nome, validade, cvv]);
 };
 
+const buscarPorId = async (id) => {
+    const result = await db.query(
+        `SELECT id_usuario, nome_usuario, email_usuario 
+         FROM usuarios 
+         WHERE id_usuario = $1`,
+        [id]
+    );
+    return result.rows[0];
+};
+
+
 // Exportamos a função para que o Controller possa usá-la
 module.exports = {
     criarUsuario,
     buscarEmail,
-    salvarCartao
+    salvarCartao,
+    buscarPorId
 };

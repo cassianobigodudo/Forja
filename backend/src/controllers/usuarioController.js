@@ -1,3 +1,5 @@
+// backend/src/controllers/usuarioController.js
+
 const UsuarioModel = require('../models/usuarioModel');
 
 const cadastrar = async (req, res) => {
@@ -45,7 +47,7 @@ const login = async(req, res) =>{
         }
         if (usuario.senha_usuario != senha){
             return res.status(401).json({
-                message: "Senha Incorreta"
+                message: "Dados de autenticação inválidas!!!"
             })
         }
 
@@ -74,8 +76,33 @@ const adicionarCartao = async (req, res) => {
     }
 };
 
+
+const buscarPorId = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const usuario = await UsuarioModel.buscarPorId(id);
+
+        if (!usuario) {
+            return res.status(404).json({ message: "Usuário não encontrado" });
+        }
+
+        res.status(200).json({
+            nome: usuario.nome_usuario,
+            email: usuario.email_usuario
+            // senha NÃO deve ser enviada!
+        });
+
+    } catch (error) {
+        console.error("Erro ao buscar usuário:", error);
+        res.status(500).json({ message: "Erro no servidor." });
+    }
+};
+
+
 module.exports = { 
-cadastrar, 
-login,
-adicionarCartao 
+    cadastrar, 
+    login,
+    adicionarCartao,
+    buscarPorId
 };

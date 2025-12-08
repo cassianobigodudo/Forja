@@ -45,7 +45,8 @@ function MeusDados() {
 
       try {
         const resposta = await axios.get(`${API_URL}/usuarios/${idParaBuscar}`);
-        setUsuario(resposta.data);
+        const { senha, ...dadosSemSenha } = resposta.data;
+        setUsuario({ ...dadosSemSenha, senha: "" });
       } catch (erro) {
         console.error("Erro ao buscar usuário:", erro);
       } finally {
@@ -57,6 +58,9 @@ function MeusDados() {
 
   // 2. FUNÇÕES DE EDIÇÃO DE CAMPO
   const habilitarEdicao = (campo) => {
+    if (campo === "senha"){
+      setUsuario((prev) => ({ ...prev, senha: "" }));
+    }
     setEditando((prev) => ({ ...prev, [campo]: true }));
   };
 
@@ -121,6 +125,7 @@ function MeusDados() {
   // 4. SALVAR ENDEREÇO NO BANCO
   const salvarNovoEndereco = async () => {
     const idParaSalvar = idUsuario || localStorage.getItem('id_usuario');
+    console.log('id do usuário recuperado após tentar salvar o endereço',idParaSalvar);
     if (!idParaSalvar) return alert("Erro de autenticação");
 
     try {
@@ -203,7 +208,7 @@ function MeusDados() {
               type="password"
               className={`inputs-dados ${editando.senha ? 'editavel' : ''}`}
               disabled={!editando.senha}
-              value={usuario.senha || "********"} // Mascara senha
+              value={editando.senha ? usuario.senha : "********"} // Mascara senha
               onChange={(e) => setUsuario({ ...usuario, senha: e.target.value })}
             />
              <div className="botoes-acao">

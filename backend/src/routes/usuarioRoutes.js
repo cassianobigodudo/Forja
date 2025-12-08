@@ -1,3 +1,5 @@
+// backend/src/routes/usuarioRoutes.js
+
 const express = require('express');
 const router = express.Router();
 const usuarioController = require('../controllers/usuarioController');
@@ -10,4 +12,8 @@ router.post('/login', usuarioController.login);
 //
 // Rota para CADASTRO DE CARTÃO (POST /api/usuarios/cartoes)
 router.post('/cartoes', usuarioController.adicionarCartao);
+
+// Rota para buscar os dados do usuário logado
+router.get('/:id', usuarioController.buscarPorId);
+
 module.exports = router;
