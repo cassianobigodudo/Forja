@@ -53,7 +53,7 @@ const montarPayloadIndustrial = (item, novoPedidoId) => {
                 bloco2: bloco2,
                 bloco3: bloco3
             },
-            sku: "RPG-CUSTOM-V1"
+            sku: "FORJA-CUSTOM-V1"
         },
         // IMPORTANTE: Use a variável de ambiente. Se estiver testando local, use ngrok.
         callbackUrl: `${process.env.BACKEND_URL}/api/pedidos/callback`
