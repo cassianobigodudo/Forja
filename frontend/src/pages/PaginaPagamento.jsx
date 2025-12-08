@@ -9,7 +9,7 @@ function PaginaPagamento() {
     // Pegamos a função removerDoCarrinho do contexto para garantir sincronia global
     // Se o contexto não tiver essa função exposta ou se preferir fazer local, a gente faz local.
     // Vou fazer local para garantir que funcione com o estado 'cartItems' desta página.
-    const { usuarioId } = useGlobalContext();
+    const { usuarioId, removerDoCarrinho, atualizarCarrinho } = useGlobalContext();
     const navigate = useNavigate();
 
     const [cartItems, setCartItems] = useState([]);
@@ -45,22 +45,12 @@ function PaginaPagamento() {
     const custoEnvio = 34.90;
     const totalFinal = totalCarrinho + custoEnvio;
 
-    // --- 3. FUNÇÃO DE REMOVER ITEM ---
     const handleRemoveItem = async (idCarrinhoItem) => {
-        // Remove visualmente primeiro (Optimistic Update)
+        // Usa a função do contexto que já remove do banco E atualiza o estado global
+        await removerDoCarrinho(idCarrinhoItem);
+        
+        // Atualiza a lista local desta página para refletir a mudança
         setCartItems(prev => prev.filter(item => item.id_carrinho_item !== idCarrinhoItem));
-
-        try {
-            // Chama a rota de delete
-            await axios.delete(`https://forja-qvex.onrender.com/api/carrinho/${idCarrinhoItem}`);
-            console.log("Item removido com sucesso.");
-        } catch (error) {
-            console.error("Erro ao remover item:", error);
-            alert("Erro ao remover item. Atualizando carrinho...");
-            // Se der erro, recarrega a lista original
-            const idUser = usuarioId || localStorage.getItem('id_usuario');
-            if(idUser) fetchCartItems(idUser);
-        }
     };
 
     // --- 4. FINALIZAR COMPRA ---
