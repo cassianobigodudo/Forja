@@ -9,20 +9,30 @@ const adicionarItem = async (id_usuario, personagem_id) => {
     return result;
 };
 
-// 2. BUSCAR (Agora traz o id_carrinho_item)
+// src/models/carrinhoModel.js
+
 const buscarPorSessao = async (id_usuario) => {
+    // ATENÇÃO NOS CAMPOS DO SELECT
     const query = `
         SELECT 
-            c.id_carrinho_item, -- O NOVO ID ÚNICO
-            p.id AS personagem_id,
-            p.nome, 
-            p.valor, 
-            p.img
-        FROM carrinho c
-        INNER JOIN personagens p ON c.personagem_id = p.id
+            c.id as id_carrinho_item, 
+            p.id as personagem_id,      -- <--- ISSO ESTAVA FALTANDO OU COM NOME ERRADO
+            p.nome,
+            p.valor,
+            p.img,
+            -- Trazendo os dados numéricos para a Indústria
+            p.generonum, p.corpelenum, p.marcasnum,
+            p.cabelonum, p.corcabelonum,
+            p.acesscabecanum, p.acesspescoconum,
+            p.roupacimanum, p.roupacimavariantenum,
+            p.armasnum, p.basemininum,
+            p.roupabaixonum, p.roupabaixovariantenum,
+            p.sapatonum, p.sapatovariantenum
+        FROM carrinho_itens c
+        JOIN personagens p ON c.id_personagem = p.id
         WHERE c.id_usuario = $1
-        ORDER BY c.adicionado_em DESC
     `;
+    
     const { rows } = await db.query(query, [id_usuario]);
     return rows;
 };

@@ -60,98 +60,87 @@ const montarPayloadIndustrial = (item, novoPedidoId) => {
     };
 };
 
+// src/controllers/pedidoController.js
+
 const criarAPartirDoCarrinho = async (req, res) => {
-    console.log("\n🚀 [DEBUG] Iniciando Processo de Checkout...");
+    console.log("\n🚀 [DEBUG] Iniciando Checkout (MODO RIGOROSO)...");
     const { id_usuario } = req.body;
 
-    if (!id_usuario) {
-        console.error("❌ [DEBUG] Erro: Sem ID de usuário.");
-        return res.status(400).json({ message: 'ID de usuário é obrigatório.' });
-    }
+    if (!id_usuario) return res.status(400).json({ message: 'Sem ID de usuário.' });
 
     const client = await db.pool.connect();
 
     try {
         await client.query('BEGIN');
-        console.log(`✅ [DEBUG] Transação iniciada para User: ${id_usuario}`);
 
-        // 1. Busca itens
+        // 1. Busca itens (Agora com a coluna personagem_id garantida)
         const itensCarrinho = await CarrinhoModel.buscarPorSessao(id_usuario);
-        console.log(`📦 [DEBUG] Itens no carrinho: ${itensCarrinho.length}`);
+        
+        console.log(`📦 [DEBUG] Itens encontrados: ${itensCarrinho.length}`);
+        
+        // DEBUG EXTRA: Ver o que veio do banco
+        if(itensCarrinho.length > 0) {
+            console.log("🔍 [DEBUG] Primeiro item (estrutura):", JSON.stringify(itensCarrinho[0], null, 2));
+        }
 
         if (itensCarrinho.length === 0) {
-            await client.query('ROLLBACK');
-            return res.status(400).json({ message: 'Carrinho vazio.' });
+            throw new Error('Carrinho vazio.'); // Joga para o catch principal
         }
         
-        const resultados = { sucessos: [], falhas: [] };
-
+        // LOOP DE PROCESSAMENTO
         for (const item of itensCarrinho) {
-            console.log(`\n🔨 [DEBUG] Processando Item: ${item.nome} (ID: ${item.id})`);
             
-            let novoPedidoId = null;
-            try {
-                // 2. Cria pedido no banco (Status: Processando)
-                novoPedidoId = await PedidoModel.criar(client, id_usuario, item.id, 'processando');
-                console.log(`   -> Pedido criado no DB com ID: ${novoPedidoId}`);
-
-                // 3. Monta o Payload usando a função auxiliar
-                const requisicaoParaProfessor = montarPayloadIndustrial(item, novoPedidoId);
-                
-                console.log("   -> Payload Gerado para a Máquina:");
-                console.log(JSON.stringify(requisicaoParaProfessor.payload.order, null, 2));
-                console.log(`   -> Callback URL: ${requisicaoParaProfessor.callbackUrl}`);
-
-                // 4. Envia para o Professor
-                console.log("   -> 📡 Enviando para API externa...");
-                const responseExt = await axios.post('http://52.72.137.244:3000/queue/items', requisicaoParaProfessor);
-                
-                console.log(`   -> ✅ Resposta API Externa: ${responseExt.status}`);
-
-                // 5. Atualiza status para 'enviado'
-                const orderIdExterno = requisicaoParaProfessor.payload.orderId;
-                await PedidoModel.atualizarStatus(client, novoPedidoId, 'enviado', orderIdExterno);
-                
-                resultados.sucessos.push(novoPedidoId);
-
-            } catch (error) {
-                console.error(`❌ [DEBUG] FALHA no item ${item.id}:`);
-                if (error.response) {
-                    // Erro vindo da API do professor
-                    console.error("   -> Dados do Erro API:", error.response.data);
-                    console.error("   -> Status do Erro API:", error.response.status);
-                } else {
-                    console.error("   -> Erro Interno:", error.message);
-                }
-
-                resultados.falhas.push({ personagemId: item.id, erro: error.message });
-                
-                if (novoPedidoId) {
-                    await PedidoModel.atualizarStatus(client, novoPedidoId, 'falha_envio', null);
-                }
-                // Decisão: Não damos throw aqui para tentar processar os outros itens do carrinho
-                // Se quiser cancelar tudo ao primeiro erro, coloque 'throw error'
+            // VALIDAÇÃO CRÍTICA DO ID
+            if (!item.personagem_id) {
+                throw new Error(`O item "${item.nome}" não possui um ID de personagem válido.`);
             }
+
+            console.log(`\n🔨 [DEBUG] Processando: ${item.nome} (ID Personagem: ${item.personagem_id})`);
+            
+            // 2. Cria pedido no banco
+            // IMPORTANTE: Usando item.personagem_id agora!
+            const novoPedidoId = await PedidoModel.criar(client, id_usuario, item.personagem_id, 'processando');
+            console.log(`   -> Pedido criado ID: ${novoPedidoId}`);
+
+            // 3. Monta Payload
+            // Certifique-se que sua função montarPayloadIndustrial usa as colunas novas (generonum, etc)
+            const requisicaoParaProfessor = montarPayloadIndustrial(item, novoPedidoId);
+
+            // 4. Envia para API Externa
+            console.log("   -> 📡 Enviando para fábrica...");
+            
+            // Se o axios falhar aqui, ele vai explodir o erro e cair no catch lá em baixo (ROLLBACK)
+            await axios.post('http://52.72.137.244:3000/queue/items', requisicaoParaProfessor);
+                
+            console.log(`   -> ✅ Sucesso na fábrica.`);
+
+            // 5. Atualiza status local
+            const orderIdExterno = requisicaoParaProfessor.payload.orderId;
+            await PedidoModel.atualizarStatus(client, novoPedidoId, 'enviado', orderIdExterno);
         }
 
-        // 6. Limpa carrinho APENAS se houve pelo menos um sucesso
-        if (resultados.sucessos.length > 0) {
-            await CarrinhoModel.limparPorSessao(client, id_usuario);
-            console.log("🧹 [DEBUG] Carrinho limpo.");
-        }
+        // 6. Se chegou aqui, TODOS deram certo. Limpa o carrinho.
+        await CarrinhoModel.limparPorSessao(client, id_usuario);
         
         await client.query('COMMIT');
-        console.log("🏁 [DEBUG] Checkout finalizado com sucesso.");
+        console.log("🏁 [DEBUG] SUCESSO TOTAL. Commit realizado.");
         
-        res.status(200).json({ 
-            mensagem: 'Processamento concluído.', 
-            detalhes: resultados 
-        });
+        res.status(200).json({ mensagem: 'Compra finalizada com sucesso!' });
 
     } catch (error) {
+        // QUALQUER ERRO CAI AQUI E CANCELA TUDO
         await client.query('ROLLBACK');
-        console.error('🔥 [DEBUG] ERRO FATAL NA TRANSAÇÃO:', error);
-        res.status(500).json({ message: 'Erro crítico ao finalizar compra.' });
+        
+        console.error('❌ [DEBUG] ERRO FATAL - OPERAÇÃO CANCELADA');
+        
+        // Tenta pegar mensagem de erro da API do professor se existir
+        const msgErro = error.response?.data ? JSON.stringify(error.response.data) : error.message;
+        console.error('   -> Motivo:', msgErro);
+
+        res.status(500).json({ 
+            message: 'Erro ao processar pagamento. Nenhuma cobrança foi feita.',
+            detalhe: msgErro
+        });
     } finally {
         client.release();
     }
