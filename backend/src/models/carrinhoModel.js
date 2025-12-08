@@ -9,32 +9,52 @@ const adicionarItem = async (id_usuario, personagem_id) => {
     return result;
 };
 
-// src/models/carrinhoModel.js
-
 const buscarPorSessao = async (id_usuario) => {
-    // ATENÇÃO NOS CAMPOS DO SELECT
+    // AQUI ESTAVA O PROBLEMA: A formatação das vírgulas tem que ser perfeita
     const query = `
         SELECT 
             c.id as id_carrinho_item, 
-            p.id as personagem_id,      -- <--- ISSO ESTAVA FALTANDO OU COM NOME ERRADO
+            p.id as personagem_id,
             p.nome,
             p.valor,
             p.img,
-            -- Trazendo os dados numéricos para a Indústria
-            p.generonum, p.corpelenum, p.marcasnum,
-            p.cabelonum, p.corcabelonum,
-            p.acesscabecanum, p.acesspescoconum,
-            p.roupacimanum, p.roupacimavariantenum,
-            p.armasnum, p.basemininum,
-            p.roupabaixonum, p.roupabaixovariantenum,
-            p.sapatonum, p.sapatovariantenum
+            p.historia, -- Adicionei caso queira mostrar resumo no carrinho
+            
+            -- DADOS INDUSTRIAIS (Verifique se os nomes batem com suas colunas no banco)
+            p.generonum, 
+            p.corpelenum, 
+            p.marcasnum,
+            p.cabelonum, 
+            p.corcabelonum,
+            p.acesscabecanum, 
+            p.acesspescoconum,
+            p.roupacimanum, 
+            p.roupacimavariantenum,
+            p.armasnum, 
+            p.basemininum,
+            p.roupabaixonum, 
+            p.roupabaixovariantenum,
+            p.sapatonum, 
+            p.sapatovariantenum
+
         FROM carrinho_itens c
         JOIN personagens p ON c.id_personagem = p.id
         WHERE c.id_usuario = $1
     `;
     
-    const { rows } = await db.query(query, [id_usuario]);
-    return rows;
+    try {
+        const { rows } = await db.query(query, [id_usuario]);
+        return rows;
+    } catch (error) {
+        console.error("Erro no SQL do Carrinho:", error.message);
+        throw error; // Joga o erro para o controller saber que falhou
+    }
+};
+
+const limparPorSessao = async (client, id_usuario) => {
+    // Se passar 'client' (transação), usa ele. Se não, usa o pool direto.
+    const executor = client || db;
+    await executor.query('DELETE FROM carrinho_itens WHERE id_usuario = $1', [id_usuario]);
 };
 
 // 3. REMOVER (Muito mais simples e seguro)
@@ -45,21 +65,6 @@ const limparUnidade = async (id_carrinho_item) => {
     const result = await db.query(query, [id_carrinho_item]);
     return result;
 };
-
-// Limpa o carrinho de uma sessão (será usado pelo controller de Pedidos)
-const limparPorSessao = async (client, id_usuario) => {
-    console.log(`--- [DEBUG MODEL CARRINHO] Executando DELETE para User: ${id_usuario}`);
-    // Usamos o 'client' da transação para garantir consistência
-    // Nota: Se 'client' não for passado (uso fora de transação), isso vai quebrar.
-    // Se for usar sem transação, use db.query direto.
-    if (client) {
-         return client.query('DELETE FROM carrinho WHERE id_usuario = $1', [id_usuario]);
-    } else {
-         console.warn("--- [AVISO MODEL] limparPorSessao chamado sem client de transação. Usando db pool.");
-         return db.query('DELETE FROM carrinho WHERE id_usuario = $1', [id_usuario]);
-    }
-};
-
 module.exports = {
     adicionarItem,
     buscarPorSessao,
