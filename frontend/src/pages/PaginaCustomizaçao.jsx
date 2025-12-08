@@ -15,6 +15,8 @@ import MenuTorso from '../components/MenuTorso';
 import MenuPernas from '../components/MenuPernas';
 import MenuSapatos from '../components/MenuSapatos';
 import MenuArmas from '../components/MenuArmas';
+// --- NOVO MENU DE BASE ---
+import MenuBases from '../components/MenuBases'; 
 
 // --- CONTEXTOS E HOOKS ---
 import { useGlobalContext } from '../context/GlobalContext';
@@ -28,7 +30,7 @@ function PaginaCustomizaçao() {
     personagem, 
     atualizarPersonagem, 
     salvarPersonagem,
-    salvarPersonagemAdicionarCarrinho,
+    salvarPersonagemAdicionarCarrinho, // USANDO A VERSÃO DA MAIN
     caminhosDasImagens, 
     opcoesDoPersonagem,
     handleAcessoriosCabecaChange, 
@@ -85,10 +87,9 @@ function PaginaCustomizaçao() {
 
     setTimeout(async () => {
         try {
-            // AQUI É A MUDANÇA:
-            // Passamos o Ref E um objeto com os dados da história
+            // USANDO A FUNÇÃO ATUALIZADA DA MAIN
             await salvarPersonagemAdicionarCarrinho(characterRef, {
-                nome: nomePersonagem,      // State da página
+                nome: nomePersonagem,       // State da página
                 historia: historiaGerada || enredoHistoria // State da página
             });
 
@@ -180,6 +181,11 @@ function PaginaCustomizaçao() {
             {caminhosDasImagens.cabeloFundo && <img src={caminhosDasImagens.cabeloFundo} alt="" style={{ position: 'absolute', top: 0, left: 0 }} />}
             {caminhosDasImagens.acessoriosCabecaFundo && caminhosDasImagens.acessoriosCabecaFundo.map((c, i) => <img key={`bg-${i}`} src={c} alt="" style={{ position: 'absolute', top: 0, left: 0 }} />)}
 
+                {/* 1.5 BASE DA MINIATURA (MAIS ABAIXO DE TUDO - NOVO) */}
+                {caminhosDasImagens.baseMini && (
+                    <img src={caminhosDasImagens.baseMini} alt="Base Miniatura" style={{ position: 'absolute', top: 0, left: 0, zIndex: -200 }} />
+                )}
+
             {/* 2. CORPO BASE */}
             <img src={caminhosDasImagens.corpo} alt="Corpo" style={{ position: 'relative' }} />
             
@@ -239,6 +245,11 @@ function PaginaCustomizaçao() {
               <button className={btnAtivo === 'ARMAS' ? 'btn-corpo-follow-ativado' : 'btn-corpo-follow'} onClick={() => handleButtonClick('ARMAS')}>
                   <label className='botaoLbl'>ARMAS</label> <img className='img-btn-icon' src="./icones/Armas.svg" alt="" onError={(e)=>e.target.style.display='none'}/>
               </button>
+              
+              {/* <-- NOVO BOTÃO DE BASE --> */}
+              <button className={btnAtivo === 'BASE' ? 'btn-corpo-follow-ativado' : 'btn-corpo-follow'} onClick={() => handleButtonClick('BASE')}>
+                  <label className='botaoLbl'>BASE</label> <img className='img-btn-icon' src="./icones/base.svg" alt="" onError={(e)=>e.target.style.display='none'}/>
+              </button>
 
               <button className={btnAtivo === 'HISTÓRIA' ? 'btn-corpo-follow-ativado' : 'btn-corpo-follow'} onClick={() => handleButtonClick('HISTÓRIA')}>
                   <label className='botaoLbl'>HISTÓRIA</label> <img className='img-btn-icon' src="./icones/Historia.svg" alt="" onError={(e)=>e.target.style.display='none'}/>
@@ -253,6 +264,7 @@ function PaginaCustomizaçao() {
               </button>
             </div>
 
+            {/* MENSAGEM COM O ESTILO DA MAIN */}
             <div className="menu-primario-custom-mensagem">
               <span className="mensagem-adicionar-carrinho">{message}</span>
             </div>
@@ -327,6 +339,12 @@ function PaginaCustomizaçao() {
               armasDisponiveis={opcoesDoPersonagem.armas}
             />}
 
+            {/* --- NOVO MENU DE BASE --- */}
+            {btnAtivo === 'BASE' && <MenuBases 
+              baseMini={personagem.baseMini}
+              atualizarPersonagem={atualizarPersonagem}
+            />}
+
             {btnAtivo === 'HISTÓRIA' && <MenuSecHistoria 
                 nomePersonagem={nomePersonagem}
                 setNomePersonagem={setNomePersonagem}
@@ -340,7 +358,7 @@ function PaginaCustomizaçao() {
                 setHistoriaGerada={setHistoriaGerada}
                 loading={loadingHistoria}
                 error={errorHistoria}
-                onGerarHistoria={handleGerarHistoria}     
+                onGerarHistoria={handleGerarHistoria}      
             />}
 
           </div>
