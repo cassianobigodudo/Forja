@@ -1,5 +1,5 @@
 import React from 'react';
-import './MenuTorso.css'; // <--- IMPORTANTE: Mudei o import
+import './MenuTorso.css'; // Garantindo o import do CSS correto
 
 function MenuTorso({ 
     genero = 'FEMININO', 
@@ -10,28 +10,37 @@ function MenuTorso({
     torsosDisponiveis, 
     variantesDisponiveis 
 }) {
+    // Garantir que a lista seja segura para mapear (evita erros se a prop vier vazia)
     const listaSegura = Array.isArray(torsosDisponiveis) ? torsosDisponiveis : [];
 
+    // Função auxiliar para gerar o caminho da imagem do torso
     const getImagePath = (nomeRoupa) => {
-        return `/personagem-${genero}/ROUPAS-TORSO/${nomeRoupa}-top-1.png`;
+        // Exemplo: /personagem-FEMININO/ROUPAS-TORSO/Top-Regata-top-1.png
+        // A variante está no final, mas o nome da roupa (sem variante) é usado na lista
+        return `/personagem-${genero}/ROUPAS-TORSO/${nomeRoupa}-${varianteAtual}.png`;
     };
 
     return (
-        <div className="container-menu-torso"> {/* Classe atualizada */}
-            <div style={{ textAlign: 'center', color: '#fff', padding: '10px', fontSize: '1.2rem', fontFamily: 'Cormorant Garamond' }}>
+        <div className="container-menu-torso">
+            {/* Título do Menu */}
+            <div>
                 TORSO
             </div>
 
-            <div className="torso-grid"> {/* Classe atualizada */}
-                {/* Botão para Remover */}
+            {/* Grid de Opções de Torso */}
+            <div className="torso-grid">
+                
+                {/* Botão para Remover/Nenhuma Opção */}
                 <button
                     className={`torso-opcao ${!torsoAtual ? 'ativada' : ''}`}
                     onClick={() => onTorsoChange(null)}
+                    title="Remover Roupa de Cima"
                 >
-                   <span style={{fontSize:'0.7rem', color:'#555'}}>Sem</span>
+                   {/* Placeholder para a opção "Sem Torso" */}
+                   <span style={{fontSize:'0.7rem', color:'var(--cor-texto)'}}>NENHUM</span>
                 </button>
 
-                {/* Lista de Roupas */}
+                {/* Mapeamento da Lista de Roupas */}
                 {listaSegura.map((nomeRoupa) => (
                     <button
                         key={nomeRoupa}
@@ -40,10 +49,12 @@ function MenuTorso({
                         title={nomeRoupa}
                     >
                         <img 
+                            // Renderiza a imagem do torso com a variante atual selecionada
                             src={getImagePath(nomeRoupa)} 
                             alt={nomeRoupa}
-                            style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                            // Removidas as classes inline de width/height/objectFit para permitir o CSS fazer o zoom
                             onError={(e) => {
+                                // Fallback: mostra o nome do item se a imagem falhar
                                 e.target.style.display = 'none'; 
                                 e.target.parentNode.innerText = nomeRoupa;
                                 e.target.parentNode.style.fontSize = '0.6rem';
@@ -54,21 +65,19 @@ function MenuTorso({
                 ))}
             </div>
 
-            <div className="variantes-torso-container"> {/* Classe atualizada */}
+            {/* Seção de Variantes/Estilos (Cores/Estilos) */}
+            <div className="variantes-torso-container">
                 <label className='lbl-torso'>VARIAÇÃO / ESTILO</label>
-                <div className="variantes-torso"> {/* Classe atualizada */}
+                <div className="variantes-torso">
+                    {/* Garante que haja pelo menos a variante padrão 'top-1' se a lista for vazia */}
                     {(variantesDisponiveis && variantesDisponiveis.length > 0 ? variantesDisponiveis : ['top-1']).map((variante) => (
                         <button
                             key={variante}
-                            className={`variante-torso ${varianteAtual === variante ? 'ativada' : ''}`} // Classe atualizada
-                            style={{ 
-                                backgroundColor: '#555', border: '1px solid #777',
-                                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                color: 'white', fontSize: '0.7rem'
-                            }}
+                            className={`variante-torso ${varianteAtual === variante ? 'ativada' : ''}`}
                             onClick={() => onVarianteChange(variante)}
                             title={variante}
                         >
+                            {/* Exibe o nome da variante, removendo prefixos */}
                             {variante.replace('top-', '').replace('Top-', '')}
                         </button>
                     ))}

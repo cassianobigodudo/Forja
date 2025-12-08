@@ -1,62 +1,65 @@
 /* =========================================
-   Variáveis Globais & Configurações
-   (MANTIDAS IGUAIS)
+   Variáveis Globais & Configurações (Herança)
    ========================================= */
 :root {
-    /* Cores */
-    --cor-destaque: #ffc107; 
+    --cor-destaque: #ffc107;
     --cor-texto: white;
     --cor-borda-padrao: white;
     --cor-borda-inativa: #5a5a5a;
-    
-    /* Fundos */
-    --bg-item: rgba(0, 0, 0, 0.2); 
-    --bg-item-hover: rgba(255, 255, 255, 0.2);
+    --bg-item: rgba(0, 0, 0, 0.2);
+    --bg-item-hover: rgba(255, 255, 255, 0.2); /* Mantido, mas não usado diretamente no hover do item */
     --transicao-padrao: 0.3s ease;
-    --transicao-rapida: 0.2s ease;
-
-    /* Tema de Fundo Escuro do Container Principal */
+    
+    /* Tema de Fundo Escuro do Container Principal (Consistente) */
     --bg-menu-content: rgba(51, 37, 31, 0.9);
+    
+    /* Cor de fundo escura para os botões de opção (Consistente) */
+    --bg-item-escuro: rgba(31, 19, 14, 0.9); 
 }
 
-/* Animações (MANTIDA IGUAL) */
 @keyframes fadeIn {
     from { opacity: 0; }
     to 	{ opacity: 1; }
 }
 
 /* =========================================
-   Container Principal (Simulando o .bottom)
+   Container Principal (Consistente com .bottom)
    ========================================= */
-.container-menu-torso {
+.container-menu-bases {
     display: flex;
     flex-direction: column;
-    justify-content: start; 
+    justify-content: flex-start; 
     align-items: center;
     gap: 15px;
+
     width: 100%;
     height: 100%; 
     padding: 20px 0; 
     box-sizing: border-box; 
+
     background-color: var(--bg-menu-content);
     border: 2px solid white;
+    
     overflow-y: auto; 
     overflow-x: hidden;
+
     animation: fadeIn var(--transicao-padrao);
 }
 
 /* =========================================
-   Grid de Torsos (Opções)
+   Grid de Bases (Opções de Chão)
    ========================================= */
-.torso-grid {
+.base-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 30px;
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 30px; 
     width: 90%;
 }
 
-.torso-opcao {
+/* Base Opção */
+.base-opcao {
     display: flex;
+    flex-direction: column; 
     justify-content: center;
     align-items: center;
     aspect-ratio: 1 / 1;
@@ -64,102 +67,85 @@
     overflow: hidden; 
 
     /* Fundo Escuro Consistente */
-    background-color: rgba(31, 19, 14, 0.9); 
-    border: 2px solid var(--cor-borda-padrao);
+    background-color: var(--bg-item-escuro); 
+    border: 2px solid var(--cor-borda-padrao); 
     cursor: pointer;
+    color: var(--cor-texto);
 
     transition: background-color var(--transicao-padrao), 
                 border-color var(--transicao-padrao);
 }
 
-.torso-opcao img {
-    width: 90%;
-    height: 90%;
-    object-fit: contain;
+.base-opcao img {
+    width: 100%; 
+    height: 100%; 
+    object-fit: contain; 
     pointer-events: none;
     
-    /* AJUSTE DE ZOOM BASE */
-    transform: scale(3) translateY(15%); 
+    /* AJUSTE DE ZOOM BASE (MANTIDO) */
+    transform: scale(2.3) translateY(-40%); 
     transition: transform var(--transicao-padrao);
 }
 
-/* Estados Interativos (.torso-opcao) */
-.torso-opcao:hover {
-    /* Fundo Claro/Transparente no hover */
-    background-color: var(--bg-item-hover); 
+/* Estados Interativos */
+.base-opcao:hover {
+    /* REMOVIDO: background-color: var(--bg-item-hover);
+       O fundo agora herda o escuro de .base-opcao, eliminando o brilho claro. */
+    /* Você pode adicionar um leve escurecimento extra se desejar: 
+       background-color: rgba(0, 0, 0, 0.4); */
 }
 
-/* --- ADICIONADO: Interação de Zoom do componente Pernas --- */
-.torso-opcao:hover img {
-    /* Aplica um zoom um pouco maior (ex: +0.1 na escala e ajuste o Y se necessário) */
-    transform: scale(3.1) translateY(15%); 
+.base-opcao:hover img {
+    /* Zoom interativo (MANTIDO) */
+    transform: scale(2.4) translateY(-40%); 
 }
-/* -------------------------------------------------------- */
 
-.torso-opcao.ativada {
+.base-opcao.ativada {
     border-color: var(--cor-destaque);
+    /* REMOVIDO: box-shadow para consistência com Torso/Pernas/Armas */
+}
+
+/* Estilo para o placeholder do botão "NENHUMA" base (MANTIDO) */
+.base-opcao .placeholder-none {
+    font-size: 0.7rem;
+    color: var(--cor-texto);
+    text-align: center;
+    line-height: 1;
 }
 
 /* =========================================
-   Seção de Variantes (Cores/Estilos)
-   (MANTIDA IGUAL)
+   Seção de Cores/Opções (MANTIDA)
    ========================================= */
-.variantes-torso-container {
+.cores-base-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
     gap: 15px;
-    margin-top: 15px;
+    padding-top: 10px; 
 }
 
-.lbl-torso {
-    font-family: "fonte-titulos", sans-serif; 
+.lbl-base {
+    font-family: "fonte-titulos", sans-serif;
     font-size: 20px;
     letter-spacing: 2px;
     color: var(--cor-texto);
 }
 
-.variantes-torso {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    flex-wrap: wrap; 
-}
-
-.variante-torso {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: 3px solid var(--cor-borda-inativa);
-    cursor: pointer;
-    transition: border-color var(--transicao-padrao), 
-                transform var(--transicao-rapida);
-}
-
-.variante-torso:hover {
-    transform: scale(1.1);
-}
-
-.variante-torso.ativada {
-    border-color: var(--cor-borda-padrao);
-}
-
-
 /* =========================================
-   SCROLLBAR (MANTIDA IGUAL)
+   SCROLLBAR (Copiado do seu tema principal)
    ========================================= */
-.container-menu-torso::-webkit-scrollbar {
+.container-menu-bases::-webkit-scrollbar {
     width: 20px; 
     background-image: url(./fundo/TRACK.png);
     background-size: contain;
 }
 
-.container-menu-torso::-webkit-scrollbar-track {
+.container-menu-bases::-webkit-scrollbar-track {
     background-clip: content-box;
 }
 
-.container-menu-torso::-webkit-scrollbar-thumb {
+.container-menu-bases::-webkit-scrollbar-thumb {
     border: 4px solid transparent;
     background-image: url(./fundo/DRAG-HANDLE.png);
     background-color: transparent;
@@ -170,6 +156,6 @@
     cursor: pointer;
 }
 
-.container-menu-torso::-webkit-scrollbar-corner {
+.container-menu-bases::-webkit-scrollbar-corner {
     background-color: transparent;
 }

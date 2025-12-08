@@ -1,144 +1,196 @@
 /* =========================================
    Variáveis Globais & Configurações
+   (MANTIDAS IGUAIS)
    ========================================= */
 :root {
-  --cor-destaque: #ffc107;
-  --cor-texto: white;
-  --cor-borda-padrao: white;
-  --cor-borda-inativa: #5a5a5a;
-  --bg-item: rgba(0, 0, 0, 0.2);
-  --bg-item-hover: rgba(255, 255, 255, 0.2);
-  --transicao-padrao: 0.3s ease;
-  --transicao-rapida: 0.2s ease;
+    --cor-destaque: #ffc107;
+    --cor-texto: white;
+    --cor-borda-padrao: white;
+    --cor-borda-inativa: #5a5a5a;
+    --bg-item: rgba(0, 0, 0, 0.2);
+    --bg-item-hover: rgba(255, 255, 255, 0.2);
+    --transicao-padrao: 0.3s ease;
+    --transicao-rapida: 0.2s ease;
+    
+    /* Tema de Fundo Escuro do Container Principal (Baseado no .bottom) */
+    --bg-menu-content: rgba(51, 37, 31, 0.9);
+    
+    /* Cor de fundo escura para os botões de opção, padronizada com Torso/Pernas */
+    --bg-item-escuro: rgba(31, 19, 14, 0.9); 
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+    from { opacity: 0; }
+    to 	{ opacity: 1; }
 }
 
 /* =========================================
-   Container Principal
+   Container Principal (Simulando o .bottom)
    ========================================= */
 .container-menu-sapatos {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-  gap: 15px;
-  width: 100%;
-  height: 100%;
-  padding: 10px;
-  animation: fadeIn var(--transicao-padrao);
+    /* Layout */
+    display: flex;
+    flex-direction: column;
+    justify-content: start; /* Alterado para 'start' para empilhar conteúdo */
+    align-items: center;
+    gap: 15px;
+
+    /* Dimensões */
+    width: 100%;
+    height: 100%; 
+    padding: 20px 0; /* Padding para espaçar o grid do topo/base */
+    box-sizing: border-box; 
+
+    /* Estilo Visual (Do .bottom do seu primeiro bloco) */
+    background-color: var(--bg-menu-content);
+    border: 2px solid white;
+    
+    overflow-y: auto; /* Adiciona scrollbar */
+    overflow-x: hidden;
+
+    /* Animação */
+    animation: fadeIn var(--transicao-padrao);
 }
 
 /* =========================================
    Grid de Sapatos (Opções)
    ========================================= */
 .sapatos-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 30px;
-  width: 90%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    width: 90%;
 }
 
 .sapatos-opcao {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  aspect-ratio: 1 / 1;
-  padding: 5px;
-  overflow: hidden; 
+    /* Layout Interno */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    aspect-ratio: 1 / 1;
+    padding: 5px;
+    overflow: hidden; 
 
-  background-color: var(--bg-item);
-  border: 2px solid var(--cor-borda-padrao);
-  background-color: rgb(17, 11, 6, 0.7); /* Fundo escuro conforme seu pedido */
-  cursor: pointer;
-  transition: background-color var(--transicao-padrao), 
-              border-color var(--transicao-padrao);
+    /* Estilo Visual */
+    /* CORREÇÃO: Usando a variável de fundo escuro consistente, removendo o rgb(17, 11, 6, 0.7) */
+    background-color: var(--bg-item-escuro); 
+    border: 2px solid var(--cor-borda-padrao);
+    cursor: pointer;
+    
+    /* Transição */
+    transition: background-color var(--transicao-padrao), 
+                border-color var(--transicao-padrao);
 }
 
 .sapatos-opcao img {
-  width: 90%;
-  height: 90%;
-  object-fit: contain;
-  pointer-events: none;
-  
-  /* --- AJUSTE DE ZOOM PARA SAPATOS --- */
-  /* scale(2.5): Zoom alto para focar nos pés.
-     translateY(-10%): Puxa a imagem para cima, pois os pés estão no final da imagem */
-  transform: scale(3.2) translateY(-33%); 
-  transition: transform var(--transicao-padrao);
+    width: 90%;
+    height: 90%;
+    object-fit: contain;
+    pointer-events: none;
+    
+    /* --- AJUSTE DE ZOOM PARA SAPATOS (MANTIDO o seu zoom original) --- */
+    transform: scale(3.2) translateY(-33%); 
+    transition: transform var(--transicao-padrao);
 }
 
+/* Estados Interativos (MANTIDOS) */
 .sapatos-opcao:hover {
-  background-color: var(--bg-item-hover);
+    /* Fundo CLARO/TRANSPARENTE no hover */
+    background-color: var(--bg-item-hover);
 }
 
 .sapatos-opcao:hover img {
-    /* Zoom extra no hover */
-    transform: scale(2.7) translateY(-10%);
+    /* Zoom extra no hover (MANTIDO, mas ajustando a escala para um pequeno aumento sobre o base) */
+    /* Assumindo que o zoom base é 3.2, vamos para 3.3. */
+    transform: scale(3.3) translateY(-33%);
 }
 
 .sapatos-opcao.ativada {
-  border-color: var(--cor-destaque);
+    border-color: var(--cor-destaque);
 }
 
 /* =========================================
-   Seção de Variantes
+   Seção de Variantes (Cores/Estilos)
+   (MANTIDA IGUAL, mas padronizando a margem e cor)
    ========================================= */
 .variantes-sapatos-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  gap: 15px;
-  /* Margem superior e borda visual para separar, se necessário */
-  margin-top: 15px;
-  border-top: 1px solid rgba(255,255,255,0.1);
-  padding-top: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 15px;
+    margin-top: 15px;
+    /* Ajustando a borda superior para ser mais sutil e temática */
+    border-top: 1px solid rgba(255, 255, 255, 0.15); 
+    padding-top: 10px;
 }
 
 .lbl-sapatos {
-  font-family: "fonte-titulos", sans-serif; /* Ou 'Cormorant Garamond' se preferir direto */
-  font-size: 0.9rem; /* Levemente menor conforme seu código original */
-  letter-spacing: 2px;
-  color: #ccc;
-  text-transform: uppercase;
+    font-family: "fonte-titulos", sans-serif;
+    font-size: 20px; /* Padronizado com o tamanho de Torso/Pernas */
+    letter-spacing: 2px;
+    color: var(--cor-texto); /* Padronizado para branco */
+    text-transform: uppercase;
 }
 
 .variantes-sapatos {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  flex-wrap: wrap; 
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap; 
 }
 
 .variante-sapato {
-  width: 30px; /* Um pouco menor para sapatos, conforme seu React original */
-  height: 30px;
-  border-radius: 50%;
-  border: 1px solid var(--cor-borda-inativa);
-  background-color: transparent;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: monospace;
-  font-size: 0.9rem;
-  
-  cursor: pointer;
-  transition: border-color var(--transicao-padrao), 
-              background-color var(--transicao-padrao),
-              transform var(--transicao-rapida);
+    width: 40px; /* Padronizado com o tamanho de Torso/Pernas */
+    height: 40px;
+    border-radius: 50%;
+    border: 3px solid var(--cor-borda-inativa); /* Padronizado com a espessura de Torso/Pernas */
+    background-color: transparent;
+    cursor: pointer;
+    
+    /* Transição */
+    transition: border-color var(--transicao-padrao), 
+                transform var(--transicao-rapida);
+    
+    /* Removidas regras internas desnecessárias (display, font) se for apenas um círculo de cor */
 }
 
 .variante-sapato:hover {
-  transform: scale(1.1);
-  background-color: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+    /* Removido background-color: rgba(255, 255, 255, 0.1); para manter a consistência de hover */
 }
 
 .variante-sapato.ativada {
-  border: 2px solid var(--cor-destaque); /* Dourado */
-  background-color: #333;
+    border-color: var(--cor-borda-padrao); /* Padronizado para borda branca no ativo */
+    background-color: transparent; /* Mantido transparente, se a cor vier de um estilo inline/variável */
+}
+
+
+/* =========================================
+   SCROLLBAR (Copiado do seu tema)
+   ========================================= */
+/* Aplica-se ao container principal */
+.container-menu-sapatos::-webkit-scrollbar {
+    width: 20px; 
+    background-image: url(./fundo/TRACK.png);
+    background-size: contain;
+}
+
+.container-menu-sapatos::-webkit-scrollbar-track {
+    background-clip: content-box;
+}
+
+.container-menu-sapatos::-webkit-scrollbar-thumb {
+    border: 4px solid transparent;
+    background-image: url(./fundo/DRAG-HANDLE.png);
+    background-color: transparent;
+    background-clip: padding-box;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    cursor: pointer;
+}
+
+.container-menu-sapatos::-webkit-scrollbar-corner {
+    background-color: transparent;
 }
