@@ -2,9 +2,6 @@ import React, { useState, useEffect } from 'react';
 import './MeusPedidos.css';
 import BoxItem from './BoxItem';
 import axios from "axios";
-
-// CORREÇÃO 3: Importe APENAS o useGlobalContext. 
-// Removemos 'GlobalContext' daqui pois não estamos usando ele direto, e sim o hook.
 import { useGlobalContext } from '../context/GlobalContext';
 
 function MeusPedidos() {
@@ -17,48 +14,68 @@ function MeusPedidos() {
   const API_URL = "https://forja-qvex.onrender.com/api"; 
 
   useEffect(() => {
-    const fetchPedidos = async () => {
-      try {
-        console.log("Tentando buscar pedidos para Session ID:", idUsuario);
-        
-        // Se idUsuario for null (ainda carregando ou não logado), não faz a busca agora
-        if (!idUsuario) {
-            // Podemos esperar um pouco ou retornar. 
-            // Se for login obrigatório, o isLoading fica true até ter o ID.
-            return; 
-        }
+    // Se não tiver usuário, paramos o loading e não buscamos nada
+    if (!idUsuario) {
+        console.log("Usuário não logado, abortando busca.");
+        setIsLoading(false);
+        return;
+    }
 
+    const fetchPedidos = async () => {
+      setIsLoading(true); // Garante que começa carregando ao mudar de user
+      try {
+        console.log("Buscando pedidos para:", idUsuario);
         const response = await axios.get(
           `${API_URL}/pedidos/por-sessao/${idUsuario}`
         );
-        console.log("Pedidos recebidos:", response.data);
+        console.log("Dados recebidos:", response.data);
         setPedidos(response.data); 
-
       } catch (err) {
-        console.error("Erro ao buscar pedidos:", err);
+        console.error("Erro axios:", err);
         setError(err.message);
       } finally {
-        // Só paramos de carregar se tentamos buscar ou se deu erro
-        if (idUsuario) setIsLoading(false);
+        // CORREÇÃO: Removemos o 'if (idUsuario)' daqui. 
+        // O loading deve parar independente do resultado.
+        setIsLoading(false);
       }
     };
 
     fetchPedidos();
-  }, [idUsuario]); // CORREÇÃO 4: Adicione idUsuario aqui. Assim que o Contexto carregar o ID, esse efeito roda de novo.
+  }, [idUsuario]);
 
-  if (isLoading && !idUsuario) {
-     // Mostra carregando enquanto o Contexto não devolve o ID do localStorage
-     return <div className='container-meus-pedidos'><label>Verificando autenticação...</label></div>
+  // --- Renderizações Condicionais ---
+
+  // 1. Se não tem usuário logado
+  if (!idUsuario && !isLoading) {
+      return (
+        <div className='container-meus-pedidos'>
+            <div className="parte-solicitacoes" style={{color: 'white', textAlign: 'center'}}>
+                <h2>Você precisa estar logado.</h2>
+                <p>Faça login para ver seus pedidos.</p>
+            </div>
+        </div>
+      );
   }
 
+  // 2. Se está carregando
   if (isLoading) {
-    return <div className='container-meus-pedidos'><label>Carregando pedidos...</label></div>
+    return (
+        <div className='container-meus-pedidos' style={{display:'flex', justifyContent:'center', alignItems:'center', color: '#ffaa00'}}>
+            <h2>🔥 Aqueçendo a Forja... (Carregando)</h2>
+        </div>
+    );
   }
 
+  // 3. Se deu erro
   if (error) {
-    return <div className='container-meus-pedidos'><label>Erro: {error}</label></div>
+    return (
+        <div className='container-meus-pedidos'>
+            <label style={{color: 'red'}}>Erro: {error}</label>
+        </div>
+    );
   }
 
+  // 4. Se deu tudo certo
   return (
     <div className='container-meus-pedidos'>
       <div className="parte-solicitacoes">
@@ -70,10 +87,13 @@ function MeusPedidos() {
             <div className="boxs-itens">
               {pedidos.length > 0 ? (
                 pedidos.map(pedido => (
-                  <BoxItem key={pedido.pedido_id} pedido={pedido} />
+                    // IMPORTANTE: Se o ID vier como 'id' ou 'pedido_id', ajuste aqui
+                  <BoxItem key={pedido.pedido_id || pedido.id} pedido={pedido} />
                 ))
               ) : (
-                <label>Nenhum pedido encontrado.</label>
+                <div style={{color: '#aaa', padding: '20px'}}>
+                    <label>Nenhum pedido encontrado nesta conta.</label>
+                </div>
               )}
             </div>
           </div>
