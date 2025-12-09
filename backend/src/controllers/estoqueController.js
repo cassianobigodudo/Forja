@@ -36,45 +36,29 @@ const getExpedicao = async (req, res) => {
 
 const liberarExpedicao = async (req, res) => {
     const { slot } = req.params;
-    console.log(`\n♻️ [RECICLAGEM] Iniciando liberação do Slot ${slot}...`);
+    console.log(`\n♻️ [RECICLAGEM] Liberando Slot ${slot}...`);
 
     try {
-        // 1. Descobrir quais peças estão nesse slot para devolver
+        // 1. Recupera peças do boneco para reciclar
         const pecas = await EstoqueModel.getPecasDoPedidoNoSlot(slot);
-
+        
         if (pecas) {
-            // Monta o mapa de devolução (Ex: 2 Vermelhos, 1 Azul)
             const devolucao = {};
-
-            // Helper para somar no objeto
-            const somar = (id) => {
-                if (!id) return;
-                const chave = String(id);
-                devolucao[chave] = (devolucao[chave] || 0) + 1;
-            };
-
-            somar(pecas.cor_cabeca);
-            somar(pecas.cor_torso);
-            somar(pecas.cor_base);
-
-            console.log("   -> Peças recuperadas do boneco:", devolucao);
-
-            // 2. Devolve para o estoque (UPDATE +)
-            await EstoqueModel.devolverItens(devolucao);
-            console.log("   -> Estoque reabastecido com sucesso.");
-        } else {
-            console.warn("   -> Slot estava vazio ou pedido não encontrado. Nada a devolver.");
+            const somar = (id) => { if(id) devolucao[id] = (devolucao[id] || 0) + 1; };
+            
+            somar(pecas.cor_cabeca); somar(pecas.cor_torso); somar(pecas.cor_base);
+            
+            await EstoqueModel.devolverItens(devolucao); // SOMA no estoque
+            console.log("   -> Peças devolvidas ao estoque:", devolucao);
         }
 
-        // 3. Libera a gaveta (UPDATE status='livre')
+        // 2. Libera a gaveta
         await EstoqueModel.liberarSlot(slot);
-        
-        console.log("   -> Slot liberado.");
-        res.status(200).json({ message: `Slot ${slot} liberado e peças devolvidas ao estoque!` });
+        res.status(200).json({ message: `Slot ${slot} liberado e reciclado!` });
 
     } catch (error) {
-        console.error("❌ Erro ao liberar slot:", error);
-        res.status(500).json({ error: "Erro interno ao processar devolução." });
+        console.error("❌ Erro na reciclagem:", error);
+        res.status(500).json({ error: "Erro ao liberar slot" });
     }
 };
 
