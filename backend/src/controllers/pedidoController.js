@@ -1,5 +1,6 @@
 const PedidoModel = require('../models/pedidoModel');
 const CarrinhoModel = require('../models/carrinhoModel');
+const EstoqueModel = require('../models/estoqueModel');
 const db = require('../config/database');
 const axios = require('axios');
 
