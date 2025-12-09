@@ -32,6 +32,22 @@ const atualizarStatusPorCallback = async (orderIdExterno, novoStatus, producaoId
     return result.rows[0];
 };
 
+const atualizarStatusElog = async (orderIdExterno, novoStatus, logEntry, slot) => {
+    const query = `
+        UPDATE pedidos 
+        SET 
+            status = $2,
+            slot_expedicao = COALESCE($4, slot_expedicao), -- Atualiza se vier slot novo
+            log_producao = log_producao || $3::jsonb -- Adiciona ao histórico JSON
+        WHERE orderid_externo = $1
+        RETURNING *
+    `;
+    const values = [orderIdExterno, novoStatus, JSON.stringify([logEntry]), slot];
+    const { rows } = await db.query(query, values);
+    return rows[0];
+};
+
+// --- AQUI ESTÁ A QUERY QUE O FRONTEND USA ---
 const buscarPorUsuario = async (id_usuario) => {
     const { rows } = await db.query(
         `SELECT 
@@ -39,11 +55,15 @@ const buscarPorUsuario = async (id_usuario) => {
             p.status, 
             p.orderid_externo, 
             p.producao_id_externo,
-            p.slot,
+            p.slot_expedicao as slot, -- Renomeia para 'slot' pro frontend entender
+            p.data_pedido,
+            
+            -- Dados do Personagem
+            pers.nome as nome_personagem,
             pers.genero,
-            pers.corPele,
             pers.img,
-            pers.historia
+            pers.valor
+
          FROM pedidos p
          JOIN personagens pers ON p.personagem_id = pers.id
          WHERE p.id_usuario = $1
@@ -58,5 +78,6 @@ module.exports = {
     criar,
     atualizarStatus,
     atualizarStatusPorCallback,
+    atualizarStatusElog,
     buscarPorUsuario, // Exporte a nova função
 };

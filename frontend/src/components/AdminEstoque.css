@@ -1,0 +1,205 @@
+.admin-painel {
+    width: 100%;
+    padding: 30px;
+    color: white;
+    animation: fadeIn 0.5s;
+    overflow-y: auto;
+    padding-bottom: 100px;
+}
+
+.titulo-admin {
+    font-family: "fonte-titulos";
+    color: #d4af37;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    padding-bottom: 15px;
+    margin-bottom: 30px;
+}
+
+.subtitulo-admin {
+    font-size: 0.9rem;
+    color: #aaa;
+    margin-bottom: 15px;
+    font-style: italic;
+}
+
+.secao-admin {
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 25px;
+    margin-bottom: 30px;
+}
+
+.secao-admin h3 {
+    font-family: "fonte-subtitulos";
+    color: #fff;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* --- GRID DE BLOCOS --- */
+.grid-blocos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 20px;
+}
+
+.card-bloco {
+    background: rgba(255,255,255,0.05);
+    border-radius: 6px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    transition: 0.3s;
+}
+
+.card-bloco:hover {
+    background: rgba(255,255,255,0.1);
+    transform: translateY(-2px);
+}
+
+/* DESENHO DO BLOCO (CSS PURO) */
+.bloco-visual {
+    width: 60px;
+    height: 40px;
+    border-radius: 2px;
+    position: relative;
+    box-shadow: inset 0 -5px 0 rgba(0,0,0,0.2), 0 5px 10px rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px; /* Espaço para os pinos */
+}
+
+/* Pinos do bloco */
+.pino {
+    width: 16px;
+    height: 6px;
+    background: inherit; /* Herda a cor do bloco */
+    border-radius: 2px 2px 0 0;
+    position: relative;
+    top: -6px; /* Sobe para fora do bloco */
+    filter: brightness(1.1); /* Um pouco mais claro */
+    box-shadow: 0 1px 1px rgba(0,0,0,0.3);
+}
+
+.bloco-info {
+    text-align: center;
+}
+
+.bloco-info strong {
+    display: block;
+    font-family: "fonte-titulos";
+    font-size: 1.1rem;
+}
+
+.qtd-badge {
+    font-family: "fonte-numeros";
+    color: #d4af37;
+    font-size: 1.2rem;
+}
+.qtd-badge.baixo { color: #ff4444; animation: piscar 2s infinite; }
+
+.btn-ajuste {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #ccc;
+    font-size: 0.8rem;
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+}
+.btn-ajuste:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+/* --- GRID SLOTS --- */
+.grid-slots {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.slot-card {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 6px;
+    padding: 15px;
+    min-height: 160px;
+    display: flex;
+    flex-direction: column;
+}
+
+.slot-card.ocupado {
+    border: 1px solid #d4af37;
+    background: radial-gradient(circle at center, rgba(212,175,55,0.1), #1a1a1a);
+}
+
+.slot-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 10px;
+}
+
+.slot-header span {
+    font-family: "fonte-numeros";
+    color: #888;
+    letter-spacing: 2px;
+}
+
+/* Luzinha de Status */
+.luz-status {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: #333;
+    box-shadow: 0 0 2px #000;
+}
+.luz-status.livre { background: #00ff00; box-shadow: 0 0 8px #00ff00; }
+.luz-status.ocupado { background: #ffaa00; box-shadow: 0 0 8px #ffaa00; }
+
+.slot-conteudo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.info-pedido, .info-cliente {
+    font-size: 0.9rem;
+    color: #ddd;
+    margin-bottom: 8px;
+}
+
+.vazio-text {
+    text-align: center;
+    color: #444;
+    font-style: italic;
+    margin-top: 20px;
+}
+
+.btn-entregar {
+    background: #d4af37;
+    color: #000;
+    border: none;
+    padding: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 2px;
+    margin-top: 10px;
+    transition: 0.3s;
+}
+.btn-entregar:hover {
+    background: #fff;
+    box-shadow: 0 0 10px #fff;
+}
+
+@keyframes piscar {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}

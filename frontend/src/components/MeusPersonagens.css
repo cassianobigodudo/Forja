@@ -35,22 +35,42 @@
 .galeria-grid::-webkit-scrollbar-thumb { background-color: rgba(255,255,255,0.2); }
 
 /* --- CARD STRUCTURE --- */
+
+/* --- CARD STRUCTURE --- */
 .card-heroi {
-    background-color: var(--FundoAlternativo); /* Marrom */
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    /* 1. FUNDO COM IMAGEM E GRADIENTE */
+    background-color: var(--FundoAlternativo); /* Fallback */
+    
+    /* Gradiente escuro em cima + Imagem de textura embaixo */
+    background-image: 
+    linear-gradient(to bottom, rgba(20, 20, 25, 0.8), rgba(10, 10, 10, 0.95)),
+    url('/fundo/tim-mcburnie-completa.webp');
+
+    background-size: cover;
+    background-position: center;
+
+    /* 2. BORDA E MOLDURA */
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    /* Box-shadow interno para dar profundidade (parecer afundado ou elevado) */
+    box-shadow: 
+        0 4px 10px rgba(0,0,0,0.5), 
+        inset 0 0 20px rgba(0,0,0,0.8); /* Sombra interna */
+
     border-radius: 4px;
     display: flex;
     flex-direction: column;
-    height: 350px; /* Altura um pouco menor */
+    height: 350px;
     position: relative;
     overflow: hidden;
     transition: 0.3s ease;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
 }
 
 .card-heroi:hover {
-    border-color: rgba(255, 255, 255, 0.4);
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+    /* No hover, a borda brilha como prata */
+    border-color: rgba(255, 255, 255, 0.6);
+    box-shadow: 
+        0 10px 25px rgba(0,0,0,0.8),
+        inset 0 0 10px rgba(255, 255, 255, 0.1); /* Brilho interno */
     transform: translateY(-3px);
 }
 
@@ -60,7 +80,8 @@
     position: relative;
     width: 100%;
     overflow: hidden;
-    background: #111;
+    background-image: url('/fundo/tim-mcburnie-completa.webp');
+    background-position: center;
 }
 
 /* FOCO NO ROSTO */
@@ -93,6 +114,7 @@
     opacity: 0;
     transition: opacity 0.3s ease;
     z-index: 2;
+
 }
 
 .card-heroi:hover .card-overlay-hover {
@@ -183,81 +205,103 @@
     transform: scale(1.1); /* Leve zoom no ícone */
 }
 
-/* --- MODAL CENTRALIZADO --- */
 .modal-backdrop {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    width: 100vw; height: 100vh;
+    /* Garante que cubra a tela DO NAVEGADOR, não do elemento pai */
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 70vw; 
+    height: 100vh;
+    
     background-color: rgba(0,0,0,0.85);
-    z-index: 9999; /* Garante que fique acima de tudo */
+    z-index: 10000; /* Bem alto para ficar acima de tudo */
+    
     display: flex;
     justify-content: center;
-    align-items: center;
-    backdrop-filter: blur(2px);
+    /* align-items: center;     Centraliza Verticalmente */
+    
+    backdrop-filter: blur(4px);
+    padding: 20px; /* Garante que não encoste nas bordas em telas pequenas */
 }
 
 .modal-box {
-    background-color: var(--FundoAlternativo); /* Marrom */
+    background-color: var(--FundoAlternativo);
     border: 1px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 0 30px rgba(0,0,0,0.8);
+    box-shadow: 0 0 50px rgba(0,0,0,1);
     
-    width: 90%;
-    max-width: 500px;
-    max-height: 80vh; /* Limite de altura */
+    /* LARGURA E ALTURA */
+    width: 100%;
+    max-width: 900px; 
+    max-height: 70vh; /* Nunca ultrapassa 90% da altura da tela */
     
-    padding: 25px;
-    border-radius: 4px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    border-radius: 4px;
+    padding: 30px;
+    position: relative; /* Para o botão fechar absoluto funcionar */
     
-    animation: fadeIn 0.3s ease-out;
+    /* ANIMAÇÃO SUAVE AO ABRIR */
+    animation: zoomInModal 0.3s ease-out;
+    margin-right: 80px;
 }
 
-.modal-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    padding-bottom: 10px;
-}
-
-.modal-top h3 {
-    font-family: "fonte-titulos";
-    font-size: 1.5rem;
-    color: #d4af37; /* Dourado apenas no título do modal, se quiser mudar pra branco, use var(--Texto) */
-    margin: 0;
-}
-
-.btn-fechar-modal-historia {
-    background: none;
-    border: none;
-    color: rgba(255,255,255,0.5);
-    font-size: 1.8rem;
-    cursor: pointer;
-    line-height: 1;
-}
-.btn-fechar-modal-historia:hover { color: #fff; }
-
+/* ÁREA DE TEXTO COM SCROLL */
 .modal-text {
-    overflow-y: auto;
-    padding-right: 5px;
+    flex: 1; /* Ocupa o espaço que sobrar */
+    overflow-y: auto; /* Cria barra de rolagem SÓ aqui se o texto for grande */
+    margin-top: 15px;
+    padding-right: 10px;
 }
-
-.modal-text::-webkit-scrollbar { width: 5px; }
-.modal-text::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); }
 
 .modal-text p {
     font-family: "fonte-paragrafos";
     color: rgba(255,255,255,0.9);
-    line-height: 1.6;
+    font-size: 1.2rem;
+    line-height: 1.8;
     text-align: justify;
-    font-size: 1.1rem;
     white-space: pre-wrap;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.95); }
+/* CABEÇALHO DO MODAL */
+.modal-top {
+    display: flex;
+    justify-content: center; /* Título no meio */
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 15px;
+    position: relative;
+    flex-shrink: 0; /* Impede que o cabeçalho seja esmagado */
+}
+
+.modal-top h3 {
+    font-family: "fonte-titulos";
+    font-size: 2rem;
+    color: white;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+/* BOTÃO FECHAR ABSOLUTO (CANTO SUPERIOR DIREITO) */
+.btn-fechar-modal-historia {
+    position: absolute;
+    right: 0;
+    top: 0; /* Alinha com o topo do modal-box, não do header */
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.5);
+    font-size: 2rem;
+    cursor: pointer;
+    line-height: 1;
+    transition: 0.3s;
+}
+.btn-fechar-modal-historia:hover { 
+    color: #ff4444; 
+    transform: scale(1.1);
+}
+
+/* NOVA ANIMAÇÃO SÓ PRO MODAL */
+@keyframes zoomInModal {
+    from { opacity: 0; transform: scale(0.9); }
     to { opacity: 1; transform: scale(1); }
 }
 
