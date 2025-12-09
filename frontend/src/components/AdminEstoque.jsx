@@ -110,35 +110,35 @@ function AdminEstoque() {
                 <div className="titulo-secao">
                     <IconeCaixa /> <h3>Expedição & Retirada</h3>
                 </div>
-
-                <div className="grid-slots">
-                    {slots.map(s => (
-                        <div key={s.numero_slot} className={`slot-card ${s.status === 'ocupado' ? 'ocupado' : 'livre'}`}>
-                            <div className="slot-id">BOX 0{s.numero_slot}</div>
-                            
-                            <div className="slot-body">
-                                {s.status === 'ocupado' ? (
-                                    <>
-                                        <div className="pedido-info">
-                                            <span className="label">Pedido</span>
-                                            <span className="valor">{s.orderid_externo}</span>
-                                        </div>
-                                        <div className="pedido-info">
-                                            <span className="label">Cliente</span>
-                                            <span className="valor">{s.nome_usuario || '---'}</span>
-                                        </div>
-                                        <button className="btn-liberar" onClick={() => handleConfirmarEntrega(s.numero_slot)}>
-                                            <IconeCheck /> Confirmar Entrega
-                                        </button>
-                                    </>
-                                ) : (
-                                    <span className="status-livre">Disponível</span>
-                                )}
+                    <div className="grid-slots">
+                        {slots.map(s => (
+                            <div key={s.numero_slot} className={`slot-card ${s.status === 'ocupado' ? 'ocupado' : 'livre'}`}>
+                                {/* CORREÇÃO AQUI: padStart garante BOX 01, BOX 09, BOX 10, BOX 26... */}
+                                <div className="slot-id">BOX {String(s.numero_slot).padStart(2, '0')}</div>
+                                
+                                <div className="slot-body">
+                                    {s.status === 'ocupado' ? (
+                                        <>
+                                            <div className="pedido-info">
+                                                <span className="label">Pedido</span>
+                                                <span className="valor">{s.orderid_externo}</span>
+                                            </div>
+                                            <div className="pedido-info">
+                                                <span className="label">Cliente</span>
+                                                <span className="valor">{s.nome_usuario || '---'}</span>
+                                            </div>
+                                            <button className="btn-liberar" onClick={() => handleConfirmarEntrega(s.numero_slot)}>
+                                                <IconeCheck /> Confirmar Entrega
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <span className="status-livre">Disponível</span>
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
-            </div>
 
             {/* SEÇÃO 3: LOGS */}
             <div className="secao-admin logs-container">

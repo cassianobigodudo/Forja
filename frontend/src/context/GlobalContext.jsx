@@ -143,7 +143,9 @@ export const GlobalContextProvider = ({ children }) => {
     <GlobalContext.Provider value={{
       // Auth
       usuarioId, 
-      usuarioNome, 
+      usuarioNome,
+      setUsuarioId,
+      setUsuarioNome, 
       loginUsuario, 
       logoutUsuario,
       isLoadingAuth,

@@ -74,8 +74,20 @@ const adicionarCartao = async (req, res) => {
     }
 };
 
+const deletarConta = async (req, res) => {
+    const { id_usuario } = req.params;
+    try {
+        await UsuarioModel.removerUsuario(id_usuario);
+        res.status(200).json({ message: "Usuário removido com sucesso." });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Erro ao remover usuário." });
+    }
+};
+
 module.exports = { 
 cadastrar, 
 login,
-adicionarCartao 
+adicionarCartao,
+deletarConta
 };

@@ -29,9 +29,18 @@ const salvarCartao = async (id_usuario, numero, nome, validade, cvv) => {
     return db.query(query, [id_usuario, numero, nome, validade, cvv]);
 };
 
+const removerUsuario = async (id_usuario) => {
+    const query = `
+        DELETE FROM usuarios
+        WHERE id_usuario = $1
+    `;
+    return db.query(query, [id_usuario]);
+}
+
 // Exportamos a função para que o Controller possa usá-la
 module.exports = {
     criarUsuario,
     buscarEmail,
-    salvarCartao
+    salvarCartao,
+    removerUsuario
 };

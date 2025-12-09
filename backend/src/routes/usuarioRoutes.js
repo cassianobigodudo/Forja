@@ -10,4 +10,6 @@ router.post('/login', usuarioController.login);
 //
 // Rota para CADASTRO DE CARTÃO (POST /api/usuarios/cartoes)
 router.post('/cartoes', usuarioController.adicionarCartao);
+
+router.delete('/:id_usuario', usuarioController.deletarConta);
 module.exports = router;

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useGlobalContext } from "../context/GlobalContext";
+import { useNavigate } from "react-router-dom"; // Importe isso para redirecionar após excluir
 import "./MeusDados.css";
 
 function MeusDados() {
-  const { idUsuario } = useGlobalContext(); // Pega ID do contexto global
+  const { usuarioId, setUsuarioId } = useGlobalContext(); // Se tiver função de setar usuario global, use aqui
+  const navigate = useNavigate(); // Hook de navegação
   const API_URL = "https://forja-qvex.onrender.com/api";
 
   const [dialogAberto, setDialogAberto] = useState(false);
@@ -39,7 +41,7 @@ function MeusDados() {
   useEffect(() => {
     async function fetchUsuario() {
       // Se não tiver ID (ex: deslogou), não busca
-      const idParaBuscar = idUsuario || localStorage.getItem('id_usuario');
+      const idParaBuscar = usuarioId || localStorage.getItem('id_usuario');
       
       if (!idParaBuscar) return;
 
@@ -53,7 +55,7 @@ function MeusDados() {
       }
     }
     fetchUsuario();
-  }, [idUsuario]);
+  }, [usuarioId]);
 
   // 2. FUNÇÕES DE EDIÇÃO DE CAMPO
   const habilitarEdicao = (campo) => {
@@ -66,7 +68,7 @@ function MeusDados() {
   };
 
   const salvarCampo = async (campo) => {
-    const idParaSalvar = idUsuario || localStorage.getItem('id_usuario');
+    const idParaSalvar = usuarioId || localStorage.getItem('id_usuario');
     try {
       // PATCH para atualizar apenas 1 campo
       const resposta = await axios.patch(
@@ -120,7 +122,7 @@ function MeusDados() {
 
   // 4. SALVAR ENDEREÇO NO BANCO
   const salvarNovoEndereco = async () => {
-    const idParaSalvar = idUsuario || localStorage.getItem('id_usuario');
+    const idParaSalvar = usuarioId || localStorage.getItem('id_usuario');
     if (!idParaSalvar) return alert("Erro de autenticação");
 
     try {
@@ -137,6 +139,40 @@ function MeusDados() {
         alert("Erro ao salvar endereço.");
     }
   }
+
+  const handleExcluirConta = async () => {
+    const idParaDeletar = usuarioId || localStorage.getItem('id_usuario');
+
+    // 1. TRAVA DO ADMIN (ID 5)
+    if (String(idParaDeletar) === '5') {
+        alert("🛡️ Ação Bloqueada: O Mestre da Forja (Admin) não pode deletar a própria conta!");
+        return;
+    }
+
+    // 2. CONFIRMAÇÃO DE SEGURANÇA
+    const confirmacao = window.confirm(
+        "Tem certeza absoluta? \n\nIsso apagará seus personagens, pedidos e histórico permanentemente. Essa ação não pode ser desfeita."
+    );
+
+    if (!confirmacao) return; // Se cancelar, para aqui.
+
+    // 3. CHAMADA API
+    try {
+        await axios.delete(`${API_URL}/usuarios/${idParaDeletar}`);
+        
+        alert("Sua conta foi excluída. Sentiremos sua falta, aventureiro!");
+
+        // 4. LOGOUT FORÇADO (Limpeza)
+        localStorage.removeItem('id_usuario'); // Limpa ID
+        localStorage.removeItem('carrinho');   // Limpa carrinho local se tiver
+        
+        navigate('/'); // Redireciona para home
+        
+    } catch (error) {
+        console.error("Erro ao excluir:", error);
+        alert("Erro ao excluir conta. Verifique se você tem pedidos pendentes ou tente novamente.");
+    }
+  };
 
   if (loading) return <div className="loading-profile">Carregando dados...</div>;
 
@@ -232,7 +268,7 @@ function MeusDados() {
       {/* --- COLUNA DA DIREITA: FOTO E EXCLUIR --- */}
       <div className="editar-imagem">
         <h1>FOTO DE PERFIL</h1>
-        {/* Placeholder ou Foto Real */}
+        
         <div 
             className="preview-foto"
             style={{ 
@@ -248,7 +284,12 @@ function MeusDados() {
         </label>
         <input id="file-upload" type="file" />
 
-        <button className="botao-deletar-conta" onClick={() => alert("Função em desenvolvimento no backend!")}>
+        {/* --- BOTÃO ATUALIZADO --- */}
+        <button 
+            className="botao-deletar-conta" 
+            onClick={handleExcluirConta} // <--- Chama a função nova aqui
+            style={{ marginTop: '20px', cursor: 'pointer' }}
+        >
             Excluir Conta
         </button>
       </div>
