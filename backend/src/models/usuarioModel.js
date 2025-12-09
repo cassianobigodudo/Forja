@@ -29,12 +29,28 @@ const salvarCartao = async (id_usuario, numero, nome, validade, cvv) => {
     return db.query(query, [id_usuario, numero, nome, validade, cvv]);
 };
 
-const removerUsuario = async (id_usuario) => {
-    const query = `DELETE FROM usuarios WHERE id_usuario = $1`;
-    console.log(`🔌 [SQL EXEC] Executando: ${query} com ID [${id_usuario}]`);
+const removerUsuario = async (client, id_usuario) => {
+    // Apaga os dados relacionados primeiro (ordem importa!)
+    await db.query("DELETE FROM enderecos WHERE id_usuario = $1", [id_usuario]);
+    await db.query("DELETE FROM carrinho WHERE id_usuario = $1", [id_usuario]);
     
-    // O retorno do db.query contém 'rowCount', que diz quantas linhas foram apagadas
-    return db.query(query, [id_usuario]); 
+    // CUIDADO: Ao apagar pedidos, você perde histórico financeiro.
+    // O ideal seria apenas desativar o usuário (soft delete).
+    // Mas para o trabalho acadêmico, vamos apagar tudo:
+    
+    // Precisamos apagar os itens de expedição antes dos pedidos
+    await db.query(`
+        UPDATE expedicao_slots SET status = 'livre', pedido_id = NULL 
+        WHERE pedido_id IN (SELECT id FROM pedidos WHERE id_usuario = $1)
+    `, [id_usuario]);
+
+    await db.query("DELETE FROM pedidos WHERE id_usuario = $1", [id_usuario]);
+    
+    // Personagens também
+    await db.query("DELETE FROM personagens WHERE usuario_id = $1", [id_usuario]);
+
+    // Finalmente, apaga o usuário
+    return db.query("DELETE FROM usuarios WHERE id_usuario = $1", [id_usuario]);
 }
 // Exportamos a função para que o Controller possa usá-la
 module.exports = {
