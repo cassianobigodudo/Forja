@@ -47,7 +47,7 @@ const removerUsuario = async (client, id_usuario) => {
     await db.query("DELETE FROM pedidos WHERE id_usuario = $1", [id_usuario]);
     
     // Personagens também
-    await db.query("DELETE FROM personagens WHERE usuario_id = $1", [id_usuario]);
+    await db.query("DELETE FROM personagens WHERE id_usuario = $1", [id_usuario]);
 
     // Finalmente, apaga o usuário
     return db.query("DELETE FROM usuarios WHERE id_usuario = $1", [id_usuario]);
