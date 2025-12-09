@@ -84,7 +84,7 @@ function AdminEstoque() {
                 
                 <div className="grid-blocos">
                     {blocos.map(bloco => (
-                        <div key={bloco.id} className="card-bloco">
+                        <div key={bloco.id} className="card-bloco" style={{ borderColor: bloco.cor_hex }}>
                             <div className="bloco-header">
                                 <span className="bloco-nome">{bloco.cor_nome}</span>
                             </div>

@@ -51,7 +51,7 @@ const montarPayloadIndustrial = (item, novoPedidoId) => {
 };
 
 // =========================================================================
-// 2. CRIAR PEDIDO (CHECKOUT)
+// 2. CRIAR PEDIDO (CHECKOUT COM CONSUMO DE ESTOQUE)
 // =========================================================================
 const criarAPartirDoCarrinho = async (req, res) => {
     console.log("\n🚀 [CHECKOUT] Iniciando processo...");
@@ -64,18 +64,59 @@ const criarAPartirDoCarrinho = async (req, res) => {
     try {
         await client.query('BEGIN');
 
-        // Busca Carrinho
+        // 1. Busca Itens do Carrinho
         const itensCarrinho = await CarrinhoModel.buscarPorSessao(id_usuario);
+        if (itensCarrinho.length === 0) throw new Error('Carrinho vazio.');
+
         console.log(`📦 Itens no carrinho: ${itensCarrinho.length}`);
 
-        if (itensCarrinho.length === 0) throw new Error('Carrinho vazio.');
+        // =================================================================
+        // 🛑 NOVA LÓGICA: CALCULAR DEMANDA E SUBTRAIR ESTOQUE
+        // =================================================================
+        
+        const demandaTotal = {}; // Ex: { '1': 3, '2': 5 } (ID Preto: 3, ID Vermelho: 5)
+
+        const somarUso = (idCor) => {
+            if (!idCor) return; 
+            const chave = String(idCor);
+            demandaTotal[chave] = (demandaTotal[chave] || 0) + 1;
+        };
+
+        // Varre todos os itens e soma os chassis usados
+        itensCarrinho.forEach(item => {
+            somarUso(item.generonum);       // Cor da Cabeça
+            somarUso(item.acesspescoconum); // Cor do Torso
+            somarUso(item.basemininum);     // Cor da Base
+        });
+
+        console.log("📊 Demanda de Peças:", demandaTotal);
+
+        // A. Verificar se TEM peça suficiente (Sem mexer ainda)
+        // Você precisa ter criado essa função no estoqueModel.js (passo anterior)
+        const errosEstoque = await EstoqueModel.verificarDisponibilidade(demandaTotal);
+        
+        if (errosEstoque.length > 0) {
+            console.error("❌ FALTA DE ESTOQUE:", errosEstoque);
+            // IMPORTANTE: Retorna 409 (Conflict) para o front saber que é erro de estoque
+            throw new Error(`Estoque insuficiente:\n${errosEstoque.join('\n')}`);
+        }
+
+        // B. CONSUMIR (SUBTRAIR) DO BANCO AGORA
+        // Passamos 'client' para garantir que isso faça parte da transação
+        // Se der erro depois (na API do professor), o ROLLBACK desfaz essa subtração
+        await EstoqueModel.consumirItens(client, demandaTotal);
+        console.log("🔥 Estoque debitado com sucesso (Reserva Garantida).");
+
+        // =================================================================
+        // FIM DA LÓGICA DE ESTOQUE - CONTINUA O PROCESSO NORMAL
+        // =================================================================
 
         for (const item of itensCarrinho) {
             if (!item.personagem_id) throw new Error(`Item ${item.nome} sem ID válido.`);
 
-            console.log(`\n🔨 Processando: ${item.nome} (ID: ${item.personagem_id})`);
+            console.log(`\n🔨 Processando: ${item.nome}`);
 
-            // Cria pedido
+            // Cria pedido no banco
             const novoPedidoId = await PedidoModel.criar(client, id_usuario, item.personagem_id, 'processando');
             
             // Monta Payload
@@ -91,15 +132,26 @@ const criarAPartirDoCarrinho = async (req, res) => {
         }
 
         await CarrinhoModel.limparPorSessao(client, id_usuario);
+        
+        // Se chegou aqui, confirma a subtração do estoque e os pedidos
         await client.query('COMMIT');
         
         console.log("🏁 [CHECKOUT] Finalizado com sucesso.");
         res.status(200).json({ message: 'Itens enviados para produção.' });
 
     } catch (error) {
+        // Se der erro em qualquer lugar (falta estoque, API offline), desfaz a subtração
         await client.query('ROLLBACK');
+        
         console.error('❌ [ERRO CHECKOUT]', error.message);
-        res.status(500).json({ message: 'Erro ao processar.', detalhe: error.message });
+        
+        // Retorna status adequado
+        const status = error.message.includes('Estoque insuficiente') ? 409 : 500;
+        
+        res.status(status).json({ 
+            message: 'Erro ao processar.', 
+            detalhe: error.message 
+        });
     } finally {
         client.release();
     }

@@ -85,6 +85,17 @@ const listarLogs = async () => {
     return rows;
 };
 
+const consumirItens = async (client, demandas) => {
+    // demandas é { '1': 2, '3': 1 }
+    for (const [corId, qtd] of Object.entries(demandas)) {
+        // Usa 'client.query' para manter na transação do pedido
+        await client.query(
+            "UPDATE estoque_pecas SET quantidade = quantidade - $1 WHERE id = $2",
+            [qtd, corId]
+        );
+    }
+};
+
 module.exports = {
     listarPecas,
     atualizarPeca,
@@ -92,5 +103,6 @@ module.exports = {
     liberarSlot,
     listarLogs,
     getPecasDoPedidoNoSlot, // <--- NOVO
-    devolverItens
+    devolverItens,
+    consumirItens
 };
