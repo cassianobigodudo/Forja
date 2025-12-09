@@ -176,10 +176,21 @@ const listarPorUsuario = async (req, res) => {
         return res.status(500).json({ error: "Erro interno ao buscar personagens." });
     }
 };
+const excluirPersonagem = async (req, res) => {
+    const { id } = req.params;
+    try {
+        await PersonagemModel.excluir(id);
+        res.status(200).json({ message: 'Personagem deletado com sucesso.' });
+    } catch (error) {
+        console.error("Erro ao deletar personagem:", error);
+        res.status(500).json({ error: "Erro ao deletar personagem." });
+    }
+};
 
 module.exports = {
     criarPersonagem,
     gerarHistoria,
     buscarPersonagensLoja,
-    listarPorUsuario // <--- NÃO ESQUEÇA DE EXPORTAR
+    listarPorUsuario, // <--- NÃO ESQUEÇA DE EXPORTAR
+    excluirPersonagem // <--- Adicione aqui
 };

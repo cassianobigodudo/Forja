@@ -5,11 +5,12 @@ import { useGlobalContext } from '../context/GlobalContext';
 
 // Importação dos Componentes Filhos
 import MeusDados from '../components/MeusDados';
-import MeusPedidos from '../components/MeusPedidos';
-import MeuHistorico from '../components/MeuHistorico';
-import Navbar from '../components/Navbar';
+// IMPORTANTE: Verifique se o arquivo está mesmo em components ou pages
+import MeusPersonagens from '../components/MeusPersonagens'; 
 
-// Importação do CSS
+// Componentes removidos desta branch: MeusPedidos, MeuHistorico
+
+import Navbar from '../components/Navbar';
 import './UserAccount.css';
 
 function UserAccount() {
@@ -34,7 +35,6 @@ function UserAccount() {
             }
 
             try {
-                // Ajuste a rota conforme seu backend (ex: /api/usuarios/5)
                 const response = await axios.get(`https://forja-qvex.onrender.com/api/usuarios/${id}`);
                 setUserData(response.data);
             } catch (error) {
@@ -55,16 +55,14 @@ function UserAccount() {
         }
     };
 
-    // 3. Função para renderizar o componente correto baseado na aba ativa
+    // 3. Função para renderizar o componente correto
     const renderComponente = () => {
         switch (ativo) {
             case "dados":
-                // Passamos userData como prop para MeusDados
                 return <MeusDados dados={userData} />;
-            case "pedidos":
-                return <MeusPedidos />;
-            case "historico":
-                return <MeuHistorico />;
+            case "personagens":
+                // MeusPersonagens busca seus próprios dados via Contexto/API
+                return <MeusPersonagens />;
             default:
                 return <MeusDados dados={userData} />;
         }
@@ -83,7 +81,6 @@ function UserAccount() {
                     <div className="parte-menu">
 
                         <div className="menu-parte-foto">
-                            {/* Se tiver foto no banco usa ela, senão usa um placeholder */}
                             <div 
                                 className="parte-foto"
                                 style={{ 
@@ -98,6 +95,7 @@ function UserAccount() {
                         </div>
 
                         <div className="menu-parte-botoes">
+                            {/* Botão MEUS DADOS */}
                             <button 
                                 className={`botoes-menu ${ativo === "dados" ? "ativo" : ""}`}
                                 onClick={() => setAtivo("dados")}
@@ -105,19 +103,15 @@ function UserAccount() {
                                 Meus Dados
                             </button>
 
+                            {/* Botão MEUS PERSONAGENS (NOVO) */}
                             <button 
-                                className={`botoes-menu ${ativo === "pedidos" ? "ativo" : ""}`}
-                                onClick={() => setAtivo("pedidos")}
+                                className={`botoes-menu ${ativo === "personagens" ? "ativo" : ""}`}
+                                onClick={() => setAtivo("personagens")}
                             >
-                                Pedidos
+                                Meus Personagens
                             </button>
 
-                            <button 
-                                className={`botoes-menu ${ativo === "historico" ? "ativo" : ""}`}
-                                onClick={() => setAtivo("historico")}
-                            >
-                                Histórico
-                            </button>
+                            {/* Botões de Pedidos e Histórico removidos nesta branch */}
                         </div>
 
                         <div className="menu-parte-sair">
@@ -129,10 +123,9 @@ function UserAccount() {
                     </div>
                 </div>
 
-                {/* --- ÁREA DO CONTEÚDO --- */}
+                {/* --- ÁREA DO CONTEÚDO (DIREITA) --- */}
                 <div className="container-principal-componente">
                     <div className="parte-componente">
-                        {/* Aqui renderizamos o conteúdo dinâmico */}
                         {renderComponente()}
                     </div>
                 </div>

@@ -8,5 +8,6 @@ router.post('/', personagemController.criarPersonagem);
 router.post('/gerar-historia', personagemController.gerarHistoria);
 router.get('/buscar-loja', personagemController.buscarPersonagensLoja);
 router.get('/usuario/:id_usuario', personagemController.listarPorUsuario);
+router.delete('/:id', personagemController.excluirPersonagem);
 
 module.exports = router;
