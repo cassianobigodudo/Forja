@@ -111,7 +111,6 @@ const receberCallback = async (req, res) => {
     try {
         const statusExterno = dados.status; 
         const orderIdExterno = dados.payload?.orderId;
-        // Tenta pegar o slot de vários lugares
         let slot = dados.payload?.slot || dados.estoquePos || dados.payload?.estoquePos;
 
         if (!orderIdExterno) {
@@ -121,14 +120,13 @@ const receberCallback = async (req, res) => {
 
         console.log(`🔎 Pedido: ${orderIdExterno} | Status: ${statusExterno}`);
 
-        // Tradução de Status
         let novoStatus = 'processando';
         if (statusExterno === 'IN_PROGRESS' || statusExterno === 'PRINTING') novoStatus = 'forjando';
         
         if (statusExterno === 'COMPLETED' || statusExterno === 'ENTREGUE') {
             novoStatus = 'concluido';
             
-            // Tratamento se slot vier NULL (Mock)
+            // Mock de Slot se vier null
             if (!slot) {
                 console.warn("⚠️ Slot veio NULL. Simulando slot...");
                 const idNum = parseInt(orderIdExterno.replace(/\D/g, '')) || 1;
@@ -136,20 +134,18 @@ const receberCallback = async (req, res) => {
             }
             console.log(`📍 Produto na GAVETA: ${slot}`);
 
-            // ATUALIZA A TABELA DE EXPEDIÇÃO (Slots)
-            // Primeiro descobrimos o ID interno do pedido
-            const pedidoResult = await db.query("SELECT id FROM pedidos WHERE orderid_externo = $1", [orderIdExterno]);
+            // --- AQUI ESTAVA O ERRO MVC ANTES ---
+            // Agora usamos o Model para buscar o ID e o EstoqueModel para ocupar o slot
             
-            if (pedidoResult.rows.length > 0) {
-                const idInterno = pedidoResult.rows[0].id;
-                await db.query(
-                    "UPDATE expedicao_slots SET status = 'ocupado', pedido_id = $1 WHERE numero_slot = $2",
-                    [idInterno, slot]
-                );
+            const idInterno = await PedidoModel.buscarIdPorExterno(orderIdExterno);
+            
+            if (idInterno) {
+                await EstoqueModel.ocuparSlot(slot, idInterno);
+            } else {
+                console.error(`🚨 Pedido ${orderIdExterno} não encontrado no banco local.`);
             }
         }
 
-        // Salva Log JSON e Atualiza Status do Pedido
         const logEntry = { data: new Date(), status_maquina: statusExterno, slot_atribuido: slot, dados_brutos: dados };
         await PedidoModel.atualizarStatusElog(orderIdExterno, novoStatus, logEntry, slot);
 

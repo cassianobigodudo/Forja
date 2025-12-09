@@ -78,7 +78,25 @@ const listarLogs = async () => {
     return rows;
 };
 
+const ocuparSlot = async (slot, pedidoId) => {
+    // Atualiza a tabela de slots para dizer que está ocupado por aquele pedido
+    await db.query(
+        `UPDATE expedicao_slots 
+         SET status = 'ocupado', pedido_id = $2 
+         WHERE numero_slot = $1`,
+        [slot, pedidoId]
+    );
+};
+
 module.exports = {
-    listarPecas, atualizarPeca, verificarDisponibilidade, consumirItens, devolverItens,
-    listarSlots, liberarSlot, getPecasDoPedidoNoSlot, listarLogs
+    listarPecas, 
+    atualizarPeca, 
+    verificarDisponibilidade, 
+    consumirItens, 
+    devolverItens,
+    listarSlots, 
+    liberarSlot, 
+    getPecasDoPedidoNoSlot, 
+    listarLogs,
+    ocuparSlot // <--- IMPORTANTE: Adicione na exportação
 };

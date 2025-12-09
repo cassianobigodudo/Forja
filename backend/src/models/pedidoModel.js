@@ -65,11 +65,20 @@ const buscarPorUsuario = async (id_usuario) => {
     );
     return rows;
 };
+const buscarIdPorExterno = async (orderIdExterno) => {
+    const { rows } = await db.query(
+        `SELECT id FROM pedidos WHERE orderid_externo = $1`,
+        [orderIdExterno]
+    );
+    // Retorna o ID interno ou undefined se não achar
+    return rows[0]?.id;
+};
 
 module.exports = {
     criar,
     atualizarStatus,
     atualizarStatusPorCallback,
     atualizarStatusElog,
-    buscarPorUsuario
+    buscarPorUsuario,
+    buscarIdPorExterno // <--- IMPORTANTE: Adicione na exportação
 };
