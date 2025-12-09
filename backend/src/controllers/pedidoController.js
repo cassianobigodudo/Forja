@@ -64,10 +64,45 @@ const criarAPartirDoCarrinho = async (req, res) => {
         }
         console.log(`📦 [CHECKOUT] 3. Itens encontrados: ${itensCarrinho.length}`);
 
-        // --- VALIDAÇÃO E CONSUMO (Seu código de estoque aqui) ---
-        // (Vou assumir que a parte do EstoqueModel está ok, focando no envio)
+        // =================================================================
+        // 🛑 LÓGICA DE ESTOQUE (Inserida aqui)
+        // =================================================================
         
-        // LOOP DE ENVIO
+        const demandaTotal = {}; 
+
+        const somarUso = (idCor) => {
+            if (!idCor) return; 
+            const chave = String(idCor);
+            demandaTotal[chave] = (demandaTotal[chave] || 0) + 1;
+        };
+
+        // Calcula quantos blocos de cada cor precisamos
+        itensCarrinho.forEach(item => {
+            somarUso(item.generonum);       // Cabeça
+            somarUso(item.acesspescoconum); // Torso
+            somarUso(item.basemininum);     // Base
+        });
+
+        console.log("📊 [ESTOQUE] Demanda Calculada:", demandaTotal);
+
+        // A. Verificar se TEM peça suficiente
+        const errosEstoque = await EstoqueModel.verificarDisponibilidade(demandaTotal);
+        
+        if (errosEstoque.length > 0) {
+            console.error("❌ [ESTOQUE] Insuficiente:", errosEstoque);
+            // Joga erro para cair no catch e fazer ROLLBACK
+            throw new Error(`Estoque insuficiente:\n${errosEstoque.join('\n')}`);
+        }
+
+        // B. CONSUMIR (SUBTRAIR) DO BANCO AGORA
+        // Isso acontece DENTRO da transação. Se a API da máquina falhar depois, isso é desfeito.
+        await EstoqueModel.consumirItens(client, demandaTotal);
+        console.log("🔥 [ESTOQUE] Debitado com sucesso (Reserva Garantida).");
+
+        // =================================================================
+        // 🚀 ENVIO PARA MÁQUINA
+        // =================================================================
+
         for (const item of itensCarrinho) {
             console.log(`\n🔨 [PROCESSANDO] Item: ${item.nome} (ID: ${item.personagem_id})`);
 
@@ -78,47 +113,48 @@ const criarAPartirDoCarrinho = async (req, res) => {
             // Monta Payload
             const payloadIndustrial = montarPayloadIndustrial(item, novoPedidoId);
 
-            // LOG CRÍTICO: O QUE ESTAMOS MANDANDO?
-            console.log("   -> 📤 Payload Sendo Enviado:");
-            console.log(JSON.stringify(payloadIndustrial, null, 2));
+            console.log("   -> 📤 Payload Sendo Enviado (Resumo): OrderID", payloadIndustrial.payload.orderId);
 
-            // ENVIA PARA MÁQUINA E ESPERA RESPOSTA IMEDIATA
-            console.log("   -> 📡 Disparando Axios para: http://52.72.137.244:3000/queue/items");
+            // ENVIA PARA MÁQUINA
+            console.log("   -> 📡 Disparando Axios para a Fábrica...");
             
             try {
+                // Tenta enviar. Se a máquina rejeitar, cai no catch abaixo
                 const responseExt = await axios.post('http://52.72.137.244:3000/queue/items', payloadIndustrial);
                 
-                // SE CHEGOU AQUI, A MÁQUINA RESPONDEU "OK"
                 console.log("   ✅ [SUCESSO IMEDIATO DA MÁQUINA]");
-                console.log("   -> Status Code:", responseExt.status); // Deve ser 200 ou 201
-                console.log("   -> Resposta Body:", JSON.stringify(responseExt.data));
+                console.log("   -> Status Code:", responseExt.status);
 
             } catch (axiosErro) {
-                // AQUI É ONDE ESTÁ O SEGREDO DO ERRO
                 console.error("   ❌ [A MÁQUINA REJEITOU O PEDIDO]");
                 if (axiosErro.response) {
-                    console.error("   -> Status:", axiosErro.response.status);
                     console.error("   -> Motivo:", JSON.stringify(axiosErro.response.data));
                 } else {
-                    console.error("   -> Erro de Rede/Timeout:", axiosErro.message);
+                    console.error("   -> Erro de Rede:", axiosErro.message);
                 }
+                // Esse throw faz o código pular para o catch principal -> ROLLBACK (Estoque volta)
                 throw new Error("Falha na comunicação com a Indústria.");
             }
 
-            // Atualiza status local
+            // Atualiza status local com o ID externo
             await PedidoModel.atualizarStatus(client, novoPedidoId, 'enviado', payloadIndustrial.payload.orderId);
         }
 
+        // Limpa carrinho e confirma tudo
         await CarrinhoModel.limparPorSessao(client, id_usuario);
         await client.query('COMMIT');
         
-        console.log("🏁 [CHECKOUT] Finalizado. Aguardando Callback...");
+        console.log("🏁 [CHECKOUT] Finalizado com Sucesso Total.");
         res.status(200).json({ message: 'Itens enviados para produção.' });
 
     } catch (error) {
+        // QUALQUER ERRO (Estoque ou API) cai aqui
         await client.query('ROLLBACK');
-        console.error('🔥 [ROLLBACK TOTAL] Ocorreu um erro:', error.message);
-        res.status(500).json({ message: 'Erro ao processar.', detalhe: error.message });
+        console.error('🔥 [ROLLBACK TOTAL] Operação cancelada. Estoque restaurado.');
+        console.error('   -> Erro:', error.message);
+        
+        const status = error.message.includes('Estoque insuficiente') ? 409 : 500;
+        res.status(status).json({ message: 'Erro ao processar.', detalhe: error.message });
     } finally {
         client.release();
     }
