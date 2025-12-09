@@ -89,7 +89,7 @@ const criarAPartirDoCarrinho = async (req, res) => {
     }
 };
 
-const receivingCallback = async (req, res) => {
+const receberCallback = async (req, res) => {
     // ... (Seu código de callback detetive vai aqui - use a versão mais recente que te mandei)
     // Lembre-se de importar o db para fazer o UPDATE nos slots
     const dados = req.body;
@@ -106,4 +106,4 @@ const getPedidosPorSessao = async (req, res) => {
     }
 };
 
-module.exports = { criarAPartirDoCarrinho, receivingCallback, getPedidosPorSessao };
+module.exports = { criarAPartirDoCarrinho, receberCallback, getPedidosPorSessao };
