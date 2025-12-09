@@ -12,15 +12,31 @@ const atualizarPeca = async (id, quantidade) => {
 
 // --- EXPEDIÇÃO (SLOTS) ---
 const listarSlots = async () => {
+    /* CORREÇÃO AQUI:
+       - Tabela: usuarios (u)
+       - Coluna Nome: u.nome_usuario (antes estava u.nome)
+       - Join: p.id_usuario = u.id_usuario (PK correta)
+    */
     const query = `
-        SELECT s.*, p.orderid_externo, u.nome as nome_usuario
+        SELECT 
+            s.numero_slot,
+            s.status,
+            s.pedido_id,
+            p.orderid_externo,
+            u.nome_usuario as nome_usuario  -- <--- CORRIGIDO AQUI
         FROM expedicao_slots s
         LEFT JOIN pedidos p ON s.pedido_id = p.id
         LEFT JOIN usuarios u ON p.id_usuario = u.id_usuario
         ORDER BY s.numero_slot ASC
     `;
-    const { rows } = await db.query(query);
-    return rows;
+    
+    try {
+        const { rows } = await db.query(query);
+        return rows;
+    } catch (error) {
+        console.error("Erro SQL listarSlots:", error.message);
+        throw error;
+    }
 };
 
 const liberarSlot = async (slot) => {

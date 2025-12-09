@@ -5,116 +5,102 @@ import './AdminEstoque.css';
 function AdminEstoque() {
     const [blocos, setBlocos] = useState([]);
     const [slots, setSlots] = useState([]);
+    const [logs, setLogs] = useState([]);
 
-    const API_URL = 'https://forja-qvex.onrender.com/api/estoque';
+    const API_URL = 'https://forja-qvex.onrender.com/api/estoque'; // Ajuste se for localhost
 
-    // --- CARREGAR DADOS ---
     const carregarDados = async () => {
         try {
-            const [resBlocos, resSlots] = await Promise.all([
+            const [resBlocos, resSlots, resLogs] = await Promise.all([
                 axios.get(`${API_URL}/pecas`),
-                axios.get(`${API_URL}/expedicao`)
+                axios.get(`${API_URL}/expedicao`),
+                axios.get(`${API_URL}/logs`)
             ]);
             setBlocos(resBlocos.data);
             setSlots(resSlots.data);
+            setLogs(resLogs.data);
         } catch (error) {
-            console.error("Erro ao carregar painel admin", error);
+            console.error("Erro no Admin:", error);
         }
     };
 
     useEffect(() => {
         carregarDados();
-        const intervalo = setInterval(carregarDados, 5000);
+        const intervalo = setInterval(carregarDados, 5000); // Atualiza a cada 5s
         return () => clearInterval(intervalo);
     }, []);
 
-    // --- AÇÕES ---
-    const handleEditarEstoque = async (bloco) => {
-        const novaQtd = prompt(`Quantos blocos ${bloco.cor_nome} existem agora?`, bloco.quantidade);
-        if (novaQtd === null) return;
-        
-        try {
-            await axios.put(`${API_URL}/pecas/${bloco.id}`, { quantidade: parseInt(novaQtd) });
+    const handleEditar = async (bloco) => {
+        const qtd = prompt(`Total de blocos ${bloco.cor_nome}:`, bloco.quantidade);
+        if (qtd) {
+            await axios.put(`${API_URL}/pecas/${bloco.id}`, { quantidade: parseInt(qtd) });
             carregarDados();
-        } catch (e) { alert("Erro ao atualizar estoque."); }
+        }
     };
 
-    const handleConfirmarEntrega = async (slotNumero) => {
-        if (!window.confirm(`Liberar Slot ${slotNumero}?`)) return;
-        try {
-            await axios.post(`${API_URL}/expedicao/${slotNumero}/liberar`);
+    const handleLiberar = async (slot) => {
+        if (window.confirm(`Liberar a caixa ${slot}?`)) {
+            await axios.post(`${API_URL}/expedicao/${slot}/liberar`);
             carregarDados();
-        } catch (e) { alert("Erro ao liberar slot."); }
+        }
     };
 
     return (
         <div className="admin-painel">
-            <h2 className="titulo-admin">⚙️ Mestre de Forja: Controle Industrial</h2>
+            <div className="admin-header">
+                <h2>⚙️ Painel do Mestre de Forja</h2>
+                <button onClick={carregarDados}>🔄 Atualizar</button>
+            </div>
 
-            {/* --- SEÇÃO 1: ESTOQUE DE CHASSIS UNIVERSAIS --- */}
+            {/* SEÇÃO 1: BLOCOS */}
             <div className="secao-admin">
-                <h3>🧱 Estoque de Chassis (Blocos Universais)</h3>
-                <p className="subtitulo-admin">Cada miniatura consome 3 blocos.</p>
-                
+                <h3>🧱 Estoque de Chassis</h3>
                 <div className="grid-blocos">
-                    {blocos.map(bloco => (
-                        <div key={bloco.id} className="card-bloco">
-                            {/* Visual do Bloco */}
-                            <div 
-                                className="bloco-visual" 
-                                style={{ backgroundColor: bloco.cor_hex || '#ccc' }}
-                            >
-                                <div className="pino"></div>
-                                <div className="pino"></div>
+                    {blocos.map(b => (
+                        <div key={b.id} className="card-bloco">
+                            <div className="bloco-visual" style={{backgroundColor: b.cor_hex}}>
+                                <div className="pino"></div><div className="pino"></div>
                             </div>
-
-                            <div className="bloco-info">
-                                <strong>{bloco.cor_nome}</strong>
-                                <span className={`qtd-badge ${bloco.quantidade < 20 ? 'baixo' : ''}`}>
-                                    {bloco.quantidade} unid.
-                                </span>
-                            </div>
-
-                            <button className="btn-ajuste" onClick={() => handleEditarEstoque(bloco)}>
-                                Ajustar
-                            </button>
+                            <strong>{b.cor_nome}</strong>
+                            <span>{b.quantidade} un.</span>
+                            <button onClick={() => handleEditar(b)}>✏️ Ajustar</button>
                         </div>
                     ))}
                 </div>
             </div>
 
-            {/* --- SEÇÃO 2: SLOTS DE SAÍDA --- */}
+            {/* SEÇÃO 2: GAVETAS */}
             <div className="secao-admin">
-                <h3>🏭 Slots de Expedição (Saída da Máquina)</h3>
+                <h3>🏭 Expedição (Saída)</h3>
                 <div className="grid-slots">
-                    {slots.map(slot => (
-                        <div key={slot.numero_slot} className={`slot-card ${slot.status === 'ocupado' ? 'ocupado' : 'livre'}`}>
-                            <div className="slot-header">
-                                <span>CAIXA 0{slot.numero_slot}</span>
-                                <div className={`luz-status ${slot.status}`}></div>
-                            </div>
-                            
-                            <div className="slot-conteudo">
-                                {slot.status === 'ocupado' ? (
-                                    <>
-                                        <div className="info-pedido">
-                                            <strong>Pedido:</strong> {slot.orderid_externo || '---'}
-                                        </div>
-                                        <div className="info-cliente">
-                                            <strong>Aventureiro:</strong><br/>
-                                            {slot.nome_usuario || 'Desconhecido'}
-                                        </div>
-                                        <button 
-                                            className="btn-entregar"
-                                            onClick={() => handleConfirmarEntrega(slot.numero_slot)}
-                                        >
-                                            Entregar Item
-                                        </button>
-                                    </>
-                                ) : (
-                                    <span className="vazio-text">Vazio</span>
-                                )}
-                            </div>
+                    {slots.map(s => (
+                        <div key={s.numero_slot} className={`slot-card ${s.status}`}>
+                            <div className="slot-head">BOX 0{s.numero_slot}</div>
+                            {s.status === 'ocupado' ? (
+                                <>
+                                    <div className="slot-info">
+                                        <p>📦 {s.orderid_externo}</p>
+                                        <p>👤 {s.nome_usuario || '...'}</p>
+                                    </div>
+                                    <button className="btn-liberar" onClick={() => handleLiberar(s.numero_slot)}>
+                                        ✅ Entregar
+                                    </button>
+                                </>
+                            ) : <span className="vazio">Livre</span>}
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            {/* SEÇÃO 3: LOGS */}
+            <div className="secao-admin">
+                <h3>📟 Logs da Máquina</h3>
+                <div className="logs-terminal">
+                    {logs.map(log => (
+                        <div key={log.id} className="log-linha">
+                            <span className="log-id">[{log.orderid_externo}]</span>
+                            <span className="log-status">{log.status}</span>
+                            <pre>{JSON.stringify(log.log_producao, null, 2)}</pre>
                         </div>
                     ))}
                 </div>
