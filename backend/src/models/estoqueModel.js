@@ -2,7 +2,8 @@ const db = require('../config/database');
 
 // --- PEÇAS (CHASSIS) ---
 const listarPecas = async () => {
-    const { rows } = await db.query("SELECT * FROM estoque_pecas ORDER BY id");
+    // ADICIONEI "ORDER BY id ASC" PARA GARANTIR A ORDEM 1, 2, 3
+    const { rows } = await db.query("SELECT * FROM estoque_pecas ORDER BY id ASC");
     return rows;
 };
 
@@ -39,6 +40,35 @@ const listarSlots = async () => {
     }
 };
 
+// --- NOVO: RECUPERAR PEÇAS ANTES DE LIBERAR ---
+const getPecasDoPedidoNoSlot = async (slot) => {
+    // Faz um Join triplo: Slot -> Pedido -> Personagem
+    // Para descobrir as cores (IDs) usadas naquele boneco específico
+    const query = `
+        SELECT 
+            pers.generonum as cor_cabeca,       -- ID da cor da cabeça
+            pers.acesspescoconum as cor_torso,  -- ID da cor do corpo
+            pers.basemininum as cor_base        -- ID da cor da base
+        FROM expedicao_slots s
+        JOIN pedidos p ON s.pedido_id = p.id
+        JOIN personagens pers ON p.personagem_id = pers.id
+        WHERE s.numero_slot = $1 AND s.status = 'ocupado'
+    `;
+    const { rows } = await db.query(query, [slot]);
+    return rows[0]; // Retorna objeto { cor_cabeca: 1, cor_torso: 2, ... }
+};
+
+// --- NOVO: DEVOLVER AO ESTOQUE ---
+const devolverItens = async (mapaDeCores) => {
+    // mapaDeCores ex: { '1': 2, '3': 1 } (ID da Cor : Quantidade a devolver)
+    for (const [idCor, qtd] of Object.entries(mapaDeCores)) {
+        await db.query(
+            "UPDATE estoque_pecas SET quantidade = quantidade + $1 WHERE id = $2",
+            [qtd, idCor]
+        );
+    }
+};
+
 const liberarSlot = async (slot) => {
     await db.query("UPDATE expedicao_slots SET status = 'livre', pedido_id = NULL WHERE numero_slot = $1", [slot]);
 };
@@ -60,5 +90,7 @@ module.exports = {
     atualizarPeca,
     listarSlots,
     liberarSlot,
-    listarLogs
+    listarLogs,
+    getPecasDoPedidoNoSlot, // <--- NOVO
+    devolverItens
 };
