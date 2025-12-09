@@ -14,5 +14,8 @@ router.use('/usuarios', usuarioRoutes);
 router.use('/personagens', personagemRoutes);
 router.use('/carrinho', carrinhoRoutes);
 router.use('/pedidos', pedidoRoutes);
+router.use('/estoque', require('./estoqueRoutes')); // <-- Adicionado
+
+// 3. Exporta o roteador para ser usado no app principal
 
 module.exports = router;

@@ -12,6 +12,7 @@ import MeusPersonagens from '../components/MeusPersonagens';
 
 import Navbar from '../components/Navbar';
 import './UserAccount.css';
+import AdminEstoque from '../components/AdminEstoque';
 
 function UserAccount() {
     const { usuarioId, logoutUsuario } = useGlobalContext();
@@ -58,13 +59,11 @@ function UserAccount() {
     // 3. Função para renderizar o componente correto
     const renderComponente = () => {
         switch (ativo) {
-            case "dados":
-                return <MeusDados dados={userData} />;
-            case "personagens":
-                // MeusPersonagens busca seus próprios dados via Contexto/API
-                return <MeusPersonagens />;
-            default:
-                return <MeusDados dados={userData} />;
+            case "dados": return <MeusDados dados={userData} />;
+            case "personagens": return <MeusPersonagens />;
+            // NOVO CASE
+            case "admin": return <AdminEstoque />;
+            default: return <MeusDados dados={userData} />;
         }
     };
 
@@ -110,6 +109,16 @@ function UserAccount() {
                             >
                                 Meus Personagens
                             </button>
+
+                            {String(usuarioId) === '5' && (
+                                <button 
+                                    className={`botoes-menu ${ativo === "admin" ? "ativo" : ""}`}
+                                    onClick={() => setAtivo("admin")}
+                                    style={{ color: '#ff4444', borderColor: '#ff4444' }} // Destaque visual
+                                >
+                                    ⚙️ Gestão Industrial
+                                </button>
+                            )}
 
                             {/* Botões de Pedidos e Histórico removidos nesta branch */}
                         </div>
