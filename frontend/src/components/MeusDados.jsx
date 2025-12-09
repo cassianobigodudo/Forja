@@ -38,16 +38,22 @@ function MeusDados() {
   });
 
   // 1. BUSCAR DADOS AO CARREGAR
-  useEffect(() => {
+useEffect(() => {
     async function fetchUsuario() {
-      // Se não tiver ID (ex: deslogou), não busca
       const idParaBuscar = usuarioId || localStorage.getItem('id_usuario');
-      
       if (!idParaBuscar) return;
 
       try {
         const resposta = await axios.get(`${API_URL}/usuarios/${idParaBuscar}`);
-        setUsuario(resposta.data);
+        
+        // O SEGREDO ESTÁ AQUI: Traduzir do Banco para o Estado do React
+        setUsuario({
+            nome: resposta.data.nome_usuario,   // Banco: nome_usuario -> React: nome
+            email: resposta.data.email_usuario, // Banco: email_usuario -> React: email
+            senha: "", // Senha vem vazia por segurança
+            img: resposta.data.img || ""
+        });
+        
       } catch (erro) {
         console.error("Erro ao buscar usuário:", erro);
       } finally {
@@ -56,6 +62,37 @@ function MeusDados() {
     }
     fetchUsuario();
   }, [usuarioId]);
+
+  // 2. SALVAR CAMPO (CORRIGIDO)
+  const salvarCampo = async (campo) => {
+    const idParaSalvar = usuarioId || localStorage.getItem('id_usuario');
+    
+    try {
+      // Envia { nome: "Valor" } para o backend
+      // O controller vai traduzir isso para nome_usuario
+      const payload = { [campo]: usuario[campo] };
+
+      const resposta = await axios.patch(
+        `${API_URL}/usuarios/${idParaSalvar}`,
+        payload
+      );
+
+      // Atualiza visualmente com a resposta do servidor
+      if (resposta.data.usuario) {
+          setUsuario((prev) => ({
+            ...prev,
+            [campo]: resposta.data.usuario[campo] // Atualiza o estado local
+          }));
+      }
+
+      setEditando((prev) => ({ ...prev, [campo]: false })); // Fecha edição
+      alert(`${campo.toUpperCase()} atualizado com sucesso!`);
+
+    } catch (erro) {
+      console.error("Erro ao salvar campo:", erro);
+      alert("Erro ao atualizar. Tente novamente.");
+    }
+  };
 
   // 2. FUNÇÕES DE EDIÇÃO DE CAMPO
   const habilitarEdicao = (campo) => {
@@ -67,27 +104,6 @@ function MeusDados() {
     // Idealmente, reverteria para o valor original do banco aqui se tivesse backup
   };
 
-  const salvarCampo = async (campo) => {
-    const idParaSalvar = usuarioId || localStorage.getItem('id_usuario');
-    try {
-      // PATCH para atualizar apenas 1 campo
-      const resposta = await axios.patch(
-        `${API_URL}/usuarios/${idParaSalvar}`,
-        { [campo]: usuario[campo] }
-      );
-
-      setUsuario((prev) => ({
-        ...prev,
-        [campo]: resposta.data[campo] || prev[campo],
-      }));
-
-      setEditando((prev) => ({ ...prev, [campo]: false }));
-      alert(`${campo.toUpperCase()} atualizado com sucesso!`);
-    } catch (erro) {
-      console.error("Erro ao salvar campo:", erro);
-      alert(`Erro ao salvar ${campo}`);
-    }
-  };
 
   // 3. LÓGICA DE ENDEREÇO (VIA CEP)
   async function buscarCEP() {

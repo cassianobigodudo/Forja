@@ -52,10 +52,32 @@ const removerUsuario = async (id_usuario) => {
     // Finalmente, apaga o usuário
     return db.query("DELETE FROM usuarios WHERE id_usuario = $1", [id_usuario]);
 }
+
+const atualizarUsuario = async (id, dados) => {
+    // dados é um objeto ex: { nome_usuario: "Novo Nome" }
+    
+    const colunas = Object.keys(dados);
+    const valores = Object.values(dados);
+
+    // Se não mandou nada, retorna erro ou null
+    if (colunas.length === 0) return null;
+
+    // Monta a query dinâmica: UPDATE usuarios SET nome_usuario = $1 WHERE id_usuario = $2
+    const query = `
+        UPDATE usuarios 
+        SET ${colunas[0]} = $1 
+        WHERE id_usuario = $2 
+        RETURNING *
+    `;
+
+    const { rows } = await db.query(query, [valores[0], id]);
+    return rows[0];
+};
 // Exportamos a função para que o Controller possa usá-la
 module.exports = {
     criarUsuario,
     buscarEmail,
     salvarCartao,
-    removerUsuario
+    removerUsuario,
+    atualizarUsuario
 };

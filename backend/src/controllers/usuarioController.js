@@ -112,9 +112,47 @@ const deletarConta = async (req, res) => {
         });
     }
 };
+
+const editarDados = async (req, res) => {
+    const { id_usuario } = req.params;
+    const { nome, email, senha } = req.body; // Campos vindos do React
+
+    try {
+        let dadosParaUpdate = {};
+
+        // Tradutor: Frontend -> Banco de Dados
+        if (nome) dadosParaUpdate.nome_usuario = nome;
+        if (email) dadosParaUpdate.email_usuario = email;
+        if (senha) dadosParaUpdate.senha_usuario = senha; // Ideal seria criptografar aqui
+
+        if (Object.keys(dadosParaUpdate).length === 0) {
+            return res.status(400).json({ message: "Nenhum dado enviado para atualização." });
+        }
+
+        const usuarioAtualizado = await UsuarioModel.atualizarUsuario(id_usuario, dadosParaUpdate);
+
+        if (!usuarioAtualizado) {
+            return res.status(404).json({ message: "Usuário não encontrado." });
+        }
+
+        res.status(200).json({
+            message: "Dados atualizados com sucesso!",
+            usuario: {
+                nome: usuarioAtualizado.nome_usuario,
+                email: usuarioAtualizado.email_usuario
+                // Não devolvemos a senha por segurança
+            }
+        });
+
+    } catch (error) {
+        console.error("Erro ao atualizar usuário:", error);
+        res.status(500).json({ message: "Erro interno ao atualizar dados." });
+    }
+};
 module.exports = { 
 cadastrar, 
 login,
 adicionarCartao,
-deletarConta
+deletarConta,
+editarDados
 };
