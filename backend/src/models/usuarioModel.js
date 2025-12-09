@@ -29,7 +29,7 @@ const salvarCartao = async (id_usuario, numero, nome, validade, cvv) => {
     return db.query(query, [id_usuario, numero, nome, validade, cvv]);
 };
 
-const removerUsuario = async (client, id_usuario) => {
+const removerUsuario = async (id_usuario) => {
     // Apaga os dados relacionados primeiro (ordem importa!)
     await db.query("DELETE FROM enderecos WHERE id_usuario = $1", [id_usuario]);
     await db.query("DELETE FROM carrinho WHERE id_usuario = $1", [id_usuario]);
