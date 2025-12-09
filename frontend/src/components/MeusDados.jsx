@@ -141,38 +141,66 @@ function MeusDados() {
   }
 
   const handleExcluirConta = async () => {
-    const idParaDeletar = usuarioId || localStorage.getItem('id_usuario');
+    // Pegando ID com log
+    const idLocalStorage = localStorage.getItem('id_usuario');
+    console.log("🔍 [DEBUG FRONT] ID no Contexto:", usuarioId);
+    console.log("🔍 [DEBUG FRONT] ID no LocalStorage:", idLocalStorage);
 
-    // 1. TRAVA DO ADMIN (ID 5)
-    if (String(idParaDeletar) === '5') {
-        alert("🛡️ Ação Bloqueada: O Mestre da Forja (Admin) não pode deletar a própria conta!");
+    const idParaDeletar = usuarioId || idLocalStorage;
+
+    if (!idParaDeletar) {
+        alert("Erro: ID do usuário não encontrado no navegador.");
         return;
     }
 
-    // 2. CONFIRMAÇÃO DE SEGURANÇA
-    const confirmacao = window.confirm(
-        "Tem certeza absoluta? \n\nIsso apagará seus personagens, pedidos e histórico permanentemente. Essa ação não pode ser desfeita."
-    );
+    // 1. TRAVA DO ADMIN
+    if (String(idParaDeletar) === '5') {
+        alert("🛡️ Ação Bloqueada: Admin não pode se deletar.");
+        return;
+    }
 
-    if (!confirmacao) return; // Se cancelar, para aqui.
+    // 2. CONFIRMAÇÃO
+    const confirmacao = window.confirm("Tem certeza absoluta? Isso apaga tudo!");
+    if (!confirmacao) return;
 
     // 3. CHAMADA API
     try {
-        await axios.delete(`${API_URL}/usuarios/${idParaDeletar}`);
+        console.log(`📡 [AXIOS] Enviando DELETE para: ${API_URL}/usuarios/${idParaDeletar}`);
         
-        alert("Sua conta foi excluída. Sentiremos sua falta, aventureiro!");
+        const response = await axios.delete(`${API_URL}/usuarios/${idParaDeletar}`);
+        
+        console.log("✅ [AXIOS SUCESSO]:", response.data);
+        alert("Conta excluída com sucesso.");
 
-        // 4. LOGOUT FORÇADO (Limpeza)
-        localStorage.removeItem('id_usuario'); // Limpa ID
-        localStorage.removeItem('carrinho');   // Limpa carrinho local se tiver
+        localStorage.removeItem('id_usuario');
+        localStorage.removeItem('carrinho');
         
-        navigate('/'); // Redireciona para home
-        
+        // Use window.location para forçar recarregamento limpo
+        window.location.href = '/'; 
+
     } catch (error) {
-        console.error("Erro ao excluir:", error);
-        alert("Erro ao excluir conta. Verifique se você tem pedidos pendentes ou tente novamente.");
+        console.error("❌ [AXIOS ERRO]:", error);
+        
+        // Debug detalhado do erro
+        if (error.response) {
+            console.log("   -> Status:", error.response.status);
+            console.log("   -> Dados do Erro:", error.response.data);
+            
+            // Mostra o erro real na tela
+            const msgErro = error.response.data.debug_erro || error.response.data.message;
+            const sqlCode = error.response.data.sql_code;
+
+            // DICA DE OURO: CÓDIGO 23503
+            if (sqlCode === '23503') {
+                alert("ERRO DE VÍNCULO (23503):\n\nVocê não pode excluir sua conta porque existem Pedidos ou Personagens vinculados a ela.\n\nO banco de dados protege esses registros.");
+            } else {
+                alert(`Erro no servidor: ${msgErro}`);
+            }
+        } else {
+            alert("Erro de conexão com o servidor.");
+        }
     }
-  };
+};
 
   if (loading) return <div className="loading-profile">Carregando dados...</div>;
 

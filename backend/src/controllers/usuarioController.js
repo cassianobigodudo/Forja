@@ -76,15 +76,42 @@ const adicionarCartao = async (req, res) => {
 
 const deletarConta = async (req, res) => {
     const { id_usuario } = req.params;
+
+    console.log(`\n🗑️ [DELETE REQUEST] Recebido pedido para apagar usuário ID: ${id_usuario}`);
+
     try {
-        await UsuarioModel.removerUsuario(id_usuario);
+        // Verifica se o ID veio
+        if (!id_usuario || id_usuario === 'undefined') {
+            console.log("❌ [ERRO] ID do usuário inválido ou indefinido.");
+            return res.status(400).json({ message: "ID inválido." });
+        }
+
+        console.log("➡️ [MODEL] Chamando UsuarioModel.removerUsuario...");
+        const resultado = await UsuarioModel.removerUsuario(id_usuario);
+        
+        console.log("✅ [SUCESSO] Usuário removido. Linhas afetadas:", resultado.rowCount);
+        
+        if (resultado.rowCount === 0) {
+            console.warn("⚠️ [AVISO] O comando rodou, mas nenhum usuário foi encontrado com esse ID.");
+            return res.status(404).json({ message: "Usuário não encontrado." });
+        }
+
         res.status(200).json({ message: "Usuário removido com sucesso." });
+
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Erro ao remover usuário." });
+        console.error("❌ [ERRO FATAL NO DELETE]:");
+        console.error("   -> Mensagem:", error.message);
+        console.error("   -> Código SQL:", error.code); // Importante para saber se é Foreign Key
+        console.error("   -> Detalhe:", error.detail);
+        
+        // Retorna o erro detalhado para o frontend (ajuda no debug)
+        res.status(500).json({ 
+            message: "Erro ao remover usuário.", 
+            debug_erro: error.message,
+            sql_code: error.code 
+        });
     }
 };
-
 module.exports = { 
 cadastrar, 
 login,

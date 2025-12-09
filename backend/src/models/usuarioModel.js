@@ -30,13 +30,12 @@ const salvarCartao = async (id_usuario, numero, nome, validade, cvv) => {
 };
 
 const removerUsuario = async (id_usuario) => {
-    const query = `
-        DELETE FROM usuarios
-        WHERE id_usuario = $1
-    `;
-    return db.query(query, [id_usuario]);
+    const query = `DELETE FROM usuarios WHERE id_usuario = $1`;
+    console.log(`🔌 [SQL EXEC] Executando: ${query} com ID [${id_usuario}]`);
+    
+    // O retorno do db.query contém 'rowCount', que diz quantas linhas foram apagadas
+    return db.query(query, [id_usuario]); 
 }
-
 // Exportamos a função para que o Controller possa usá-la
 module.exports = {
     criarUsuario,
