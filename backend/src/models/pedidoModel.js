@@ -19,6 +19,31 @@ const atualizarStatus = async (client, pedidoId, status, orderIdExterno) => {
     );
 };
 
+const verificarDisponibilidade = async (demandas) => {
+    const erros = [];
+    
+    // Para cada cor necessária
+    for (const [corId, qtdNecessaria] of Object.entries(demandas)) {
+        // Busca quanto tem no banco
+        const { rows } = await db.query(
+            "SELECT quantidade, cor_nome FROM estoque_pecas WHERE id = $1", 
+            [corId]
+        );
+        
+        if (rows.length === 0) {
+            erros.push(`Cor ID ${corId} não existe no estoque.`);
+            continue;
+        }
+
+        const peca = rows[0];
+        if (peca.quantidade < qtdNecessaria) {
+            erros.push(`Falta ${peca.cor_nome} (Necessário: ${qtdNecessaria}, Disponível: ${peca.quantidade})`);
+        }
+    }
+
+    return erros; // Se retornar array vazio, pode produzir!
+};
+
 const atualizarStatusPorCallback = async (orderIdExterno, novoStatus, producaoIdExterno, slot) => {
     const result = await db.query(
         `UPDATE pedidos 
@@ -80,4 +105,5 @@ module.exports = {
     atualizarStatusPorCallback,
     atualizarStatusElog,
     buscarPorUsuario, // Exporte a nova função
+    verificarDisponibilidade
 };
