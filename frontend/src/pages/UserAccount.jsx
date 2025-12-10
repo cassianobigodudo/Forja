@@ -48,7 +48,13 @@ function UserAccount() {
         carregarDadosDoUsuario();
     }, [usuarioId, navigate]);
 
-    const handleLogout = () => { /* ...seu código igual... */ };
+    // 3. SAIR DA CONTA
+    const handleLogout = () => { 
+        if (window.confirm("Tem certeza que deseja sair de sua conta?")) {
+            logoutUsuario();
+            navigate("/");
+        }
+    };
 
     // 3. PASSAR A FUNÇÃO COMO PROPS PARA O FILHO
     const renderComponente = () => {
