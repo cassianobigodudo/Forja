@@ -1,127 +1,105 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { useGlobalContext } from "../context/GlobalContext";
-import "./HistoricoPedidos.css";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import './HistoricoPedidos.css'; // O CSS que vamos criar abaixo
 
-function HistoricoPedidos() {
-  const { idUsuario } = useGlobalContext();
+const API_URL = "https://forja-qvex.onrender.com/api";
+// URL da API do professor (Exemplo)
+const PROFESSOR_API = 'http://52.72.137.244:3000'; // Ajuste conforme necessário
+
+const HistoricoPedidos = ({ idUsuario }) => {
   const [pedidos, setPedidos] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
-  const API_URL = "https://forja-qvex.onrender.com/api";
-
- const fetchPedidos = async () => {
-    // LOG 1: Verificar quem é o ID
-    const idLocal = localStorage.getItem('id_usuario');
-    const id = idUsuario || idLocal;
-    
-    console.log("🖥️ [FRONT] Tentando buscar pedidos. ID Usado:", id);
-    console.log("   --> idUsuario (props):", idUsuario);
-    console.log("   --> localStorage:", idLocal);
-
-    if (!id) {
-        console.warn("⛔ [FRONT] ID não encontrado. Abortando busca.");
-        return;
-    }
+  // --- 1. BUSCA E SINCRONIZAÇÃO (O ESPIÃO) ---
+  const fetchPedidos = async () => {
+    const id = idUsuario || localStorage.getItem('id_usuario');
+    if (!id) return;
 
     try {
-      const url = `${API_URL}/pedidos/por-sessao/${id}`;
-      console.log(`📡 [FRONT] GET ${url}`);
-
-      const response = await axios.get(url);
-      
-      console.log("📥 [FRONT] Resposta da API:", response.data); // Verifique se é [] ou [...]
-      
+      // A. Busca Local
+      const response = await axios.get(`${API_URL}/pedidos/por-sessao/${id}`);
       const pedidosLocais = response.data;
       setPedidos(pedidosLocais);
 
-      // =================================================================
-      // 🕵️ PARTE NOVA: O ESPIÃO (Sincronização com API do Professor)
-      // =================================================================
-      
-      // Vamos varrer os pedidos para ver se algum mudou lá fora
+      // B. Verifica API Externa (Polling)
       pedidosLocais.forEach(async (pedido) => {
+        // Ignora se já finalizou ou se não tem ID externo
+        if (pedido.status === 'CONCLUIDO' || !pedido.orderid_externo) return;
         
-        // Pula se não tiver ID externo ou se já tiver sido entregue/finalizado
-        if (!pedido.orderid_externo || pedido.status === 'ENTREGUE_AO_CLIENTE') return;
-
-        // Pula se JÁ TEM slot (não precisa alocar de novo)
+        // Ignora se JÁ TEM slot (já sabemos que está pronto)
         if (pedido.slot) return;
 
         try {
-          // 2. Consulta a API do Professor
-          // (Substitua pela URL real do professor)
-          const profResponse = await axios.get(`http://api-do-professor.com/orders/${pedido.orderid_externo}`);
-          const dadosExternos = profResponse.data;
+          const { data: dadosExternos } = await axios.get(`${PROFESSOR_API}/queue/items/${pedido.orderid_externo}`);
 
-          // 3. O GATILHO: Se lá está PRONTO e aqui está SEM SLOT
-          if (dadosExternos.stage === 'EXPEDICAO') {
+          // C. Gatilho: Se lá fora terminou e aqui ainda não tem slot
+          if ((dadosExternos.stage === 'EXPEDICAO' || dadosExternos.stage === 'ENTREGUE') && !pedido.slot) {
+            console.log(`🚀 Pedido ${pedido.pedido_id} pronto! Alocando vaga...`);
             
-            console.log(`🚀 Pedido ${pedido.pedido_id} ficou pronto! Alocando vaga...`);
-            
-            // Chama sua NOVA rota do Backend para ocupar o slot
             await axios.post(`${API_URL}/expedicao/alocar`, { 
-              pedidoId: pedido.pedido_id // Envia o ID Inteiro do seu banco
+              pedidoId: pedido.pedido_id,
+              orderIdExterno: pedido.orderid_externo
             });
-
-            // Nota: Na próxima rodada do setInterval (5s), o fetchPedidos vai rodar
-            // e já vai trazer o slot preenchido do banco, atualizando a tela sozinho.
+            // O próximo setInterval vai atualizar a tela com o slot
           }
-
-        } catch (erroApi) {
-          console.warn(`Erro ao checar pedido ${pedido.orderid_externo} na API externa:`, erroApi);
+        } catch (error) {
+           // Silencia erros de fetch externo para não sujar o console
         }
       });
 
     } catch (error) {
       console.error("Erro ao buscar histórico:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
+  // Roda a cada 5 segundos
   useEffect(() => {
     fetchPedidos();
     const intervalo = setInterval(fetchPedidos, 5000);
     return () => clearInterval(intervalo);
   }, [idUsuario]);
 
-  const handleColetar = async (slot, idPedido) => {
-    if (!window.confirm(`Confirmar retirada do Box ${slot}?`)) return;
+
+  // --- 2. AÇÃO DE PEGAR O PEDIDO ---
+  const handleColetar = async (slot, pedidoId) => {
+    if (!window.confirm(`Confirmar retirada no BOX ${slot}?`)) return;
 
     try {
-        await axios.post(`${API_URL}/estoque/liberar/${slot}`);
-        alert("Item coletado com sucesso!");
-        fetchPedidos(); 
+      setLoading(true);
+      // Chama a rota que baixa estoque e libera slot
+      await axios.post(`${API_URL}/expedicao/${slot}/entrega`);
+      
+      alert("Sucesso! Pedido retirado.");
+      fetchPedidos(); // Atualiza a tela imediatamente
     } catch (error) {
-        console.error("Erro ao coletar:", error);
-        alert("Erro ao confirmar coleta.");
+      console.error(error);
+      alert("Erro ao retirar pedido.");
+    } finally {
+      setLoading(false);
     }
   };
 
-  // LÓGICA DE STATUS REVISADA (SEM INVENTAR NÚMEROS)
-  const renderStatus = (p) => {
-      // Se status é concluído mas NÃO tem slot no banco -> Aguardando Expedição
-      if (p.status === 'concluido' && !p.slot) {
-          return <span className="tag entregue">JÁ COLETADO / FINALIZADO</span>;
-      }
-      
-      switch(p.status) {
-          case 'processando': return <span className="tag processando">⏳ NA FILA</span>;
-          case 'forjando': return <span className="tag forjando">🔨 FORJANDO...</span>;
-          case 'enviado': return <span className="tag enviado">📡 ENVIADO</span>;
-          
-          // Só mostra o BOX se p.slot for REAL (vindo do banco)
-          case 'concluido': 
-            return p.slot 
-                ? <span className="tag pronto">✅ PRONTO NO BOX {p.slot}</span>
-                : <span className="tag aguardando">⚠️ AGUARDANDO EXPEDIÇÃO</span>;
-          
-          default: return <span className="tag">{p.status}</span>;
-      }
+
+  // --- 3. RENDERIZAÇÃO VISUAL DOS STATUS ---
+  const renderStatus = (pedido) => {
+    // Caso 1: Já foi entregue/concluido
+    if (pedido.status === 'CONCLUIDO' || pedido.status === 'ENTREGUE_AO_CLIENTE') {
+      return <span className="badge badge-concluido">✅ Concluído</span>;
+    }
+
+    // Caso 2: Está no Slot (PRONTO)
+    if (pedido.status === 'PRONTO' && pedido.slot) {
+      return (
+        <div className="badge-expedicao">
+            <span className="pulse">●</span> Aguardando Retirada
+        </div>
+      );
+    }
+
+    // Caso 3: Processando
+    return <span className="badge badge-processando">⚙️ Em Produção</span>;
   };
 
-  if (loading) return <div className="loading-historico">Carregando histórico...</div>;
 
   return (
     <div className="container-historico-pedidos">
@@ -131,18 +109,20 @@ function HistoricoPedidos() {
         {pedidos.length === 0 && <p className="sem-pedidos">Nenhum pedido realizado ainda.</p>}
 
         {pedidos.map((pedido) => (
-          <div key={pedido.pedido_id} className={`row-pedido ${pedido.status}`}>
+          <div key={pedido.pedido_id} className={`row-pedido status-${pedido.status.toLowerCase()}`}>
             
             {/* 1. IMAGEM NA ESQUERDA */}
             <div className="img-lateral">
-                <img src={pedido.img} alt={pedido.nome_personagem} />
+                <img src={pedido.img || 'https://via.placeholder.com/100'} alt={pedido.nome_personagem} />
             </div>
 
             {/* 2. INFORMAÇÕES NO CENTRO */}
             <div className="info-central">
                 <div className="topo-info">
                     <h3>{pedido.nome_personagem}</h3>
-                    <span className="id-pedido">#{pedido.orderid_externo?.split('-')[2] || pedido.pedido_id}</span>
+                    <span className="id-pedido">
+                        #{pedido.orderid_externo?.split('-')[2] || pedido.pedido_id}
+                    </span>
                 </div>
                 
                 <p className="data-hora">
@@ -158,14 +138,18 @@ function HistoricoPedidos() {
             <div className="status-direita">
                 {renderStatus(pedido)}
 
-                {/* Botão só aparece se tiver slot REAL */}
-                {pedido.status === 'concluido' && pedido.slot && (
-                    <button 
-                        className="btn-coletar-row"
-                        onClick={() => handleColetar(pedido.slot, pedido.pedido_id)}
-                    >
-                        PEGAR NO BOX {pedido.slot}
-                    </button>
+                {/* LOGICA DO BOTAO: Só aparece se status for PRONTO e tiver SLOT */}
+                {pedido.status === 'PRONTO' && pedido.slot && (
+                    <div className="box-action">
+                        <span className="box-number">BOX {pedido.slot}</span>
+                        <button 
+                            className="btn-coletar-row"
+                            onClick={() => handleColetar(pedido.slot, pedido.pedido_id)}
+                            disabled={loading}
+                        >
+                            PEGAR PEDIDO
+                        </button>
+                    </div>
                 )}
             </div>
           </div>
@@ -173,6 +157,6 @@ function HistoricoPedidos() {
       </div>
     </div>
   );
-}
+};
 
 export default HistoricoPedidos;

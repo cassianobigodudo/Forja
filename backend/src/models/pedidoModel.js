@@ -53,9 +53,9 @@ const atualizarStatusElog = async (orderIdExterno, novoStatus, logEntry) => {
 };
 
 const buscarPorUsuario = async (id_usuario) => {
-    console.log(`   🛠️ [DB] Executando SELECT WHERE p.id_usuario = '${id_usuario}'`);
+    console.log(`   🛠️ [DB] Buscando pedidos...`);
 
-    // Removida a linha 'p.slot_expedicao as slot'
+    // ADICIONEI O JOIN COM expedicao_slots
     const query = `
         SELECT 
             p.id as pedido_id, 
@@ -64,23 +64,17 @@ const buscarPorUsuario = async (id_usuario) => {
             p.producao_id_externo,
             p.data_pedido,
             pers.nome as nome_personagem,
-            pers.genero,
             pers.img,
-            pers.valor
+            s.numero_slot as slot -- <--- RECUPERAMOS O SLOT AQUI
          FROM pedidos p
          LEFT JOIN personagens pers ON p.personagem_id = pers.id
+         LEFT JOIN expedicao_slots s ON p.id = s.pedido_id -- JOIN PARA LER O SLOT
          WHERE CAST(p.id_usuario AS VARCHAR) = $1
          ORDER BY p.id DESC;
     `;
     
-    try {
-        const { rows } = await db.query(query, [String(id_usuario)]);
-        console.log(`   📦 [DB] Query retornou ${rows.length} linhas.`);
-        return rows;
-    } catch (err) {
-        console.error("   ❌ [DB] Erro na Query SQL:", err.message);
-        throw err;
-    }
+    const { rows } = await db.query(query, [String(id_usuario)]);
+    return rows;
 };
 
 const buscarIdPorExterno = async (orderIdExterno) => {
@@ -91,11 +85,17 @@ const buscarIdPorExterno = async (orderIdExterno) => {
     return rows[0]?.id;
 };
 
+const marcarComoPronto = async (pedidoId) => {
+    const query = `UPDATE pedidos SET status = 'PRONTO' WHERE id = $1`;
+    await db.query(query, [pedidoId]);
+};
+
 module.exports = {
     criar,
     atualizarStatus,
     atualizarStatusPorCallback,
     atualizarStatusElog,
     buscarPorUsuario,
-    buscarIdPorExterno
+    buscarIdPorExterno,
+    marcarComoPronto
 };

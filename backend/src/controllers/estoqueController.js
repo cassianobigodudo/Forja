@@ -1,4 +1,5 @@
 const EstoqueModel = require('../models/estoqueModel');
+const PedidoModel = require('../models/pedidoModel');
 
 // --- PEÇAS ---
 const getPecas = async (req, res) => {
@@ -34,48 +35,36 @@ const getExpedicao = async (req, res) => {
 };
 
 const alocarPedidoNaExpedicao = async (req, res) => {
-    // Esperamos receber o ID INTERNO do pedido (aquele Integer do seu banco)
-    const { pedidoId } = req.body; 
+    const { pedidoId, orderIdExterno } = req.body;
 
-    console.log(`\n📥 Tentando alocar pedido ID ${pedidoId} na expedição...`);
+    console.log(`\n📥 Processando alocação para Pedido ID ${pedidoId}...`);
 
     try {
-        if (!pedidoId) {
-            return res.status(400).json({ error: "ID do pedido é obrigatório." });
-        }
-
-        // 1. Segurança: Verifica se o pedido JÁ tem um slot
+        // 1. Verifica se já tem slot (Segurança)
         const slotExistente = await EstoqueModel.buscarSlotDoPedido(pedidoId);
         if (slotExistente) {
-            console.log(` ⚠️ Pedido já está no Slot ${slotExistente}.`);
-            return res.status(200).json({ 
-                message: "Pedido já alocado.", 
-                slot: slotExistente 
-            });
+            return res.status(200).json({ message: "Já alocado", slot: slotExistente });
         }
 
-        // 2. Busca um slot livre (A1, A2...)
+        // 2. Busca vaga
         const slotLivre = await EstoqueModel.buscarSlotLivre();
-
         if (!slotLivre) {
-            console.error(" ❌ Fila cheia! Nenhum slot livre.");
-            return res.status(409).json({ error: "Expedição lotada. Aguarde retiradas." });
+            return res.status(409).json({ error: "Expedição lotada." });
         }
 
-        // 3. Ocupa o slot
+        // 3. Ocupa o Slot (Responsabilidade do EstoqueModel)
         await EstoqueModel.ocuparSlot(slotLivre, pedidoId);
         
-        console.log(` ✅ Sucesso! Pedido ${pedidoId} estacionado no Slot ${slotLivre}.`);
+        // 4. Atualiza Status (Responsabilidade do PedidoModel) - CORRIGIDO
+        await PedidoModel.marcarComoPronto(pedidoId);
 
-        res.status(200).json({ 
-            success: true, 
-            message: `Pedido alocado no slot ${slotLivre}`,
-            slot: slotLivre
-        });
+        console.log(` ✅ Pedido ${pedidoId} atualizado para 'PRONTO' no Slot ${slotLivre}`);
+
+        res.status(200).json({ success: true, slot: slotLivre });
 
     } catch (error) {
-        console.error("Erro ao alocar expedição:", error);
-        res.status(500).json({ error: "Erro interno ao processar alocação." });
+        console.error("Erro ao alocar:", error);
+        res.status(500).json({ error: "Erro interno" });
     }
 };
 
