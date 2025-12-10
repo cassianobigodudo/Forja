@@ -10,16 +10,29 @@ function HistoricoPedidos() {
 
   const API_URL = "https://forja-qvex.onrender.com/api";
 
-  const fetchPedidos = async () => {
-    const id = idUsuario || localStorage.getItem('id_usuario');
-    if (!id) return;
+ const fetchPedidos = async () => {
+    // LOG 1: Verificar quem é o ID
+    const idLocal = localStorage.getItem('id_usuario');
+    const id = idUsuario || idLocal;
+    
+    console.log("🖥️ [FRONT] Tentando buscar pedidos. ID Usado:", id);
+    console.log("   --> idUsuario (props):", idUsuario);
+    console.log("   --> localStorage:", idLocal);
+
+    if (!id) {
+        console.warn("⛔ [FRONT] ID não encontrado. Abortando busca.");
+        return;
+    }
 
     try {
-      // 1. Busca os dados LOCAIS (o que seu banco já sabe)
-      const response = await axios.get(`${API_URL}/pedidos/por-sessao/${id}`);
-      const pedidosLocais = response.data;
+      const url = `${API_URL}/pedidos/por-sessao/${id}`;
+      console.log(`📡 [FRONT] GET ${url}`);
+
+      const response = await axios.get(url);
       
-      // Atualiza a tela imediatamente com o que temos
+      console.log("📥 [FRONT] Resposta da API:", response.data); // Verifique se é [] ou [...]
+      
+      const pedidosLocais = response.data;
       setPedidos(pedidosLocais);
 
       // =================================================================

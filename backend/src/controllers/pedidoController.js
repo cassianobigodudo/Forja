@@ -184,10 +184,23 @@ const receberCallback = async (req, res) => {
 // 4. HISTÓRICO
 // =========================================================================
 const getPedidosPorSessao = async (req, res) => {
+    const { session_id } = req.params;
+    
+    console.log(`\n🔍 [API] Buscando histórico para Usuario/Sessão: "${session_id}"`);
+
     try {
-        const pedidos = await PedidoModel.buscarPorUsuario(req.params.session_id);
+        const pedidos = await PedidoModel.buscarPorUsuario(session_id);
+        
+        console.log(`✅ [API] Encontrados ${pedidos.length} pedidos para este usuário.`);
+        
+        // Se a lista vier vazia, avisa no console pra gente saber
+        if (pedidos.length === 0) {
+            console.warn("⚠️ AVISO: O banco retornou array vazio!");
+        }
+
         res.status(200).json(pedidos);
     } catch (error) {
+        console.error("❌ [API] Erro no controller:", error);
         res.status(500).json({ message: "Erro ao buscar histórico." });
     }
 };

@@ -52,10 +52,11 @@ const atualizarStatusElog = async (orderIdExterno, novoStatus, logEntry, slot) =
     const { rows } = await db.query(query, values);
     return rows[0];
 };
-
 const buscarPorUsuario = async (id_usuario) => {
-    const { rows } = await db.query(
-        `SELECT 
+    console.log(`   🛠️ [DB] Executando SELECT WHERE p.id_usuario = '${id_usuario}'`);
+
+    const query = `
+        SELECT 
             p.id as pedido_id, 
             p.status, 
             p.orderid_externo, 
@@ -67,12 +68,21 @@ const buscarPorUsuario = async (id_usuario) => {
             pers.img,
             pers.valor
          FROM pedidos p
-         JOIN personagens pers ON p.personagem_id = pers.id
-         WHERE p.id_usuario = $1
-         ORDER BY p.id DESC;`,
-        [id_usuario]
-    );
-    return rows;
+         LEFT JOIN personagens pers ON p.personagem_id = pers.id -- MUDEI PARA LEFT JOIN
+         WHERE CAST(p.id_usuario AS VARCHAR) = $1 -- FORÇA COMPARAÇÃO COMO TEXTO
+         ORDER BY p.id DESC;
+    `;
+    
+    // Dica: O CAST no WHERE ajuda se um lado for número e o outro texto
+    
+    try {
+        const { rows } = await db.query(query, [String(id_usuario)]);
+        console.log(`   📦 [DB] Query retornou ${rows.length} linhas.`);
+        return rows;
+    } catch (err) {
+        console.error("   ❌ [DB] Erro na Query SQL:", err.message);
+        throw err;
+    }
 };
 const buscarIdPorExterno = async (orderIdExterno) => {
     const { rows } = await db.query(
