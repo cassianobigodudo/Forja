@@ -1,7 +1,5 @@
-// backend/src/models/pedidoModel.js
 const db = require('../config/database');
 
-// Cria um novo registro de pedido dentro de uma transação
 const criar = async (client, id_usuario, personagem_id, status) => {
     const resPedido = await client.query(
         `INSERT INTO pedidos (id_usuario, personagem_id, status)
@@ -11,7 +9,6 @@ const criar = async (client, id_usuario, personagem_id, status) => {
     return resPedido.rows[0].id;
 };
 
-// Atualiza um pedido existente, também dentro de uma transação
 const atualizarStatus = async (client, pedidoId, status, orderIdExterno) => {
     return client.query(
         "UPDATE pedidos SET status = $2, orderId_externo = $3 WHERE id = $1",
@@ -24,12 +21,27 @@ const atualizarStatusPorCallback = async (orderIdExterno, novoStatus, producaoId
         `UPDATE pedidos 
          SET status = $2, 
              producao_id_externo = $3, 
-             slot = $4                  -- <-- Nova linha
+             slot_expedicao = $4 -- Corrigido para nome da coluna no banco
          WHERE orderId_externo = $1 
          RETURNING *`,
         [orderIdExterno, novoStatus, producaoIdExterno, slot] 
     );
     return result.rows[0];
+};
+
+const atualizarStatusElog = async (orderIdExterno, novoStatus, logEntry, slot) => {
+    const query = `
+        UPDATE pedidos 
+        SET 
+            status = $2,
+            slot_expedicao = COALESCE($4, slot_expedicao),
+            log_producao = log_producao || $3::jsonb
+        WHERE orderid_externo = $1
+        RETURNING *
+    `;
+    const values = [orderIdExterno, novoStatus, JSON.stringify([logEntry]), slot];
+    const { rows } = await db.query(query, values);
+    return rows[0];
 };
 
 const buscarPorUsuario = async (id_usuario) => {
@@ -39,24 +51,34 @@ const buscarPorUsuario = async (id_usuario) => {
             p.status, 
             p.orderid_externo, 
             p.producao_id_externo,
-            p.slot,
+            p.slot_expedicao as slot,
+            p.data_pedido,
+            pers.nome as nome_personagem,
             pers.genero,
-            pers.corPele,
             pers.img,
-            pers.historia
+            pers.valor
          FROM pedidos p
          JOIN personagens pers ON p.personagem_id = pers.id
          WHERE p.id_usuario = $1
-         ORDER BY p.id DESC;
-        `,
+         ORDER BY p.id DESC;`,
         [id_usuario]
     );
     return rows;
+};
+const buscarIdPorExterno = async (orderIdExterno) => {
+    const { rows } = await db.query(
+        `SELECT id FROM pedidos WHERE orderid_externo = $1`,
+        [orderIdExterno]
+    );
+    // Retorna o ID interno ou undefined se não achar
+    return rows[0]?.id;
 };
 
 module.exports = {
     criar,
     atualizarStatus,
     atualizarStatusPorCallback,
-    buscarPorUsuario, // Exporte a nova função
+    atualizarStatusElog,
+    buscarPorUsuario,
+    buscarIdPorExterno // <--- IMPORTANTE: Adicione na exportação
 };

@@ -1,0 +1,184 @@
+.container-historico-pedidos {
+    padding: 10px 20px;
+    color: white;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+}
+
+/* Scrollbar Discreta */
+.container-historico-pedidos::-webkit-scrollbar { width: 6px; }
+.container-historico-pedidos::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
+.container-historico-pedidos::-webkit-scrollbar-thumb { background: #555; border-radius: 3px; }
+
+.titulo-historico {
+    font-family: 'fonte-titulos', sans-serif;
+    color: #fff; /* Branco (sem amarelo) */
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+}
+
+/* LISTA MAIS COMPACTA */
+.lista-linear-pedidos {
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* Menos espaço entre os itens */
+    padding-bottom: 50px;
+}
+
+/* CADA LINHA DE PEDIDO */
+.row-pedido {
+    display: flex;
+    flex-direction: row;
+    background: linear-gradient(90deg, rgba(30,30,30,1) 0%, rgba(20,20,20,0.8) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 4px; /* Cantos menos arredondados, mais industrial */
+    overflow: hidden;
+    height: 80px; /* Altura reduzida para ficar compacto */
+    transition: all 0.2s ease;
+    align-items: center;
+}
+
+.row-pedido:hover {
+    background: rgba(50, 50, 50, 0.8);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* 1. IMAGEM LATERAL */
+.img-lateral {
+    width: 80px; /* Quadrado perfeito com a altura */
+    height: 100%;
+    flex-shrink: 0;
+    background-color: #000;
+    border-right: 1px solid rgba(255,255,255,0.05);
+}
+
+.img-lateral img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top; 
+    filter: grayscale(30%); /* Levemente desaturado para estilo */
+}
+
+/* 2. INFO CENTRAL (Aproximada) */
+.info-central {
+    flex: 1;
+    padding: 0 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px; /* Itens bem juntinhos */
+}
+
+.topo-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.info-central h3 {
+    margin: 0;
+    font-size: 1rem;
+    color: #fff;
+    font-weight: 600;
+}
+
+.id-pedido {
+    font-family: "fonte-numeros", monospace; /* FONTE NUMÉRICA */
+    font-size: 0.9rem;
+    color: #666;
+    letter-spacing: 1px;
+}
+
+.data-hora {
+    font-family: "fonte-numeros", sans-serif; /* FONTE NUMÉRICA */
+    font-size: 0.75rem;
+    color: #888;
+}
+
+.valor-item {
+    font-family: "fonte-numeros", sans-serif; /* FONTE NUMÉRICA */
+    font-size: 0.9rem;
+    color: #ccc; /* Cinza claro em vez de dourado */
+    font-weight: bold;
+}
+
+/* 3. STATUS DIREITA */
+.status-direita {
+    width: auto;
+    min-width: 160px;
+    padding: 0 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 5px;
+}
+
+/* TAGS DE STATUS (Neutras) */
+.tag {
+    padding: 4px 8px;
+    border-radius: 2px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    letter-spacing: 0.5px;
+}
+
+.processando { color: #888; border: 1px solid #444; }
+.enviado { color: #aaa; border: 1px solid #666; }
+.forjando { color: #fff; border: 1px solid #fff; animation: pulseGrey 2s infinite; }
+.entregue { color: #444; font-size: 0.65rem; }
+
+/* PRONTO E BOX (Verde Tecnológico) */
+.pronto { 
+    font-family: "fonte-numeros", sans-serif; /* Número do Box */
+    background: rgba(0, 255, 127, 0.1); 
+    color: #00ff7f; 
+    border: 1px solid #00ff7f;
+}
+
+.aguardando {
+    color: #ff9800; /* Laranja para aviso */
+    border: 1px solid #ff9800;
+    background: rgba(255, 152, 0, 0.1);
+}
+
+/* BOTÃO DE COLETAR COMPACTO */
+.btn-coletar-row {
+    background: #fff;
+    color: #000;
+    border: none;
+    padding: 4px 10px;
+    border-radius: 2px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-family: "fonte-numeros", sans-serif; /* Número do Box no botão */
+    transition: 0.2s;
+    margin-top: 4px;
+}
+
+.btn-coletar-row:hover {
+    background: #ccc;
+}
+
+@keyframes pulseGrey { 
+    0% { opacity: 0.5; } 
+    50% { opacity: 1; } 
+    100% { opacity: 0.5; } 
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .row-pedido { height: auto; padding: 10px; }
+    .img-lateral { width: 60px; height: 60px; border-radius: 4px; margin-right: 10px; border: none;}
+    .status-direita { align-items: flex-start; padding-left: 0; min-width: auto; margin-top: 5px;}
+    .info-central { padding: 0; }
+}

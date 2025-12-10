@@ -1,71 +1,52 @@
 const PedidoModel = require('../models/pedidoModel');
-const CarrinhoModel = require('../models/carrinhoModel'); // <-- Importa o model do carrinho
+const CarrinhoModel = require('../models/carrinhoModel');
+const EstoqueModel = require('../models/estoqueModel');
 const db = require('../config/database');
 const axios = require('axios');
 
-// Função auxiliar para traduzir RPG -> Indústria
+// =========================================================================
+// 1. TRADUTOR: RPG -> INDÚSTRIA
+// =========================================================================
 const montarPayloadIndustrial = (item, novoPedidoId) => {
+    const safeInt = (val) => val ? parseInt(val) : 0;
     
-    // Fallback: Se vier null do banco, usa 0 ou 1 para não quebrar a máquina
-    const safeInt = (val) => val ? parseInt(val) : 0; // 0 geralmente é "sem faceta"
-
-    // Mapeamento baseado na sua Tabela:
-    
-    // BLOCO 3 (TOPO - Cabeça)
-    const bloco3 = {
-        cor: safeInt(item.generonum),       // Cor do Bloco = Gênero
-        lamina1: safeInt(item.corpelenum),  // Frontal Cor = Pele
-        padrao1: String(safeInt(item.marcasnum)), // Frontal Símbolo = Sardas (String)
-        lamina2: safeInt(item.cabelonum),   // Direita Cor = Estilo Cabelo
-        padrao2: String(safeInt(item.corcabelonum)), // Direita Símbolo = Cor Cabelo
-        lamina3: safeInt(item.acesscabecanum), // Esquerda Cor = Acessório
-        padrao3: String(safeInt(item.acesscabecanum) > 0 ? 1 : 0) // Exemplo: Se tem acessório, põe simbolo 1
+    // Mapeamento: 1=Preto, 2=Vermelho, 3=Azul
+    const bloco3 = { // Cabeça
+        cor: safeInt(item.generonum),
+        lamina1: safeInt(item.corpelenum), padrao1: String(safeInt(item.marcasnum)),
+        lamina2: safeInt(item.cabelonum), padrao2: String(safeInt(item.corcabelonum)),
+        lamina3: safeInt(item.acesscabecanum), padrao3: String(safeInt(item.acesscabecanum) > 0 ? 1 : 0)
     };
-
-    // BLOCO 2 (MEIO - Torso)
-    const bloco2 = {
-        cor: safeInt(item.acesspescoconum) || 1, // Cor do Bloco = Acessório Pescoço (Default 1 se nulo)
-        lamina1: safeInt(item.roupacimanum),     // Frontal Cor = Roupa Cima
-        padrao1: String(safeInt(item.roupacimavariantenum)), // Frontal Símbolo
-        lamina2: 0, // Branca (Fixo na tabela) ou lógica específica
-        padrao2: "0",
-        lamina3: safeInt(item.armasnum),         // Esquerda Cor = Armas
-        padrao3: String(safeInt(item.armasnum) > 0 ? 1 : 0)
+    const bloco2 = { // Torso
+        cor: safeInt(item.acesspescoconum) || 1,
+        lamina1: safeInt(item.roupacimanum), padrao1: String(safeInt(item.roupacimavariantenum)),
+        lamina2: 0, padrao2: "0",
+        lamina3: safeInt(item.armasnum), padrao3: String(safeInt(item.armasnum) > 0 ? 1 : 0)
     };
-
-    // BLOCO 1 (BASE - Pernas)
-    const bloco1 = {
-        cor: safeInt(item.basemininum) || 1,     // Cor do Bloco = Base
-        lamina1: safeInt(item.roupabaixonum),    // Frontal Cor = Roupa Baixo
-        padrao1: String(safeInt(item.roupabaixovariantenum)),
-        lamina2: 0, // Branca (Fixo)
-        padrao2: "0",
-        lamina3: safeInt(item.sapatonum),        // Esquerda Cor = Sapatos
-        padrao3: String(safeInt(item.sapatovariantenum))
+    const bloco1 = { // Base
+        cor: safeInt(item.basemininum) || 1,
+        lamina1: safeInt(item.roupabaixonum), padrao1: String(safeInt(item.roupabaixovariantenum)),
+        lamina2: 0, padrao2: "0",
+        lamina3: safeInt(item.sapatonum), padrao3: String(safeInt(item.sapatovariantenum))
     };
 
     return {
         payload: {
             orderId: `pedido-forja-${novoPedidoId}`,
-            order: {
-                codigoProduto: 1, // Fixo ou dinâmico
-                bloco1: bloco1,
-                bloco2: bloco2,
-                bloco3: bloco3
-            },
+            order: { codigoProduto: 1, bloco1, bloco2, bloco3 },
             sku: "FORJA-CUSTOM-V1"
         },
-        // IMPORTANTE: Use a variável de ambiente. Se estiver testando local, use ngrok.
-        callbackUrl: `${process.env.BACKEND_URL}/api/pedidos/callback`
+        // CHUMBADO PARA GARANTIR QUE FUNCIONE NO RENDER
+        callbackUrl: `https://forja-qvex.onrender.com/api/pedidos/callback`
     };
 };
 
-// src/controllers/pedidoController.js
-
+// =========================================================================
+// 2. CHECKOUT (COM VALIDAÇÃO DE ESTOQUE)
+// =========================================================================
 const criarAPartirDoCarrinho = async (req, res) => {
-    console.log("\n🚀 [DEBUG] Iniciando Checkout (MODO RIGOROSO)...");
+    console.log("\n🚀 [CHECKOUT] Iniciando...");
     const { id_usuario } = req.body;
-
     if (!id_usuario) return res.status(400).json({ message: 'Sem ID de usuário.' });
 
     const client = await db.pool.connect();
@@ -73,153 +54,123 @@ const criarAPartirDoCarrinho = async (req, res) => {
     try {
         await client.query('BEGIN');
 
-        // 1. Busca itens (Agora com a coluna personagem_id garantida)
         const itensCarrinho = await CarrinhoModel.buscarPorSessao(id_usuario);
-        
-        console.log(`📦 [DEBUG] Itens encontrados: ${itensCarrinho.length}`);
-        
-        // DEBUG EXTRA: Ver o que veio do banco
-        if(itensCarrinho.length > 0) {
-            console.log("🔍 [DEBUG] Primeiro item (estrutura):", JSON.stringify(itensCarrinho[0], null, 2));
-        }
+        if (itensCarrinho.length === 0) throw new Error('Carrinho vazio.');
 
-        if (itensCarrinho.length === 0) {
-            throw new Error('Carrinho vazio.'); // Joga para o catch principal
-        }
+        // --- VALIDAÇÃO DE ESTOQUE ---
+        const demandaTotal = {};
+        const somar = (id) => { if(id) demandaTotal[String(id)] = (demandaTotal[String(id)] || 0) + 1; };
         
-        // LOOP DE PROCESSAMENTO
+        itensCarrinho.forEach(item => {
+            somar(item.generonum); somar(item.acesspescoconum); somar(item.basemininum);
+        });
+
+        const errosEstoque = await EstoqueModel.verificarDisponibilidade(demandaTotal);
+        if (errosEstoque.length > 0) throw new Error(`Estoque insuficiente:\n${errosEstoque.join('\n')}`);
+
+        // --- CONSUMO ---
+        await EstoqueModel.consumirItens(client, demandaTotal);
+        console.log("🔥 Estoque reservado.");
+
         for (const item of itensCarrinho) {
-            
-            // VALIDAÇÃO CRÍTICA DO ID
-            if (!item.personagem_id) {
-                throw new Error(`O item "${item.nome}" não possui um ID de personagem válido.`);
-            }
-
-            console.log(`\n🔨 [DEBUG] Processando: ${item.nome} (ID Personagem: ${item.personagem_id})`);
-            
-            // 2. Cria pedido no banco
-            // IMPORTANTE: Usando item.personagem_id agora!
             const novoPedidoId = await PedidoModel.criar(client, id_usuario, item.personagem_id, 'processando');
-            console.log(`   -> Pedido criado ID: ${novoPedidoId}`);
-
-            // 3. Monta Payload
-            // Certifique-se que sua função montarPayloadIndustrial usa as colunas novas (generonum, etc)
-            const requisicaoParaProfessor = montarPayloadIndustrial(item, novoPedidoId);
-
-            // 4. Envia para API Externa
-            console.log("   -> 📡 Enviando para fábrica...");
+            const payload = montarPayloadIndustrial(item, novoPedidoId);
             
-            // Se o axios falhar aqui, ele vai explodir o erro e cair no catch lá em baixo (ROLLBACK)
-            await axios.post('http://52.72.137.244:3000/queue/items', requisicaoParaProfessor);
-                
-            console.log(`   -> ✅ Sucesso na fábrica.`);
-
-            // 5. Atualiza status local
-            const orderIdExterno = requisicaoParaProfessor.payload.orderId;
-            await PedidoModel.atualizarStatus(client, novoPedidoId, 'enviado', orderIdExterno);
+            // Envia para API
+            try {
+                await axios.post('http://52.72.137.244:3000/queue/items', payload);
+            } catch (err) {
+                console.error("Erro no envio para máquina:", err.message);
+                throw new Error("Falha ao comunicar com a fábrica.");
+            }
+            
+            await PedidoModel.atualizarStatus(client, novoPedidoId, 'enviado', payload.payload.orderId);
         }
 
-        // 6. Se chegou aqui, TODOS deram certo. Limpa o carrinho.
         await CarrinhoModel.limparPorSessao(client, id_usuario);
-        
         await client.query('COMMIT');
-        console.log("🏁 [DEBUG] SUCESSO TOTAL. Commit realizado.");
-        
-        res.status(200).json({ mensagem: 'Compra finalizada com sucesso!' });
+        res.status(200).json({ message: 'Produção iniciada com sucesso!' });
 
     } catch (error) {
-        // QUALQUER ERRO CAI AQUI E CANCELA TUDO
         await client.query('ROLLBACK');
-        
-        console.error('❌ [DEBUG] ERRO FATAL - OPERAÇÃO CANCELADA');
-        
-        // Tenta pegar mensagem de erro da API do professor se existir
-        const msgErro = error.response?.data ? JSON.stringify(error.response.data) : error.message;
-        console.error('   -> Motivo:', msgErro);
-
-        res.status(500).json({ 
-            message: 'Erro ao processar pagamento. Nenhuma cobrança foi feita.',
-            detalhe: msgErro
-        });
+        console.error('❌ [ERRO CHECKOUT]', error.message);
+        const status = error.message.includes('Estoque insuficiente') ? 409 : 500;
+        res.status(status).json({ message: 'Erro ao processar.', detalhe: error.message });
     } finally {
         client.release();
     }
 };
 
+// =========================================================================
+// 3. CALLBACK (AQUI ESTAVA O QUE FALTOU)
+// =========================================================================
 const receberCallback = async (req, res) => {
-   
-    console.log('--- CALLBACK DO PROFESSOR RECEBIDO ---');
-    console.log('BODY:', JSON.stringify(req.body, null, 2));
+    const dados = req.body;
+    console.log('\n📡 [CALLBACK RECEBIDO]', JSON.stringify(dados, null, 2));
 
     try {
-        const statusExterno = req.body.status;
-        const orderId = req.body.payload.orderId;      
-        const producaoId = req.body.id;                
+        const statusExterno = dados.status; 
+        const orderIdExterno = dados.payload?.orderId;
+        let slot = dados.payload?.slot || dados.estoquePos || dados.payload?.estoquePos;
 
-        if (!orderId || !statusExterno || !producaoId) {
-            console.warn('Callback recebido com dados incompletos.');
-            return res.status(400).json({ message: "Dados do callback incompletos." });
+        if (!orderIdExterno) {
+            console.warn('⚠️ Callback sem OrderID ignorado.');
+            return res.status(200).send('Ignored');
         }
 
-        if (statusExterno === "COMPLETED") {
+        console.log(`🔎 Pedido: ${orderIdExterno} | Status: ${statusExterno}`);
+
+        let novoStatus = 'processando';
+        if (statusExterno === 'IN_PROGRESS' || statusExterno === 'PRINTING') novoStatus = 'forjando';
+        
+        if (statusExterno === 'COMPLETED' || statusExterno === 'ENTREGUE') {
+            novoStatus = 'concluido';
             
-            const nossoStatus = 'forjado'; 
-
-            const slotAleatorio = Math.floor(Math.random() * 100) + 1;
-            console.log(`Pedido ${orderId} concluído. Atribuindo slot aleatório: ${slotAleatorio}`);
-
-            const pedidoAtualizado = await PedidoModel.atualizarStatusPorCallback(
-                orderId, 
-                nossoStatus, 
-                producaoId,
-                slotAleatorio
-            );
-
-            if (!pedidoAtualizado) {
-                console.error(`Callback para orderId ${orderId} não encontrou pedido no nosso banco.`);
-                
-                return res.status(404).json({ message: "Pedido não encontrado no nosso sistema." });
+            // Mock de Slot se vier null
+            if (!slot) {
+                console.warn("⚠️ Slot veio NULL. Simulando slot...");
+                const idNum = parseInt(orderIdExterno.replace(/\D/g, '')) || 1;
+                slot = (idNum % 6) + 1; 
             }
+            console.log(`📍 Produto na GAVETA: ${slot}`);
 
-            console.log(`SUCESSO: Pedido ${pedidoAtualizado.id} (Externo: ${orderId}) atualizado para status: ${nossoStatus}`);
-
-        } else {
-            console.log(`Callback recebido para ${orderId} com status: ${statusExterno}. Nenhuma ação de atualização foi tomada.`);
+            // --- AQUI ESTAVA O ERRO MVC ANTES ---
+            // Agora usamos o Model para buscar o ID e o EstoqueModel para ocupar o slot
+            
+            const idInterno = await PedidoModel.buscarIdPorExterno(orderIdExterno);
+            
+            if (idInterno) {
+                await EstoqueModel.ocuparSlot(slot, idInterno);
+            } else {
+                console.error(`🚨 Pedido ${orderIdExterno} não encontrado no banco local.`);
+            }
         }
 
-        res.status(200).json({ message: "Callback processado com sucesso." });
+        const logEntry = { data: new Date(), status_maquina: statusExterno, slot_atribuido: slot, dados_brutos: dados };
+        await PedidoModel.atualizarStatusElog(orderIdExterno, novoStatus, logEntry, slot);
+
+        res.status(200).json({ message: "Callback processado" });
 
     } catch (error) {
-        console.error('### ERRO NO PROCESSAMENTO DO CALLBACK ###', error);
-       
-        res.status(500).json({ message: "Erro interno ao processar callback." });
+        console.error('❌ Erro Callback:', error);
+        res.status(500).json({ error: 'Erro interno.' });
     }
 };
 
+// =========================================================================
+// 4. HISTÓRICO
+// =========================================================================
 const getPedidosPorSessao = async (req, res) => {
     try {
-        // Pegamos o session_id que vem na URL (ex: /api/pedidos/por-sessao/abc-123)
-        const { session_id } = req.params;
-
-        if (!session_id) {
-            return res.status(400).json({ message: "ID de sessão é obrigatório." });
-        }
-
-        // Chama o model
-        const pedidos = await PedidoModel.buscarPorSessao(session_id);
-
-        // Retorna os pedidos encontrados (pode ser um array vazio [])
+        const pedidos = await PedidoModel.buscarPorUsuario(req.params.session_id);
         res.status(200).json(pedidos);
-
     } catch (error) {
-        console.error("Erro ao buscar pedidos:", error);
-        res.status(500).json({ message: "Erro ao buscar pedidos." });
+        res.status(500).json({ message: "Erro ao buscar histórico." });
     }
 };
 
-// Adicione a nova função ao module.exports
-module.exports = {
-    criarAPartirDoCarrinho,
-    receberCallback,
-    getPedidosPorSessao, // <-- ADICIONE AQUI
+module.exports = { 
+    criarAPartirDoCarrinho, 
+    receberCallback, 
+    getPedidosPorSessao 
 };

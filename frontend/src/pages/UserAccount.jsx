@@ -5,68 +5,65 @@ import { useGlobalContext } from '../context/GlobalContext';
 
 // Importação dos Componentes Filhos
 import MeusDados from '../components/MeusDados';
-import MeusPedidos from '../components/MeusPedidos';
-import MeuHistorico from '../components/MeuHistorico';
-import Navbar from '../components/Navbar';
+// IMPORTANTE: Verifique se o arquivo está mesmo em components ou pages
+import MeusPersonagens from '../components/MeusPersonagens'; 
 
-// Importação do CSS
+// Componentes removidos desta branch: MeusPedidos, MeuHistorico
+
+import Navbar from '../components/Navbar';
 import './UserAccount.css';
+import AdminEstoque from '../components/AdminEstoque';
+import HistoricoPedidos from '../components/HistoricoPedidos';
 
 function UserAccount() {
     const { usuarioId, logoutUsuario } = useGlobalContext();
     const navigate = useNavigate();
 
-    // Estado para controlar qual aba está ativa
     const [ativo, setAtivo] = useState("dados");
-    
-    // Estado para armazenar os dados completos do usuário vindos do banco
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    // 1. Buscar dados do usuário ao carregar a página
-    useEffect(() => {
-        const fetchUserData = async () => {
-            const id = usuarioId || localStorage.getItem('id_usuario');
-            
-            if (!id) {
-                navigate('/'); // Se não tiver ID, chuta pra home
-                return;
-            }
-
-            try {
-                // Ajuste a rota conforme seu backend (ex: /api/usuarios/5)
-                const response = await axios.get(`https://forja-qvex.onrender.com/api/usuarios/${id}`);
-                setUserData(response.data);
-            } catch (error) {
-                console.error("Erro ao buscar dados do usuário:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchUserData();
-    }, [usuarioId, navigate]);
-
-    // 2. Função de Logout
-    const handleLogout = () => {
-        if (window.confirm("Tem certeza que deseja sair de sua conta?")) {
-            logoutUsuario();
+    // 1. DEFINIR A FUNÇÃO DE BUSCA FORA DO USEEFFECT
+    const carregarDadosDoUsuario = async () => {
+        const id = usuarioId || localStorage.getItem('id_usuario');
+        
+        if (!id) {
             navigate('/');
+            return;
+        }
+
+        try {
+            // Buscando dados atualizados...
+            const response = await axios.get(`https://forja-qvex.onrender.com/api/usuarios/${id}`);
+            setUserData(response.data); // Atualiza o estado do Pai
+        } catch (error) {
+            console.error("Erro ao buscar dados:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
-    // 3. Função para renderizar o componente correto baseado na aba ativa
+    // 2. USEEFFECT CHAMA ESSA FUNÇÃO
+    useEffect(() => {
+        carregarDadosDoUsuario();
+    }, [usuarioId, navigate]);
+
+    const handleLogout = () => { /* ...seu código igual... */ };
+
+    // 3. PASSAR A FUNÇÃO COMO PROPS PARA O FILHO
     const renderComponente = () => {
         switch (ativo) {
-            case "dados":
-                // Passamos userData como prop para MeusDados
-                return <MeusDados dados={userData} />;
-            case "pedidos":
-                return <MeusPedidos />;
-            case "historico":
-                return <MeuHistorico />;
-            default:
-                return <MeusDados dados={userData} />;
+            // NOVIDADE: Passamos a prop 'atualizarPai={carregarDadosDoUsuario}'
+            case "dados": 
+                return <MeusDados dados={userData} atualizarPai={carregarDadosDoUsuario} />;
+            case "personagens": 
+                return <MeusPersonagens />;
+            case "historico": 
+                return <HistoricoPedidos />;
+            case "admin": 
+                return <AdminEstoque />;
+            default: 
+                return <MeusDados dados={userData} atualizarPai={carregarDadosDoUsuario} />;
         }
     };
 
@@ -83,21 +80,21 @@ function UserAccount() {
                     <div className="parte-menu">
 
                         <div className="menu-parte-foto">
-                            {/* Se tiver foto no banco usa ela, senão usa um placeholder */}
                             <div 
                                 className="parte-foto"
                                 style={{ 
-                                    backgroundImage: userData?.foto ? `url(${userData.foto})` : 'none',
+                                    backgroundImage: userData?.img ? `url(${userData.img})` : 'none',
                                     backgroundSize: 'cover',
                                     backgroundPosition: 'center'
                                 }}
                             ></div>
                             <label className='label-nome-usuario'>
-                                {userData?.nome || "Aventureiro"}
+                                {userData.nome_usuario || "Aventureiro"}
                             </label>
                         </div>
 
                         <div className="menu-parte-botoes">
+                            {/* Botão MEUS DADOS */}
                             <button 
                                 className={`botoes-menu ${ativo === "dados" ? "ativo" : ""}`}
                                 onClick={() => setAtivo("dados")}
@@ -106,18 +103,31 @@ function UserAccount() {
                             </button>
 
                             <button 
-                                className={`botoes-menu ${ativo === "pedidos" ? "ativo" : ""}`}
-                                onClick={() => setAtivo("pedidos")}
-                            >
-                                Pedidos
-                            </button>
-
-                            <button 
                                 className={`botoes-menu ${ativo === "historico" ? "ativo" : ""}`}
                                 onClick={() => setAtivo("historico")}
                             >
-                                Histórico
+                                📜 Histórico de Pedidos
                             </button>
+
+                            {/* Botão MEUS PERSONAGENS (NOVO) */}
+                            <button 
+                                className={`botoes-menu ${ativo === "personagens" ? "ativo" : ""}`}
+                                onClick={() => setAtivo("personagens")}
+                            >
+                                Meus Personagens
+                            </button>
+
+                            {String(usuarioId) === '5' && (
+                                <button 
+                                    className={`botoes-menu ${ativo === "admin" ? "ativo" : ""}`}
+                                    onClick={() => setAtivo("admin")}
+                                    style={{ color: '#ff4444', borderColor: '#ff4444' }} // Destaque visual
+                                >
+                                    ⚙️ Gestão Industrial
+                                </button>
+                            )}
+
+                            {/* Botões de Pedidos e Histórico removidos nesta branch */}
                         </div>
 
                         <div className="menu-parte-sair">
@@ -129,10 +139,9 @@ function UserAccount() {
                     </div>
                 </div>
 
-                {/* --- ÁREA DO CONTEÚDO --- */}
+                {/* --- ÁREA DO CONTEÚDO (DIREITA) --- */}
                 <div className="container-principal-componente">
                     <div className="parte-componente">
-                        {/* Aqui renderizamos o conteúdo dinâmico */}
                         {renderComponente()}
                     </div>
                 </div>

@@ -76,33 +76,102 @@ const adicionarCartao = async (req, res) => {
     }
 };
 
+const deletarConta = async (req, res) => {
+    const { id_usuario } = req.params;
 
-const buscarPorId = async (req, res) => {
-    const { id } = req.params;
+    console.log(`\n🗑️ [DELETE REQUEST] Recebido pedido para apagar usuário ID: ${id_usuario}`);
 
     try {
-        const usuario = await UsuarioModel.buscarPorId(id);
-
-        if (!usuario) {
-            return res.status(404).json({ message: "Usuário não encontrado" });
+        // Verifica se o ID veio
+        if (!id_usuario || id_usuario === 'undefined') {
+            console.log("❌ [ERRO] ID do usuário inválido ou indefinido.");
+            return res.status(400).json({ message: "ID inválido." });
         }
 
-        res.status(200).json({
-            nome: usuario.nome_usuario,
-            email: usuario.email_usuario
-            // senha NÃO deve ser enviada!
-        });
+        console.log("➡️ [MODEL] Chamando UsuarioModel.removerUsuario...");
+        const resultado = await UsuarioModel.removerUsuario(id_usuario);
+        
+        console.log("✅ [SUCESSO] Usuário removido. Linhas afetadas:", resultado.rowCount);
+        
+        if (resultado.rowCount === 0) {
+            console.warn("⚠️ [AVISO] O comando rodou, mas nenhum usuário foi encontrado com esse ID.");
+            return res.status(404).json({ message: "Usuário não encontrado." });
+        }
+
+        res.status(200).json({ message: "Usuário removido com sucesso." });
 
     } catch (error) {
-        console.error("Erro ao buscar usuário:", error);
-        res.status(500).json({ message: "Erro no servidor." });
+        console.error("❌ [ERRO FATAL NO DELETE]:");
+        console.error("   -> Mensagem:", error.message);
+        console.error("   -> Código SQL:", error.code); // Importante para saber se é Foreign Key
+        console.error("   -> Detalhe:", error.detail);
+        
+        // Retorna o erro detalhado para o frontend (ajuda no debug)
+        res.status(500).json({ 
+            message: "Erro ao remover usuário.", 
+            debug_erro: error.message,
+            sql_code: error.code 
+        });
     }
 };
 
+const editarDados = async (req, res) => {
+    const { id_usuario } = req.params;
+    const { nome, email, senha, img } = req.body; // Campos vindos do React
+
+    try {
+        let dadosParaUpdate = {};
+
+        // Tradutor: Frontend -> Banco de Dados
+        if (nome) dadosParaUpdate.nome_usuario = nome;
+        if (email) dadosParaUpdate.email_usuario = email;
+        if (senha) dadosParaUpdate.senha_usuario = senha; // Ideal seria criptografar aqui
+        if (img) dadosParaUpdate.img = img;
+
+        if (Object.keys(dadosParaUpdate).length === 0) {
+            return res.status(400).json({ message: "Nenhum dado enviado para atualização." });
+        }
+
+        const usuarioAtualizado = await UsuarioModel.atualizarUsuario(id_usuario, dadosParaUpdate);
+
+        if (!usuarioAtualizado) {
+            return res.status(404).json({ message: "Usuário não encontrado." });
+        }
+
+        res.status(200).json({
+            message: "Dados atualizados com sucesso!",
+            usuario: {
+                nome: usuarioAtualizado.nome_usuario,
+                email: usuarioAtualizado.email_usuario
+                // Não devolvemos a senha por segurança
+            }
+        });
+
+    } catch (error) {
+        console.error("Erro ao atualizar usuário:", error);
+        res.status(500).json({ message: "Erro interno ao atualizar dados." });
+    }
+};
+
+const obterDadosUsuario = async (req, res) => {
+    const { id_usuario } = req.params;
+    try {
+        const usuario = await UsuarioModel.buscarPorId(id_usuario);
+        if (!usuario) {
+            return res.status(404).json({ message: "Usuário não encontrado." });
+        }   
+        res.status(200).json(usuario);
+    } catch (error) {
+        console.error("Erro ao obter dados do usuário:", error);
+        res.status(500).json({ message: "Erro interno ao obter dados do usuário." });
+    }
+};
 
 module.exports = { 
-    cadastrar, 
-    login,
-    adicionarCartao,
-    buscarPorId
+obterDadosUsuario,
+cadastrar, 
+login,
+adicionarCartao,
+deletarConta,
+editarDados
 };

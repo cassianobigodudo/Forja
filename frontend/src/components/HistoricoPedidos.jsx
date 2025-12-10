@@ -1,0 +1,122 @@
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useGlobalContext } from "../context/GlobalContext";
+import "./HistoricoPedidos.css";
+
+function HistoricoPedidos() {
+  const { idUsuario } = useGlobalContext();
+  const [pedidos, setPedidos] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const API_URL = "https://forja-qvex.onrender.com/api";
+
+  const fetchPedidos = async () => {
+    const id = idUsuario || localStorage.getItem('id_usuario');
+    if (!id) return;
+
+    try {
+      const response = await axios.get(`${API_URL}/pedidos/por-sessao/${id}`);
+      setPedidos(response.data);
+    } catch (error) {
+      console.error("Erro ao buscar histórico:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPedidos();
+    const intervalo = setInterval(fetchPedidos, 5000);
+    return () => clearInterval(intervalo);
+  }, [idUsuario]);
+
+  const handleColetar = async (slot, idPedido) => {
+    if (!window.confirm(`Confirmar retirada do Box ${slot}?`)) return;
+
+    try {
+        await axios.post(`${API_URL}/estoque/liberar/${slot}`);
+        alert("Item coletado com sucesso!");
+        fetchPedidos(); 
+    } catch (error) {
+        console.error("Erro ao coletar:", error);
+        alert("Erro ao confirmar coleta.");
+    }
+  };
+
+  // LÓGICA DE STATUS REVISADA (SEM INVENTAR NÚMEROS)
+  const renderStatus = (p) => {
+      // Se status é concluído mas NÃO tem slot no banco -> Aguardando Expedição
+      if (p.status === 'concluido' && !p.slot) {
+          return <span className="tag entregue">JÁ COLETADO / FINALIZADO</span>;
+      }
+      
+      switch(p.status) {
+          case 'processando': return <span className="tag processando">⏳ NA FILA</span>;
+          case 'forjando': return <span className="tag forjando">🔨 FORJANDO...</span>;
+          case 'enviado': return <span className="tag enviado">📡 ENVIADO</span>;
+          
+          // Só mostra o BOX se p.slot for REAL (vindo do banco)
+          case 'concluido': 
+            return p.slot 
+                ? <span className="tag pronto">✅ PRONTO NO BOX {p.slot}</span>
+                : <span className="tag aguardando">⚠️ AGUARDANDO EXPEDIÇÃO</span>;
+          
+          default: return <span className="tag">{p.status}</span>;
+      }
+  };
+
+  if (loading) return <div className="loading-historico">Carregando histórico...</div>;
+
+  return (
+    <div className="container-historico-pedidos">
+      <h2 className="titulo-historico">Meus Pedidos</h2>
+      
+      <div className="lista-linear-pedidos">
+        {pedidos.length === 0 && <p className="sem-pedidos">Nenhum pedido realizado ainda.</p>}
+
+        {pedidos.map((pedido) => (
+          <div key={pedido.pedido_id} className={`row-pedido ${pedido.status}`}>
+            
+            {/* 1. IMAGEM NA ESQUERDA */}
+            <div className="img-lateral">
+                <img src={pedido.img} alt={pedido.nome_personagem} />
+            </div>
+
+            {/* 2. INFORMAÇÕES NO CENTRO */}
+            <div className="info-central">
+                <div className="topo-info">
+                    <h3>{pedido.nome_personagem}</h3>
+                    <span className="id-pedido">#{pedido.orderid_externo?.split('-')[2] || pedido.pedido_id}</span>
+                </div>
+                
+                <p className="data-hora">
+                    {new Date(pedido.data_pedido).toLocaleDateString()} às {new Date(pedido.data_pedido).toLocaleTimeString().slice(0,5)}
+                </p>
+                
+                <p className="valor-item">
+                    {Number(pedido.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                </p>
+            </div>
+
+            {/* 3. STATUS E AÇÃO NA DIREITA */}
+            <div className="status-direita">
+                {renderStatus(pedido)}
+
+                {/* Botão só aparece se tiver slot REAL */}
+                {pedido.status === 'concluido' && pedido.slot && (
+                    <button 
+                        className="btn-coletar-row"
+                        onClick={() => handleColetar(pedido.slot, pedido.pedido_id)}
+                    >
+                        PEGAR NO BOX {pedido.slot}
+                    </button>
+                )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default HistoricoPedidos;

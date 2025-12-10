@@ -46,59 +46,65 @@
    COLUNA ESQUERDA: NAVEGAÇÃO
 ========================================================= */
 
+/* Container da Esquerda (Ajuste para centralizar o card) */
 .esquerda {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
-    padding-right: 20px;
+    justify-content: flex-start; /* Começa do topo */
+    align-items: center;
+    padding-top: 20px;
 }
 
-.continue {
-    font-family: 'fonte-subtitulos', serif; /* Trykker */
-    font-size: 1.2rem;
-    color: rgba(255, 255, 255, 0.7);
-    margin-bottom: 10px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-/* O Risco/Divisória */
-.risco {
-    width: 100%;
-    height: 2px;
-    border: none;
-    background: linear-gradient(90deg, transparent, var(--Texto), transparent);
-    margin: 10px 0 20px;
-    opacity: 0.5;
-}
-
-/* Botão Voltar (Estilo Pergaminho/Botão Grande) */
-.btn-voltar {
-    width: 100%;
-    height: 180px;
-    font-family: 'fonte-logo', serif; /* Hellraiser */
-    font-size: 2rem;
-    color: var(--Texto);
-    border: 1px solid rgba(255,255,255,0.2);
-    cursor: pointer;
-    text-transform: uppercase;
-    line-height: 1.2;
+/* Card decorativo */
+.card-voltar-loja {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 20px;
     text-align: center;
-    
-    /* Fundo com a imagem que você mandou, mas ajustada */
-    background: var(--FundoAlternativo) url("/fundo/fundo-voltar.png") center/cover no-repeat;
+    width: 100%;
+    max-width: 250px;
+}
+
+.icone-voltar {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    opacity: 0.8;
+}
+
+.card-voltar-loja p {
+    color: #aaa;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+}
+
+/* O Novo Botão Padronizado */
+.btn-voltar-padrao {
+    display: flex;
+    font-family: 'fontes-titulo';
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 12px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Borda sutil */
+    color: #ccc;
+    font-family: inherit;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    cursor: pointer;
     border-radius: 4px;
     transition: all 0.3s ease;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-    text-shadow: 0 2px 4px black;
 }
 
-.btn-voltar:hover {
-    transform: scale(1.02);
-    border-color: var(--Texto);
-    box-shadow: 0 0 20px rgba(255,255,255,0.2);
+.btn-voltar-padrao:hover {
+    border-color: white; /* Dourado */
+    color: white;
+    background: var(--FundoAlternativo); /* Fundo dourado bem fraquinho */
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    transform: translateY(-2px);
 }
 
 /* Espaço para decoração (opcional) */
@@ -416,4 +422,104 @@
     color: white;
     transform: scale(1.1);
     box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+}
+
+/* --- CSS DE ENTREGA --- */
+.box-entrega {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.box-entrega h3 {
+    color: white;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    font-family: 'fonte-subtitulos', sans-serif;
+    border-bottom: 1px solid white;
+    padding-bottom: 5px;
+}
+
+.opcao-entrega {
+    display: flex;
+    align-items: center; /* Centraliza verticalmente */
+    gap: 10px;
+    padding: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.opcao-entrega:last-child {
+    border-bottom: none;
+}
+
+.opcao-entrega:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.opcao-entrega.selecionada {
+    background: rgba(212, 175, 55, 0.1); /* Dourado bem suave */
+    border: 1px solid white;
+    border-radius: 4px;
+}
+
+.opcao-entrega input[type="radio"] {
+    accent-color: white; /* Cor da bolinha do rádio */
+    transform: scale(1.2);
+}
+
+.opcao-entrega div {
+    display: flex;
+    flex-direction: column;
+}
+
+.opcao-entrega strong {
+    color: #fff;
+    font-size: 0.9rem;
+}
+
+.opcao-entrega small {
+    color: #aaa;
+    font-size: 0.8rem;
+}
+
+.sem-endereco-msg {
+    font-size: 0.8rem;
+    color: #aaa;
+    font-style: italic;
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* --- SCROLLBAR PARA LISTAS DE ENDEREÇO --- */
+
+/* Define uma altura máxima e ativa a rolagem */
+.lista-enderecos-scroll {
+    max-height: 250px; /* Altura máxima antes de rolar */
+    overflow-y: auto;  /* Ativa rolagem vertical */
+    padding-right: 5px; /* Espaço para não colar na barra */
+    margin-top: 10px;
+}
+
+/* Estilizando a barra de rolagem para ficar bonita (Webkit/Chrome/Edge) */
+.lista-enderecos-scroll::-webkit-scrollbar {
+    width: 6px;
+}
+
+.lista-enderecos-scroll::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 3px;
+}
+
+.lista-enderecos-scroll::-webkit-scrollbar-thumb {
+    background: white; /* Dourado do tema */
+    border-radius: 3px;
+}
+
+.lista-enderecos-scroll::-webkit-scrollbar-thumb:hover {
+    background: #fff;
 }

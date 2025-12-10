@@ -1,0 +1,246 @@
+.admin-painel {
+    width: 100%;
+    height: 100%;
+    padding: 30px;
+    animation: fadeIn 0.6s ease-out;
+    color: var(--Texto);
+    overflow-y: auto;
+    padding-bottom: 80px;
+}
+
+/* --- CABEÇALHO --- */
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 15px;
+    margin-bottom: 30px;
+}
+
+.admin-header h2 {
+    font-family: "fonte-titulos", serif;
+    color: #fff; /* Branco puro em vez de amarelo */
+    font-size: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.btn-refresh {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.3);
+    color: rgba(255,255,255,0.7);
+    padding: 8px 16px;
+    cursor: pointer;
+    font-family: "fonte-subtitulos";
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.3s;
+}
+.btn-refresh:hover {
+    border-color: #fff;
+    color: #fff;
+    background: rgba(255,255,255,0.05);
+}
+
+/* --- SEÇÕES GERAIS --- */
+.secao-admin {
+    margin-bottom: 40px;
+}
+
+.titulo-secao {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    color: rgba(255,255,255,0.6); /* Cinza ferro */
+}
+
+.titulo-secao h3 {
+    font-family: "fonte-subtitulos";
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0;
+}
+
+/* --- GRID DE BLOCOS (CHASSIS) --- */
+.grid-blocos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px;
+}
+
+.card-bloco {
+    background-color: var(--FundoAlternativo); /* Marrom escuro */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    transition: 0.3s;
+}
+
+.card-bloco:hover {
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+
+.bloco-header {
+    text-align: center;
+    font-family: "fonte-titulos";
+    font-size: 1.2rem;
+    color: #fff;
+}
+
+/* Visual Técnico do Bloco */
+.bloco-schematic {
+    height: 40px;
+    width: 100%;
+    border: 1px solid; /* A cor vem inline */
+    position: relative;
+    opacity: 0.8;
+}
+.bloco-fill {
+    height: 100%;
+    width: 100%;
+    opacity: 0.2; /* Preenchimento translúcido */
+}
+
+.bloco-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 10px;
+}
+
+.bloco-qtd {
+    font-family: "fonte-numeros";
+    font-size: 1.2rem;
+    color: rgba(255,255,255,0.9);
+}
+
+.btn-icon {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.5);
+    cursor: pointer;
+    transition: 0.2s;
+}
+.btn-icon:hover { color: #fff; transform: scale(1.1); }
+
+/* --- GRID DE SLOTS (EXPEDIÇÃO) --- */
+.grid-slots {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.slot-card {
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+}
+
+.slot-card.ocupado {
+    border-color: rgba(255, 255, 255, 0.5);
+    background: linear-gradient(to bottom, rgba(255,255,255,0.05), transparent);
+}
+
+.slot-id {
+    font-family: "fonte-titulos";
+    background: rgba(255,255,255,0.05);
+    padding: 8px;
+    text-align: center;
+    color: rgba(255,255,255,0.7);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.slot-body {
+    padding: 15px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.status-livre {
+    font-family: "fonte-paragrafos";
+    color: rgba(255,255,255,0.3);
+    font-style: italic;
+}
+
+.pedido-info {
+    width: 100%;
+    font-size: 0.9rem;
+    display: flex;
+    justify-content: space-between;
+}
+.pedido-info .label { color: rgba(255,255,255,0.4); }
+.pedido-info .valor { color: #fff; font-weight: bold; }
+
+.btn-liberar {
+    margin-top: 10px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+    padding: 8px;
+    cursor: pointer;
+    font-family: "fonte-subtitulos";
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    transition: 0.3s;
+}
+.btn-liberar:hover {
+    background: rgba(255,255,255,0.2);
+    border-color: #fff;
+}
+
+/* --- LOGS (CONSOLE) --- */
+.console-logs {
+    background: #0a0a0a;
+    border: 1px solid rgba(255,255,255,0.1);
+    height: 200px;
+    overflow-y: auto;
+    padding: 15px;
+    font-family: monospace; /* Fonte técnica */
+    font-size: 0.85rem;
+}
+
+.console-logs::-webkit-scrollbar { width: 6px; }
+.console-logs::-webkit-scrollbar-thumb { background: #333; }
+
+.log-linha {
+    border-bottom: 1px solid #222;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+
+.log-time { color: #666; }
+.log-tag { padding: 2px 5px; border-radius: 2px; font-weight: bold; font-size: 0.7rem; }
+
+/* Cores sóbrias para status */
+.log-tag.completed, .log-tag.concluido { color: #aaa; border: 1px solid #aaa; }
+.log-tag.printing, .log-tag.forjando { color: #fff; border: 1px solid #fff; }
+.log-tag.failed, .log-tag.falha { color: #888; border: 1px solid #888; text-decoration: line-through; }
+
+.log-json {
+    color: #444;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

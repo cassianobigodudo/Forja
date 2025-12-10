@@ -168,8 +168,15 @@ const buscarPorUsuario = async (idUsuario) => {
     }
 };
 
+const excluir = async (id) => {
+    // Retorna o ID deletado só para confirmar
+    const result = await db.query('DELETE FROM personagens WHERE id = $1 RETURNING id', [id]);
+    return result.rows[0];
+};
+
 module.exports = {
     criar,
     buscar,
-    buscarPorUsuario // <--- ADICIONE ESTE
+    buscarPorUsuario,
+    excluir // <--- Adicione aqui
 };

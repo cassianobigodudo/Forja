@@ -1,113 +1,101 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useGlobalContext } from "../context/GlobalContext";
+import { useNavigate } from "react-router-dom"; 
 import "./MeusDados.css";
 
-function MeusDados() {
-  const { idUsuario } = useGlobalContext(); // Pega ID do contexto global
+function MeusDados({ dados, atualizarPai }) {
+  const { idUsuario } = useGlobalContext();
+  const navigate = useNavigate();
   const API_URL = "https://forja-qvex.onrender.com/api";
 
   const [dialogAberto, setDialogAberto] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loadingCep, setLoadingCep] = useState(false);
 
-  // Estado do Usuário
-  const [usuario, setUsuario] = useState({
-    nome: "", // Mudei de apelido para nome (padrão do banco)
-    email: "",
-    senha: "", // Cuidado: Senhas geralmente não retornam do banco por segurança
+  // --- ESTADOS --- //
+  
+  // 1. Dados do Usuário
+  const [usuario, setUsuario] = useState({ nome: "", email: "", senha: "", img: "" });
+  const [editando, setEditando] = useState({ nome: false, email: false, senha: false });
+
+  // 2. Lista de Endereços (Para exibir os cards)
+  const [listaEnderecos, setListaEnderecos] = useState([]);
+
+  // 3. Formulário de Endereço (Para o Modal)
+  const [endereco, setEndereco] = useState({ 
+    id_endereco: null, 
+    cep: "", rua: "", numero: "", bairro: "", cidade: "", uf: "", complemento: "" 
   });
 
-  // Controle de Edição
-  const [editando, setEditando] = useState({
-    nome: false,
-    email: false,
-    senha: false,
-  });
+  // --- EFEITOS (Lógica de Carregamento) --- //
 
-  // Estado do Endereço (Novo)
-  const [endereco, setEndereco] = useState({
-    cep: "",
-    rua: "",
-    numero: "",
-    bairro: "",
-    cidade: "",
-    uf: "",
-    complemento: "",
-  });
-
-  // 1. BUSCAR DADOS AO CARREGAR
   useEffect(() => {
-    async function fetchUsuario() {
-      // Se não tiver ID (ex: deslogou), não busca
-      const idParaBuscar = idUsuario || localStorage.getItem('id_usuario');
-      
-      if (!idParaBuscar) return;
+    // Assim que o pai (UserAccount) mandar os dados, atualizamos o estado local
+    if (dados) {
+        setUsuario({
+            nome: dados.nome_usuario || "",   
+            email: dados.email_usuario || "", 
+            senha: "", // Senha vazia por segurança
+            img: dados.img || ""
+        });
 
+        // Aproveita que temos o ID e busca os endereços
+        const idParaBuscar = idUsuario || localStorage.getItem('id_usuario');
+        console.log("Dados recebidos em MeusDados:", dados);
+
+        carregarEnderecos(idParaBuscar);
+    }
+  }, [dados]);
+
+  // Função Auxiliar: Buscar Endereços no Backend
+  const carregarEnderecos = async (id) => {
+      if (!id) return;
       try {
-        const resposta = await axios.get(`${API_URL}/usuarios/${idParaBuscar}`);
-        const { senha, ...dadosSemSenha } = resposta.data;
-        setUsuario({ ...dadosSemSenha, senha: "" });
-      } catch (erro) {
-        console.error("Erro ao buscar usuário:", erro);
-      } finally {
-        setLoading(false);
+          const res = await axios.get(`${API_URL}/enderecos/usuario/${id}`);
+          setListaEnderecos(res.data);
+      } catch (error) {
+          console.error("Erro ao carregar endereços", error);
       }
-    }
-    fetchUsuario();
-  }, [idUsuario]);
-
-  // 2. FUNÇÕES DE EDIÇÃO DE CAMPO
-  const habilitarEdicao = (campo) => {
-    if (campo === "senha"){
-      setUsuario((prev) => ({ ...prev, senha: "" }));
-    }
-    setEditando((prev) => ({ ...prev, [campo]: true }));
   };
 
-  const cancelarEdicao = (campo) => {
-    setEditando((prev) => ({ ...prev, [campo]: false }));
-    // Idealmente, reverteria para o valor original do banco aqui se tivesse backup
-  };
+  // --- FUNÇÕES DE USUÁRIO (Editar Nome/Email/Senha) --- //
+
+  const habilitarEdicao = (campo) => setEditando((prev) => ({ ...prev, [campo]: true }));
+  const cancelarEdicao = (campo) => setEditando((prev) => ({ ...prev, [campo]: false }));
 
   const salvarCampo = async (campo) => {
     const idParaSalvar = idUsuario || localStorage.getItem('id_usuario');
     try {
-      // PATCH para atualizar apenas 1 campo
-      const resposta = await axios.patch(
-        `${API_URL}/usuarios/${idParaSalvar}`,
-        { [campo]: usuario[campo] }
-      );
+      const payload = { [campo]: usuario[campo] };
+      const resposta = await axios.patch(`${API_URL}/usuarios/${idParaSalvar}`, payload);
 
-      setUsuario((prev) => ({
-        ...prev,
-        [campo]: resposta.data[campo] || prev[campo],
-      }));
-
+      if (resposta.data.usuario) {
+          setUsuario((prev) => ({
+            ...prev,
+            [campo]: resposta.data.usuario[campo]
+          }));
+      }
       setEditando((prev) => ({ ...prev, [campo]: false }));
       alert(`${campo.toUpperCase()} atualizado com sucesso!`);
     } catch (erro) {
-      console.error("Erro ao salvar campo:", erro);
-      alert(`Erro ao salvar ${campo}`);
+      console.error(erro);
+      alert("Erro ao atualizar. Tente novamente.");
     }
   };
 
-  // 3. LÓGICA DE ENDEREÇO (VIA CEP)
+  // --- FUNÇÕES DE ENDEREÇO (CRUD Completo) --- //
+
+  // 1. ViaCEP
   async function buscarCEP() {
     const cepLimpo = endereco.cep.replace(/\D/g, "");
-
-    if (cepLimpo.length !== 8) {
-      alert("Digite um CEP válido com 8 números.");
-      return;
-    }
+    if (cepLimpo.length !== 8) { alert("CEP inválido (digite 8 números)."); return; }
 
     try {
+      setLoadingCep(true);
       const response = await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`);
       const data = await response.json();
 
-      if (data.erro) {
-        alert("CEP não encontrado!");
-        return;
-      }
+      if (data.erro) { alert("CEP não encontrado!"); return; }
 
       setEndereco((prev) => ({
         ...prev,
@@ -117,153 +105,283 @@ function MeusDados() {
         uf: data.uf || "",
         complemento: data.complemento || "",
       }));
-    } catch (err) {
-      console.error("Erro ao buscar CEP", err);
-    }
+    } catch (err) { alert("Erro ao consultar ViaCEP."); } finally { setLoadingCep(false); }
   }
 
-  // 4. SALVAR ENDEREÇO NO BANCO
-  const salvarNovoEndereco = async () => {
-    const idParaSalvar = idUsuario || localStorage.getItem('id_usuario');
-    console.log('id do usuário recuperado após tentar salvar o endereço',idParaSalvar);
-    if (!idParaSalvar) return alert("Erro de autenticação");
+  // 2. Abrir Modal Vazio (Criar)
+  const abrirModalNovo = () => {
+      setEndereco({ id_endereco: null, cep: "", rua: "", numero: "", bairro: "", cidade: "", uf: "", complemento: "" });
+      setDialogAberto(true);
+  };
+
+  // 3. Abrir Modal Preenchido (Editar)
+  const abrirModalEditar = (end) => {
+      setEndereco({
+          id_endereco: end.id_endereco,
+          cep: end.cep,
+          rua: end.rua,
+          numero: end.numero,
+          bairro: end.bairro,
+          cidade: end.cidade,
+          uf: end.estado, // Banco usa 'estado', front usa 'uf'
+          complemento: end.complemento
+      });
+      setDialogAberto(true);
+  };
+
+  // 4. Salvar (POST ou PUT)
+  const salvarEnderecoForm = async () => {
+    const idUser = idUsuario || localStorage.getItem('id_usuario');
+    if (!idUser) return;
 
     try {
-        await axios.post(`${API_URL}/enderecos`, {
-            id_usuario: idParaSalvar,
-            ...endereco
-        });
-        alert("Endereço salvo na sua conta!");
+        // Se tem ID, é Edição (PUT)
+        if (endereco.id_endereco) {
+            await axios.put(`${API_URL}/enderecos/${endereco.id_endereco}`, endereco);
+            alert("Endereço atualizado!");
+        } else {
+            // Se não tem ID, é Criação (POST)
+            await axios.post(`${API_URL}/enderecos`, { id_usuario: idUser, ...endereco });
+            alert("Endereço criado!");
+        }
+        
         setDialogAberto(false);
-        // Limpar form
-        setEndereco({ cep: "", rua: "", numero: "", bairro: "", cidade: "", uf: "", complemento: "" });
+        carregarEnderecos(idUser); // Atualiza a lista na tela
     } catch (error) {
         console.error(error);
         alert("Erro ao salvar endereço.");
     }
   }
 
-  if (loading) return <div className="loading-profile">Carregando dados...</div>;
+  // 5. Deletar (DELETE)
+  const deletarEndereco = async (idEnd) => {
+      if(!window.confirm("Remover este endereço?")) return;
+      try {
+          await axios.delete(`${API_URL}/enderecos/${idEnd}`);
+          const idUser = idUsuario || localStorage.getItem('id_usuario');
+          carregarEnderecos(idUser);
+      } catch (error) {
+          alert("Erro ao remover endereço.");
+      }
+  };
+
+  // --- FUNÇÃO EXCLUIR CONTA --- //
+  const handleExcluirConta = async () => {
+    const idParaDeletar = idUsuario || localStorage.getItem('id_usuario');
+
+    if (String(idParaDeletar) === '5') {
+        alert("🛡️ Admin não pode se deletar.");
+        return;
+    }
+    if (!window.confirm("Tem certeza absoluta? Isso apagará tudo!")) return;
+
+    try {
+        await axios.delete(`${API_URL}/usuarios/${idParaDeletar}`);
+        alert("Conta excluída. Até logo!");
+        localStorage.removeItem('id_usuario');
+        localStorage.removeItem('carrinho');
+        window.location.href = '/'; 
+    } catch (error) {
+        console.error("Erro ao excluir:", error);
+        alert("Erro ao excluir conta (verifique se há pedidos pendentes).");
+    }
+  };
+
+ const handleUploadFoto = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+        alert("Imagem muito grande! Máximo 2MB.");
+        return;
+    }
+
+    const reader = new FileReader();
+    
+    reader.onloadend = async () => {
+        const base64String = reader.result;
+        
+        // Atualiza localmente (Feedback imediato)
+        setUsuario((prev) => ({ ...prev, img: base64String }));
+
+        const idParaSalvar = idUsuario || localStorage.getItem('id_usuario');
+        try {
+            await axios.patch(`${API_URL}/usuarios/${idParaSalvar}`, { 
+                img: base64String 
+            });
+            
+            alert("Foto de perfil atualizada! 📸");
+            
+            // --- AQUI ESTÁ A MÁGICA ---
+            // Avisa o Pai (UserAccount) para recarregar os dados do banco
+            if (atualizarPai) {
+                atualizarPai(); 
+            }
+
+        } catch (error) {
+            console.error("Erro ao salvar imagem:", error);
+            alert("Erro ao salvar foto.");
+        }
+    };
+
+    reader.readAsDataURL(file); 
+  };
+
+  if (!dados) return <div className="loading-profile">Carregando dados...</div>;
 
   return (
     <div className="container-meus-dados">
-      
-      {/* --- COLUNA DA ESQUERDA: INPUTS --- */}
-      <div className="parte-inputs">
-        
-        {/* Campo: NOME/APELIDO */}
-        <div className="grupo-input">
-          <label className="label-dados">Nome / Apelido</label>
-          <div className="input-wrapper">
-            <input
-              type="text"
-              className={`inputs-dados ${editando.nome ? 'editavel' : ''}`}
-              disabled={!editando.nome}
-              value={usuario.nome || ""}
-              onChange={(e) => setUsuario({ ...usuario, nome: e.target.value })}
-            />
+       
+       {/* --- COLUNA ESQUERDA --- */}
+       <div className="parte-inputs">
+           
+           {/* INPUT: NOME */}
+           <div className="grupo-input">
+             <label className="label-dados">Nome / Apelido</label>
+             <div className="input-wrapper">
+               <input
+                 type="text"
+                 className={`inputs-dados ${editando.nome ? 'editavel' : ''}`}
+                 disabled={!editando.nome}
+                 value={usuario.nome || ""}
+                 onChange={(e) => setUsuario({ ...usuario, nome: e.target.value })}
+               />
+               <div className="botoes-acao">
+                   {!editando.nome ? (
+                    <button className="btn-editar" onClick={() => habilitarEdicao("nome")}>✎</button>
+                   ) : (
+                    <>
+                        <button className="btn-salvar" onClick={() => salvarCampo("nome")}>✔</button>
+                        <button className="btn-cancelar" onClick={() => cancelarEdicao("nome")}>✖</button>
+                    </>
+                   )}
+               </div>
+             </div>
+           </div>
+
+           {/* INPUT: EMAIL */}
+           <div className="grupo-input">
+             <label className="label-dados">E-mail</label>
+             <div className="input-wrapper">
+               <input
+                 type="email"
+                 className={`inputs-dados ${editando.email ? 'editavel' : ''}`}
+                 disabled={!editando.email}
+                 value={usuario.email || ""}
+                 onChange={(e) => setUsuario({ ...usuario, email: e.target.value })}
+               />
+               <div className="botoes-acao">
+                   {!editando.email ? (
+                    <button className="btn-editar" onClick={() => habilitarEdicao("email")}>✎</button>
+                   ) : (
+                    <>
+                        <button className="btn-salvar" onClick={() => salvarCampo("email")}>✔</button>
+                        <button className="btn-cancelar" onClick={() => cancelarEdicao("email")}>✖</button>
+                    </>
+                   )}
+               </div>
+             </div>
+           </div>
+
+           {/* INPUT: SENHA */}
+           <div className="grupo-input">
+             <label className="label-dados">Senha</label>
+             <div className="input-wrapper">
+               <input
+                 type="password"
+                 className={`inputs-dados ${editando.senha ? 'editavel' : ''}`}
+                 disabled={!editando.senha}
+                 value={usuario.senha || "********"}
+                 onChange={(e) => setUsuario({ ...usuario, senha: e.target.value })}
+               />
+               <div className="botoes-acao">
+                   {!editando.senha ? (
+                    <button className="btn-editar" onClick={() => habilitarEdicao("senha")}>✎</button>
+                   ) : (
+                    <>
+                        <button className="btn-salvar" onClick={() => salvarCampo("senha")}>✔</button>
+                        <button className="btn-cancelar" onClick={() => cancelarEdicao("senha")}>✖</button>
+                    </>
+                   )}
+               </div>
+             </div>
+           </div>
+
+           {/* --- SEÇÃO ENDEREÇOS --- */}
+           <div className="grupo-endereco">
+                <div className="cabecalho-enderecos">
+                    <label className="label-dados">Meus Endereços</label>
+                    <button className="btn-add-endereco" onClick={abrirModalNovo}>
+                         Novo
+                    </button>
+                </div>
+
+                {/* LISTA DE CARTÕES */}
+                <div className="lista-enderecos lista-enderecos-scroll">
+                    {listaEnderecos.length === 0 && <p className="sem-endereco">Nenhum endereço cadastrado.</p>}
+                    
+                    {listaEnderecos.map((end) => (
+                        <div key={end.id_endereco} className="card-endereco">
+                            <div className="info-endereco">
+                                <strong>{end.rua}, {end.numero}</strong>
+                                <span>{end.bairro} - {end.cidade}/{end.estado}</span>
+                                <span className="cep-info">CEP: {end.cep}</span>
+                                {end.complemento && <small>({end.complemento})</small>}
+                            </div>
+                            <div className="acoes-endereco">
+                                <button className="btn-editar-end" onClick={() => abrirModalEditar(end)}>✎</button>
+                                <img src="/icones/deletar.svg" className="btn-deletar-end" onClick={() => deletarEndereco(end.id_endereco)} />
+                            </div>
+                        </div>
+                    ))}
+                </div>
+           </div>
+       </div>
+
+       {/* --- COLUNA DIREITA (FOTO E EXCLUIR) --- */}
+        <div className="editar-imagem">
+            <h1>FOTO DE PERFIL</h1>
             
-            <div className="botoes-acao">
-                {!editando.nome ? (
-                <button className="btn-editar" onClick={() => habilitarEdicao("nome")}>✎</button>
-                ) : (
-                <>
-                    <button className="btn-salvar" onClick={() => salvarCampo("nome")}>✔</button>
-                    <button className="btn-cancelar" onClick={() => cancelarEdicao("nome")}>✖</button>
-                </>
-                )}
+            {/* Visualização da Foto */}
+            <div 
+                className="preview-foto"
+                style={{ 
+                    // Se tiver img, usa ela. Se não, fundo transparente
+                    backgroundImage: usuario.img ? `url(${usuario.img})` : 'none',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundColor: usuario.img ? 'transparent' : 'whitesmoke',
+                    border: '2px solid #d4af37' // Borda dourada bonita
+                }}
+            >
+                {/* Ícone de bonequinho só aparece se NÃO tiver imagem */}
+                {!usuario.img && <span style={{color:'black', fontSize:'40px'}}>👤</span>}
             </div>
-          </div>
-        </div>
-
-        {/* Campo: EMAIL */}
-        <div className="grupo-input">
-          <label className="label-dados">E-mail</label>
-          <div className="input-wrapper">
-            <input
-              type="email"
-              className={`inputs-dados ${editando.email ? 'editavel' : ''}`}
-              disabled={!editando.email}
-              value={usuario.email || ""}
-              onChange={(e) => setUsuario({ ...usuario, email: e.target.value })}
+            
+            {/* Botão Bonito para o Input File */}
+            <label htmlFor="file-upload" className="custom-file-upload">
+                Escolher Nova Foto
+            </label>
+            
+            {/* O Input File invisível que faz a mágica */}
+            <input 
+                id="file-upload" 
+                type="file" 
+                accept="image/*" // Só aceita imagens
+                onChange={handleUploadFoto} // <--- CHAMA A FUNÇÃO AQUI
             />
-             <div className="botoes-acao">
-                {!editando.email ? (
-                <button className="btn-editar" onClick={() => habilitarEdicao("email")}>✎</button>
-                ) : (
-                <>
-                    <button className="btn-salvar" onClick={() => salvarCampo("email")}>✔</button>
-                    <button className="btn-cancelar" onClick={() => cancelarEdicao("email")}>✖</button>
-                </>
-                )}
-            </div>
-          </div>
-        </div>
 
-        {/* Campo: SENHA */}
-        <div className="grupo-input">
-          <label className="label-dados">Senha</label>
-          <div className="input-wrapper">
-            <input
-              type="password"
-              className={`inputs-dados ${editando.senha ? 'editavel' : ''}`}
-              disabled={!editando.senha}
-              value={editando.senha ? usuario.senha : "********"} // Mascara senha
-              onChange={(e) => setUsuario({ ...usuario, senha: e.target.value })}
-            />
-             <div className="botoes-acao">
-                {!editando.senha ? (
-                <button className="btn-editar" onClick={() => habilitarEdicao("senha")}>✎</button>
-                ) : (
-                <>
-                    <button className="btn-salvar" onClick={() => salvarCampo("senha")}>✔</button>
-                    <button className="btn-cancelar" onClick={() => cancelarEdicao("senha")}>✖</button>
-                </>
-                )}
-            </div>
-          </div>
-        </div>
-
-        {/* BOTÃO ADICIONAR ENDEREÇO */}
-        <div className="grupo-endereco">
-            <label className="label-dados">Endereços Cadastrados</label>
-            <button className="btn-add-endereco" onClick={() => setDialogAberto(true)}>
-                ➕ Novo Endereço
+            <button className="botao-deletar-conta" onClick={handleExcluirConta}>
+                Excluir Conta
             </button>
-        </div>
+       </div>
 
-      </div>
-
-      {/* --- COLUNA DA DIREITA: FOTO E EXCLUIR --- */}
-      <div className="editar-imagem">
-        <h1>FOTO DE PERFIL</h1>
-        {/* Placeholder ou Foto Real */}
-        <div 
-            className="preview-foto"
-            style={{ 
-                backgroundImage: usuario.img ? `url(${usuario.img})` : 'none',
-                backgroundColor: usuario.img ? 'transparent' : 'whitesmoke'
-            }}
-        >
-            {!usuario.img && <span style={{color:'black', fontSize:'30px'}}>👤</span>}
-        </div>
-
-        <label htmlFor="file-upload" className="custom-file-upload">
-            Escolher Arquivo
-        </label>
-        <input id="file-upload" type="file" />
-
-        <button className="botao-deletar-conta" onClick={() => alert("Função em desenvolvimento no backend!")}>
-            Excluir Conta
-        </button>
-      </div>
-
-      {/* --- DIALOG (MODAL) DE ENDEREÇO --- */}
-      {dialogAberto && (
+       {/* --- MODAL DE ENDEREÇO --- */}
+       {dialogAberto && (
         <div className="dialog-overlay">
             <div className="dialog-box">
                 <div className="dialog-header">
-                    <h2>Adicionar Endereço</h2>
+                    <h2>{endereco.id_endereco ? "Editar Endereço" : "Novo Endereço"}</h2>
                     <button className="btn-fechar-dialog" onClick={() => setDialogAberto(false)}>×</button>
                 </div>
 
@@ -272,50 +390,40 @@ function MeusDados() {
                     <div className="row-cep">
                         <input 
                             type="text" 
-                            placeholder="CEP (somente números)" 
+                            placeholder="CEP" 
                             value={endereco.cep}
                             onChange={(e) => setEndereco({...endereco, cep: e.target.value})}
                             maxLength={9}
                         />
-                        <button onClick={buscarCEP}>🔍</button>
+                        <button onClick={buscarCEP} disabled={loadingCep}>
+                            {loadingCep ? "..." : "🔍"}
+                        </button>
                     </div>
 
-                    {/* CAMPOS PREENCHIDOS */}
+                    {/* CAMPOS DE TEXTO (LIVRES PARA EDIÇÃO) */}
                     <div className="grid-endereco">
-                        <input type="text" placeholder="Rua" value={endereco.rua} disabled className="full-width" />
+                        <input type="text" placeholder="Rua" value={endereco.rua} onChange={(e) => setEndereco({...endereco, rua: e.target.value})} className="full-width" />
                         
-                        <input 
-                            type="text" 
-                            placeholder="Número" 
-                            value={endereco.numero} 
-                            onChange={(e) => setEndereco({...endereco, numero: e.target.value})}
-                        />
+                        <input type="text" placeholder="Número" value={endereco.numero} onChange={(e) => setEndereco({...endereco, numero: e.target.value})}/>
                         
-                        <input type="text" placeholder="Bairro" value={endereco.bairro} disabled />
+                        <input type="text" placeholder="Bairro" value={endereco.bairro} onChange={(e) => setEndereco({...endereco, bairro: e.target.value})} />
                         
-                        <input type="text" placeholder="Cidade" value={endereco.cidade} disabled />
+                        <input type="text" placeholder="Cidade" value={endereco.cidade} onChange={(e) => setEndereco({...endereco, cidade: e.target.value})} />
                         
-                        <input type="text" placeholder="UF" value={endereco.uf} disabled style={{width: '60px'}} />
+                        <input type="text" placeholder="UF" value={endereco.uf} onChange={(e) => setEndereco({...endereco, uf: e.target.value.toUpperCase()})} style={{width: '60px'}} maxLength={2}/>
                         
-                        <input 
-                            type="text" 
-                            placeholder="Complemento" 
-                            value={endereco.complemento} 
-                            onChange={(e) => setEndereco({...endereco, complemento: e.target.value})}
-                            className="full-width"
-                        />
+                        <input type="text" placeholder="Complemento" value={endereco.complemento} onChange={(e) => setEndereco({...endereco, complemento: e.target.value})} className="full-width"/>
                     </div>
                 </div>
 
                 <div className="dialog-footer">
-                    <button className="btn-salvar-endereco" onClick={salvarNovoEndereco}>
-                        Confirmar Endereço
+                    <button className="btn-salvar-endereco" onClick={salvarEnderecoForm}>
+                        {endereco.id_endereco ? "Atualizar" : "Salvar"}
                     </button>
                 </div>
             </div>
         </div>
       )}
-
     </div>
   );
 }
