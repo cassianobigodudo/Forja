@@ -9,11 +9,20 @@ const criar = async (client, id_usuario, personagem_id, status) => {
     return resPedido.rows[0].id;
 };
 
-const atualizarStatus = async (client, pedidoId, status, orderIdExterno) => {
-    return client.query(
-        "UPDATE pedidos SET status = $2, orderId_externo = $3 WHERE id = $1",
-        [pedidoId, status, orderIdExterno]
-    );
+const atualizarStatus = async (client, pedidoId, status, orderIdExterno, producaoIdExterno) => {
+    // Atenção: Adicionei a coluna producao_id_externo na query SQL
+    const query = `
+        UPDATE pedidos 
+        SET 
+            status = $2, 
+            orderid_externo = $3,
+            producao_id_externo = $4
+        WHERE id = $1
+    `;
+
+    const values = [pedidoId, status, orderIdExterno, producaoIdExterno];
+
+    return client.query(query, values);
 };
 
 const atualizarStatusPorCallback = async (orderIdExterno, novoStatus, producaoIdExterno, slot) => {

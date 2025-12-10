@@ -37,7 +37,7 @@ const montarPayloadIndustrial = (item, novoPedidoId) => {
             sku: "FORJA-CUSTOM-V1"
         },
         // CHUMBADO PARA GARANTIR QUE FUNCIONE NO RENDER
-        callbackUrl: `https://forja-qvex.onrender.com/api/pedidos/callback`
+        callbackUrl: `http://localhost:3333/callback`
     };
 };
 
@@ -54,37 +54,60 @@ const criarAPartirDoCarrinho = async (req, res) => {
     try {
         await client.query('BEGIN');
 
+        // 1. Busca Carrinho
         const itensCarrinho = await CarrinhoModel.buscarPorSessao(id_usuario);
         if (itensCarrinho.length === 0) throw new Error('Carrinho vazio.');
 
-        // --- VALIDAÇÃO DE ESTOQUE ---
+        // 2. Valida e Consome Estoque
         const demandaTotal = {};
         const somar = (id) => { if(id) demandaTotal[String(id)] = (demandaTotal[String(id)] || 0) + 1; };
-        
         itensCarrinho.forEach(item => {
             somar(item.generonum); somar(item.acesspescoconum); somar(item.basemininum);
         });
 
         const errosEstoque = await EstoqueModel.verificarDisponibilidade(demandaTotal);
         if (errosEstoque.length > 0) throw new Error(`Estoque insuficiente:\n${errosEstoque.join('\n')}`);
-
-        // --- CONSUMO ---
+        
         await EstoqueModel.consumirItens(client, demandaTotal);
         console.log("🔥 Estoque reservado.");
 
+        // 3. Loop de Envio
         for (const item of itensCarrinho) {
+            // A. Cria pedido "Pendente/Processando" no banco local
             const novoPedidoId = await PedidoModel.criar(client, id_usuario, item.personagem_id, 'processando');
+            
+            // B. Monta o JSON
             const payload = montarPayloadIndustrial(item, novoPedidoId);
-            
-            // Envia para API
+
+            console.log(`\n📡 Enviando Pedido Local ${novoPedidoId}...`);
+
+            // C. Envia para a Máquina e PEGA O ID DELA
             try {
-                await axios.post('http://52.72.137.244:3000/queue/items', payload);
+                const response = await axios.post('http://52.72.137.244:3000/queue/items', payload);
+                
+                // --- AQUI ESTÁ A SUA LÓGICA DE CAPTURA ---
+                let producaoIdExterno = null;
+                
+                if (response.data && response.data.id) {
+                    producaoIdExterno = response.data.id; // O famoso "68b7..."
+                    console.log(`✅ [SUCESSO] Máquina aceitou! ID Produção: ${producaoIdExterno}`);
+                } else {
+                    console.warn("⚠️ Máquina aceitou mas não retornou ID padrão.", response.data);
+                }
+
+                // D. Atualiza o banco com TUDO: Status 'enviado' + ID Nosso + ID Deles
+                await PedidoModel.atualizarStatus(
+                    client, 
+                    novoPedidoId, 
+                    'enviado', 
+                    payload.payload.orderId, // Nosso ID (pedido-forja-55)
+                    producaoIdExterno        // ID Deles (68b730ef...) <--- SALVANDO AGORA!
+                );
+
             } catch (err) {
-                console.error("Erro no envio para máquina:", err.message);
-                throw new Error("Falha ao comunicar com a fábrica.");
+                console.error("❌ Erro no envio para máquina:", err.message);
+                throw new Error("Falha na comunicação com a Indústria.");
             }
-            
-            await PedidoModel.atualizarStatus(client, novoPedidoId, 'enviado', payload.payload.orderId);
         }
 
         await CarrinhoModel.limparPorSessao(client, id_usuario);

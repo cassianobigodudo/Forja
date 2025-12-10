@@ -140,7 +140,6 @@ function PaginaPagamento() {
             setStatusMessage(`Sucesso! Itens enviados para produção.`);
             setCartItems([]); 
             if(atualizarCarrinho) atualizarCarrinho();
-            setTimeout(() => navigate('/conta'), 2000);
         } catch (error) {
             if (error.response && error.response.status === 409) {
                 alert(`⚠️ FALTA DE ESTOQUE:\n\n${error.response.data.detalhe}`);
