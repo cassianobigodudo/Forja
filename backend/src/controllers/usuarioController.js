@@ -1,3 +1,5 @@
+// backend/src/controllers/usuarioController.js
+
 const UsuarioModel = require('../models/usuarioModel');
 
 const cadastrar = async (req, res) => {
@@ -45,7 +47,7 @@ const login = async(req, res) =>{
         }
         if (usuario.senha_usuario != senha){
             return res.status(401).json({
-                message: "Senha Incorreta"
+                message: "Dados de autenticação inválidas!!!"
             })
         }
 
