@@ -74,7 +74,7 @@ const atualizarUsuario = async (id, dados) => {
     return rows[0];
 };
 
-const obterDadosUsuario = async (id_usuario) => {
+const buscarPorId = async (id_usuario) => {
     const result = await db.query(
         `SELECT id_usuario, nome_usuario, email_usuario
         FROM usuarios
@@ -91,5 +91,5 @@ module.exports = {
     salvarCartao,
     removerUsuario,
     atualizarUsuario,
-    obterDadosUsuario
+    buscarPorId
 };
