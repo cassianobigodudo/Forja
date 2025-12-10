@@ -37,6 +37,7 @@ function UserAccount() {
             try {
                 const response = await axios.get(`https://forja-qvex.onrender.com/api/usuarios/${id}`);
                 setUserData(response.data);
+                console.log("Dados do usuário carregados:", response.data);
             } catch (error) {
                 console.error("Erro ao buscar dados do usuário:", error);
             } finally {
@@ -88,7 +89,7 @@ function UserAccount() {
                                 }}
                             ></div>
                             <label className='label-nome-usuario'>
-                                {userData?.nome || "Aventureiro"}
+                                {userData.nome_usuario || "Aventureiro"}
                             </label>
                         </div>
 

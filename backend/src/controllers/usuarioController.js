@@ -115,7 +115,7 @@ const deletarConta = async (req, res) => {
 
 const editarDados = async (req, res) => {
     const { id_usuario } = req.params;
-    const { nome, email, senha } = req.body; // Campos vindos do React
+    const { nome, email, senha, img } = req.body; // Campos vindos do React
 
     try {
         let dadosParaUpdate = {};
@@ -124,6 +124,7 @@ const editarDados = async (req, res) => {
         if (nome) dadosParaUpdate.nome_usuario = nome;
         if (email) dadosParaUpdate.email_usuario = email;
         if (senha) dadosParaUpdate.senha_usuario = senha; // Ideal seria criptografar aqui
+        if (img) dadosParaUpdate.img = img;
 
         if (Object.keys(dadosParaUpdate).length === 0) {
             return res.status(400).json({ message: "Nenhum dado enviado para atualização." });
