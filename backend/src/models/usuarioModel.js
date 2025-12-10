@@ -76,7 +76,7 @@ const atualizarUsuario = async (id, dados) => {
 
 const buscarPorId = async (id_usuario) => {
     const result = await db.query(
-        `SELECT id_usuario, nome_usuario, email_usuario
+        `SELECT id_usuario, nome_usuario, email_usuario, img
         FROM usuarios
         WHERE id_usuario = $1`,
         [id_usuario]

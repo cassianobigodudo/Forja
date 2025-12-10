@@ -41,6 +41,8 @@ function MeusDados({ dados }) {
 
         // Aproveita que temos o ID e busca os endereços
         const idParaBuscar = idUsuario || localStorage.getItem('id_usuario');
+        console.log("Dados recebidos em MeusDados:", dados);
+        
         carregarEnderecos(idParaBuscar);
     }
   }, [dados]);
@@ -185,6 +187,42 @@ function MeusDados({ dados }) {
     }
   };
 
+  const handleUploadFoto = async (e) => {
+    const file = e.target.files[0];
+    
+    if (!file) return;
+
+    // Validação de tamanho (Máx 2MB para não travar o banco gratuito)
+    if (file.size > 2 * 1024 * 1024) {
+        alert("A imagem é muito grande! Escolha uma menor que 2MB.");
+        return;
+    }
+
+    // Leitor de Arquivo (Transforma arquivo em Texto Base64)
+    const reader = new FileReader();
+    
+    reader.onloadend = async () => {
+        const base64String = reader.result;
+        
+        // Atualiza visualmente na hora
+        setUsuario((prev) => ({ ...prev, img: base64String }));
+
+        // Manda pro Backend salvar
+        const idParaSalvar = idUsuario || localStorage.getItem('id_usuario');
+        try {
+            await axios.patch(`${API_URL}/usuarios/${idParaSalvar}`, { 
+                img: base64String 
+            });
+            alert("Foto de perfil atualizada! 📸");
+        } catch (error) {
+            console.error("Erro ao salvar imagem:", error);
+            alert("Erro ao salvar foto.");
+        }
+    };
+
+    reader.readAsDataURL(file); // Começa a ler o arquivo
+  };
+
   if (!dados) return <div className="loading-profile">Carregando dados...</div>;
 
   return (
@@ -297,20 +335,37 @@ function MeusDados({ dados }) {
        </div>
 
        {/* --- COLUNA DIREITA (FOTO E EXCLUIR) --- */}
-       <div className="editar-imagem">
+        <div className="editar-imagem">
             <h1>FOTO DE PERFIL</h1>
+            
+            {/* Visualização da Foto */}
             <div 
                 className="preview-foto"
                 style={{ 
+                    // Se tiver img, usa ela. Se não, fundo transparente
                     backgroundImage: usuario.img ? `url(${usuario.img})` : 'none',
-                    backgroundColor: usuario.img ? 'transparent' : 'whitesmoke'
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundColor: usuario.img ? 'transparent' : 'whitesmoke',
+                    border: '2px solid #d4af37' // Borda dourada bonita
                 }}
             >
-                {!usuario.img && <span style={{color:'black', fontSize:'30px'}}>👤</span>}
+                {/* Ícone de bonequinho só aparece se NÃO tiver imagem */}
+                {!usuario.img && <span style={{color:'black', fontSize:'40px'}}>👤</span>}
             </div>
             
-            <label htmlFor="file-upload" className="custom-file-upload">Escolher Arquivo</label>
-            <input id="file-upload" type="file" />
+            {/* Botão Bonito para o Input File */}
+            <label htmlFor="file-upload" className="custom-file-upload">
+                📷 Escolher Nova Foto
+            </label>
+            
+            {/* O Input File invisível que faz a mágica */}
+            <input 
+                id="file-upload" 
+                type="file" 
+                accept="image/*" // Só aceita imagens
+                onChange={handleUploadFoto} // <--- CHAMA A FUNÇÃO AQUI
+            />
 
             <button className="botao-deletar-conta" onClick={handleExcluirConta}>
                 Excluir Conta
