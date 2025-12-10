@@ -34,7 +34,6 @@ function UserAccount() {
                 navigate('/'); // Se não tiver ID, chuta pra home
                 return;
             }
-
             try {
                 const response = await axios.get(`https://forja-qvex.onrender.com/api/usuarios/${id}`);
                 setUserData(response.data);

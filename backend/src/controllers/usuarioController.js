@@ -149,7 +149,23 @@ const editarDados = async (req, res) => {
         res.status(500).json({ message: "Erro interno ao atualizar dados." });
     }
 };
+
+const obterDadosUsuario = async (req, res) => {
+    const { id_usuario } = req.params;
+    try {
+        const usuario = await UsuarioModel.buscarPorId(id_usuario);
+        if (!usuario) {
+            return res.status(404).json({ message: "Usuário não encontrado." });
+        }   
+        res.status(200).json(usuario);
+    } catch (error) {
+        console.error("Erro ao obter dados do usuário:", error);
+        res.status(500).json({ message: "Erro interno ao obter dados do usuário." });
+    }
+};
+
 module.exports = { 
+obterDadosUsuario,
 cadastrar, 
 login,
 adicionarCartao,

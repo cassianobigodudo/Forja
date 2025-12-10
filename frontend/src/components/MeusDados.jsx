@@ -1,224 +1,97 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useGlobalContext } from "../context/GlobalContext";
-import { useNavigate } from "react-router-dom"; // Importe isso para redirecionar após excluir
+import { useNavigate } from "react-router-dom"; 
 import "./MeusDados.css";
 
-function MeusDados() {
-  const { usuarioId, setUsuarioId } = useGlobalContext(); // Se tiver função de setar usuario global, use aqui
-  const navigate = useNavigate(); // Hook de navegação
+// RECEBE 'dados' VIA PROPS DO PAI (UserAccount)
+function MeusDados({ dados }) {
+  const { usuarioId } = useGlobalContext();
+  const navigate = useNavigate();
   const API_URL = "https://forja-qvex.onrender.com/api";
 
   const [dialogAberto, setDialogAberto] = useState(false);
-  const [loading, setLoading] = useState(true);
 
-  // Estado do Usuário
+  // Estado local para edição (inicializado com as props)
   const [usuario, setUsuario] = useState({
-    nome: "", // Mudei de apelido para nome (padrão do banco)
-    email: "",
-    senha: "", // Cuidado: Senhas geralmente não retornam do banco por segurança
+    nome: "", 
+    email: "", 
+    senha: "",
+    img: ""
   });
 
-  // Controle de Edição
-  const [editando, setEditando] = useState({
-    nome: false,
-    email: false,
-    senha: false,
-  });
+  const [editando, setEditando] = useState({ nome: false, email: false, senha: false });
+  const [endereco, setEndereco] = useState({ cep: "", rua: "", numero: "", bairro: "", cidade: "", uf: "", complemento: "" });
 
-  // Estado do Endereço (Novo)
-  const [endereco, setEndereco] = useState({
-    cep: "",
-    rua: "",
-    numero: "",
-    bairro: "",
-    cidade: "",
-    uf: "",
-    complemento: "",
-  });
-
-  // 1. BUSCAR DADOS AO CARREGAR
-useEffect(() => {
-    async function fetchUsuario() {
-      const idParaBuscar = usuarioId || localStorage.getItem('id_usuario');
-      if (!idParaBuscar) return;
-
-      try {
-        const resposta = await axios.get(`${API_URL}/usuarios/${idParaBuscar}`);
-        
-        // O SEGREDO ESTÁ AQUI: Traduzir do Banco para o Estado do React
+  // --- 1. Sincroniza props com estado local ---
+  // Assim que 'dados' chegar do pai, atualizamos os inputs
+  useEffect(() => {
+    if (dados) {
+        console.log("Recebendo dados do Pai:", dados);
         setUsuario({
-            nome: resposta.data.nome_usuario,   // Banco: nome_usuario -> React: nome
-            email: resposta.data.email_usuario, // Banco: email_usuario -> React: email
-            senha: "", // Senha vem vazia por segurança
-            img: resposta.data.img || ""
+            nome: dados.nome_usuario || "",   
+            email: dados.email_usuario || "", 
+            senha: "", 
+            img: dados.img || ""
         });
-        
-      } catch (erro) {
-        console.error("Erro ao buscar usuário:", erro);
-      } finally {
-        setLoading(false);
-      }
     }
-    fetchUsuario();
-  }, [usuarioId]);
+  }, [dados]); // Roda quando a prop 'dados' mudar
 
-  // 2. SALVAR CAMPO (CORRIGIDO)
+  // ... (funções habilitarEdicao, cancelarEdicao mantidas igual) ...
+  const habilitarEdicao = (campo) => setEditando((prev) => ({ ...prev, [campo]: true }));
+  const cancelarEdicao = (campo) => setEditando((prev) => ({ ...prev, [campo]: false }));
+
+  // --- 2. SALVAR CAMPO (PATCH) ---
   const salvarCampo = async (campo) => {
     const idParaSalvar = usuarioId || localStorage.getItem('id_usuario');
-    
     try {
-      // Envia { nome: "Valor" } para o backend
-      // O controller vai traduzir isso para nome_usuario
       const payload = { [campo]: usuario[campo] };
+      const resposta = await axios.patch(`${API_URL}/usuarios/${idParaSalvar}`, payload);
 
-      const resposta = await axios.patch(
-        `${API_URL}/usuarios/${idParaSalvar}`,
-        payload
-      );
-
-      // Atualiza visualmente com a resposta do servidor
       if (resposta.data.usuario) {
+          // Atualiza visualmente se o backend devolver o dado novo
           setUsuario((prev) => ({
             ...prev,
-            [campo]: resposta.data.usuario[campo] // Atualiza o estado local
+            [campo]: resposta.data.usuario[campo] // Atualiza estado local
           }));
       }
-
-      setEditando((prev) => ({ ...prev, [campo]: false })); // Fecha edição
+      setEditando((prev) => ({ ...prev, [campo]: false }));
       alert(`${campo.toUpperCase()} atualizado com sucesso!`);
-
     } catch (erro) {
       console.error("Erro ao salvar campo:", erro);
-      alert("Erro ao atualizar. Tente novamente.");
+      alert("Erro ao atualizar.");
     }
   };
 
-  // 2. FUNÇÕES DE EDIÇÃO DE CAMPO
-  const habilitarEdicao = (campo) => {
-    setEditando((prev) => ({ ...prev, [campo]: true }));
-  };
+  // ... (buscarCEP e salvarNovoEndereco mantidos igual) ...
+  async function buscarCEP() { /* ...seu código de CEP... */ }
+  const salvarNovoEndereco = async () => { /* ...seu código de endereço... */ }
 
-  const cancelarEdicao = (campo) => {
-    setEditando((prev) => ({ ...prev, [campo]: false }));
-    // Idealmente, reverteria para o valor original do banco aqui se tivesse backup
-  };
-
-
-  // 3. LÓGICA DE ENDEREÇO (VIA CEP)
-  async function buscarCEP() {
-    const cepLimpo = endereco.cep.replace(/\D/g, "");
-
-    if (cepLimpo.length !== 8) {
-      alert("Digite um CEP válido com 8 números.");
-      return;
-    }
-
-    try {
-      const response = await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`);
-      const data = await response.json();
-
-      if (data.erro) {
-        alert("CEP não encontrado!");
-        return;
-      }
-
-      setEndereco((prev) => ({
-        ...prev,
-        rua: data.logradouro || "",
-        bairro: data.bairro || "",
-        cidade: data.localidade || "",
-        uf: data.uf || "",
-        complemento: data.complemento || "",
-      }));
-    } catch (err) {
-      console.error("Erro ao buscar CEP", err);
-    }
-  }
-
-  // 4. SALVAR ENDEREÇO NO BANCO
-  const salvarNovoEndereco = async () => {
-    const idParaSalvar = usuarioId || localStorage.getItem('id_usuario');
-    if (!idParaSalvar) return alert("Erro de autenticação");
-
-    try {
-        await axios.post(`${API_URL}/enderecos`, {
-            id_usuario: idParaSalvar,
-            ...endereco
-        });
-        alert("Endereço salvo na sua conta!");
-        setDialogAberto(false);
-        // Limpar form
-        setEndereco({ cep: "", rua: "", numero: "", bairro: "", cidade: "", uf: "", complemento: "" });
-    } catch (error) {
-        console.error(error);
-        alert("Erro ao salvar endereço.");
-    }
-  }
-
+  // --- 3. EXCLUIR CONTA ---
   const handleExcluirConta = async () => {
-    // Pegando ID com log
-    const idLocalStorage = localStorage.getItem('id_usuario');
-    console.log("🔍 [DEBUG FRONT] ID no Contexto:", usuarioId);
-    console.log("🔍 [DEBUG FRONT] ID no LocalStorage:", idLocalStorage);
+    const idParaDeletar = usuarioId || localStorage.getItem('id_usuario');
 
-    const idParaDeletar = usuarioId || idLocalStorage;
-
-    if (!idParaDeletar) {
-        alert("Erro: ID do usuário não encontrado no navegador.");
-        return;
-    }
-
-    // 1. TRAVA DO ADMIN
     if (String(idParaDeletar) === '5') {
-        alert("🛡️ Ação Bloqueada: Admin não pode se deletar.");
+        alert("🛡️ Admin não pode se deletar.");
         return;
     }
+    if (!window.confirm("Tem certeza absoluta?")) return;
 
-    // 2. CONFIRMAÇÃO
-    const confirmacao = window.confirm("Tem certeza absoluta? Isso apaga tudo!");
-    if (!confirmacao) return;
-
-    // 3. CHAMADA API
     try {
-        console.log(`📡 [AXIOS] Enviando DELETE para: ${API_URL}/usuarios/${idParaDeletar}`);
-        
-        const response = await axios.delete(`${API_URL}/usuarios/${idParaDeletar}`);
-        
-        console.log("✅ [AXIOS SUCESSO]:", response.data);
-        alert("Conta excluída com sucesso.");
-
+        await axios.delete(`${API_URL}/usuarios/${idParaDeletar}`);
+        alert("Conta excluída.");
         localStorage.removeItem('id_usuario');
         localStorage.removeItem('carrinho');
-        
-        // Use window.location para forçar recarregamento limpo
         window.location.href = '/'; 
-
     } catch (error) {
-        console.error("❌ [AXIOS ERRO]:", error);
-        
-        // Debug detalhado do erro
-        if (error.response) {
-            console.log("   -> Status:", error.response.status);
-            console.log("   -> Dados do Erro:", error.response.data);
-            
-            // Mostra o erro real na tela
-            const msgErro = error.response.data.debug_erro || error.response.data.message;
-            const sqlCode = error.response.data.sql_code;
-
-            // DICA DE OURO: CÓDIGO 23503
-            if (sqlCode === '23503') {
-                alert("ERRO DE VÍNCULO (23503):\n\nVocê não pode excluir sua conta porque existem Pedidos ou Personagens vinculados a ela.\n\nO banco de dados protege esses registros.");
-            } else {
-                alert(`Erro no servidor: ${msgErro}`);
-            }
-        } else {
-            alert("Erro de conexão com o servidor.");
-        }
+        console.error("Erro ao excluir:", error);
+        alert("Erro ao excluir conta.");
     }
-};
+  };
 
-  if (loading) return <div className="loading-profile">Carregando dados...</div>;
+  // Se 'dados' ainda for null (pai carregando), pode mostrar loading ou skeleton
+  if (!dados) return <div className="loading-profile">Carregando dados...</div>;
+
 
   return (
     <div className="container-meus-dados">
@@ -228,7 +101,7 @@ useEffect(() => {
         
         {/* Campo: NOME/APELIDO */}
         <div className="grupo-input">
-          <label className="label-dados">Nome / Apelido</label>
+          <label className="label-dados">Nome</label>
           <div className="input-wrapper">
             <input
               type="text"

@@ -73,11 +73,23 @@ const atualizarUsuario = async (id, dados) => {
     const { rows } = await db.query(query, [valores[0], id]);
     return rows[0];
 };
+
+const obterDadosUsuario = async (id_usuario) => {
+    const result = await db.query(
+        `SELECT id_usuario, nome_usuario, email_usuario
+        FROM usuarios
+        WHERE id_usuario = $1`,
+        [id_usuario]
+    );
+    return result.rows[0];
+};
+
 // Exportamos a função para que o Controller possa usá-la
 module.exports = {
     criarUsuario,
     buscarEmail,
     salvarCartao,
     removerUsuario,
-    atualizarUsuario
+    atualizarUsuario,
+    obterDadosUsuario
 };
