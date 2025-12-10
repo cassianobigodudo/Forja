@@ -6,7 +6,8 @@
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
 <p align="center">
-  <img src="URL_PARA_UM_LOGO_OU_BANNER_AQUI" width="400" alt="Logo do Projeto Forja">
+  <img width="2570" height="1255" alt="Forja Logo" src="https://github.com/user-attachments/assets/e15c3986-9df4-46fe-b713-264e9731ad45" />
+
 </p>
 
 ## 📜 Índice
