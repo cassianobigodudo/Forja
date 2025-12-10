@@ -13,57 +13,57 @@ import MeusPersonagens from '../components/MeusPersonagens';
 import Navbar from '../components/Navbar';
 import './UserAccount.css';
 import AdminEstoque from '../components/AdminEstoque';
+import HistoricoPedidos from '../components/HistoricoPedidos';
 
 function UserAccount() {
     const { usuarioId, logoutUsuario } = useGlobalContext();
     const navigate = useNavigate();
 
-    // Estado para controlar qual aba está ativa
     const [ativo, setAtivo] = useState("dados");
-    
-    // Estado para armazenar os dados completos do usuário vindos do banco
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    // 1. Buscar dados do usuário ao carregar a página
-    useEffect(() => {
-        const fetchUserData = async () => {
-            const id = usuarioId || localStorage.getItem('id_usuario');
-            
-            if (!id) {
-                navigate('/'); // Se não tiver ID, chuta pra home
-                return;
-            }
-            try {
-                const response = await axios.get(`https://forja-qvex.onrender.com/api/usuarios/${id}`);
-                setUserData(response.data);
-                console.log("Dados do usuário carregados:", response.data);
-            } catch (error) {
-                console.error("Erro ao buscar dados do usuário:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchUserData();
-    }, [usuarioId, navigate]);
-
-    // 2. Função de Logout
-    const handleLogout = () => {
-        if (window.confirm("Tem certeza que deseja sair de sua conta?")) {
-            logoutUsuario();
+    // 1. DEFINIR A FUNÇÃO DE BUSCA FORA DO USEEFFECT
+    const carregarDadosDoUsuario = async () => {
+        const id = usuarioId || localStorage.getItem('id_usuario');
+        
+        if (!id) {
             navigate('/');
+            return;
+        }
+
+        try {
+            // Buscando dados atualizados...
+            const response = await axios.get(`https://forja-qvex.onrender.com/api/usuarios/${id}`);
+            setUserData(response.data); // Atualiza o estado do Pai
+        } catch (error) {
+            console.error("Erro ao buscar dados:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
-    // 3. Função para renderizar o componente correto
+    // 2. USEEFFECT CHAMA ESSA FUNÇÃO
+    useEffect(() => {
+        carregarDadosDoUsuario();
+    }, [usuarioId, navigate]);
+
+    const handleLogout = () => { /* ...seu código igual... */ };
+
+    // 3. PASSAR A FUNÇÃO COMO PROPS PARA O FILHO
     const renderComponente = () => {
         switch (ativo) {
-            case "dados": return <MeusDados dados={userData} />;
-            case "personagens": return <MeusPersonagens />;
-            // NOVO CASE
-            case "admin": return <AdminEstoque />;
-            default: return <MeusDados dados={userData} />;
+            // NOVIDADE: Passamos a prop 'atualizarPai={carregarDadosDoUsuario}'
+            case "dados": 
+                return <MeusDados dados={userData} atualizarPai={carregarDadosDoUsuario} />;
+            case "personagens": 
+                return <MeusPersonagens />;
+            case "historico": 
+                return <HistoricoPedidos />;
+            case "admin": 
+                return <AdminEstoque />;
+            default: 
+                return <MeusDados dados={userData} atualizarPai={carregarDadosDoUsuario} />;
         }
     };
 
@@ -83,7 +83,7 @@ function UserAccount() {
                             <div 
                                 className="parte-foto"
                                 style={{ 
-                                    backgroundImage: userData?.foto ? `url(${userData.foto})` : 'none',
+                                    backgroundImage: userData?.img ? `url(${userData.img})` : 'none',
                                     backgroundSize: 'cover',
                                     backgroundPosition: 'center'
                                 }}
@@ -100,6 +100,13 @@ function UserAccount() {
                                 onClick={() => setAtivo("dados")}
                             >
                                 Meus Dados
+                            </button>
+
+                            <button 
+                                className={`botoes-menu ${ativo === "historico" ? "ativo" : ""}`}
+                                onClick={() => setAtivo("historico")}
+                            >
+                                📜 Histórico de Pedidos
                             </button>
 
                             {/* Botão MEUS PERSONAGENS (NOVO) */}

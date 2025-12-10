@@ -4,7 +4,7 @@ import { useGlobalContext } from "../context/GlobalContext";
 import { useNavigate } from "react-router-dom"; 
 import "./MeusDados.css";
 
-function MeusDados({ dados }) {
+function MeusDados({ dados, atualizarPai }) {
   const { idUsuario } = useGlobalContext();
   const navigate = useNavigate();
   const API_URL = "https://forja-qvex.onrender.com/api";
@@ -42,7 +42,7 @@ function MeusDados({ dados }) {
         // Aproveita que temos o ID e busca os endereços
         const idParaBuscar = idUsuario || localStorage.getItem('id_usuario');
         console.log("Dados recebidos em MeusDados:", dados);
-        
+
         carregarEnderecos(idParaBuscar);
     }
   }, [dados]);
@@ -187,40 +187,44 @@ function MeusDados({ dados }) {
     }
   };
 
-  const handleUploadFoto = async (e) => {
+ const handleUploadFoto = async (e) => {
     const file = e.target.files[0];
-    
     if (!file) return;
 
-    // Validação de tamanho (Máx 2MB para não travar o banco gratuito)
     if (file.size > 2 * 1024 * 1024) {
-        alert("A imagem é muito grande! Escolha uma menor que 2MB.");
+        alert("Imagem muito grande! Máximo 2MB.");
         return;
     }
 
-    // Leitor de Arquivo (Transforma arquivo em Texto Base64)
     const reader = new FileReader();
     
     reader.onloadend = async () => {
         const base64String = reader.result;
         
-        // Atualiza visualmente na hora
+        // Atualiza localmente (Feedback imediato)
         setUsuario((prev) => ({ ...prev, img: base64String }));
 
-        // Manda pro Backend salvar
         const idParaSalvar = idUsuario || localStorage.getItem('id_usuario');
         try {
             await axios.patch(`${API_URL}/usuarios/${idParaSalvar}`, { 
                 img: base64String 
             });
+            
             alert("Foto de perfil atualizada! 📸");
+            
+            // --- AQUI ESTÁ A MÁGICA ---
+            // Avisa o Pai (UserAccount) para recarregar os dados do banco
+            if (atualizarPai) {
+                atualizarPai(); 
+            }
+
         } catch (error) {
             console.error("Erro ao salvar imagem:", error);
             alert("Erro ao salvar foto.");
         }
     };
 
-    reader.readAsDataURL(file); // Começa a ler o arquivo
+    reader.readAsDataURL(file); 
   };
 
   if (!dados) return <div className="loading-profile">Carregando dados...</div>;
@@ -308,12 +312,12 @@ function MeusDados({ dados }) {
                 <div className="cabecalho-enderecos">
                     <label className="label-dados">Meus Endereços</label>
                     <button className="btn-add-endereco" onClick={abrirModalNovo}>
-                        ➕ Novo
+                         Novo
                     </button>
                 </div>
 
                 {/* LISTA DE CARTÕES */}
-                <div className="lista-enderecos">
+                <div className="lista-enderecos lista-enderecos-scroll">
                     {listaEnderecos.length === 0 && <p className="sem-endereco">Nenhum endereço cadastrado.</p>}
                     
                     {listaEnderecos.map((end) => (
@@ -356,7 +360,7 @@ function MeusDados({ dados }) {
             
             {/* Botão Bonito para o Input File */}
             <label htmlFor="file-upload" className="custom-file-upload">
-                📷 Escolher Nova Foto
+                Escolher Nova Foto
             </label>
             
             {/* O Input File invisível que faz a mágica */}

@@ -37,6 +37,7 @@ const consumirItens = async (client, demandas) => {
 
 const devolverItens = async (demandas) => {
     for (const [corId, qtd] of Object.entries(demandas)) {
+        console.log(`      [SQL] UPDATE estoque_pecas SET qtd = qtd + ${qtd} WHERE id = ${corId}`);
         await db.query(
             "UPDATE estoque_pecas SET quantidade = quantidade + $1 WHERE id = $2",
             [qtd, corId]

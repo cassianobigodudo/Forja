@@ -441,3 +441,32 @@ input[type="file"] { display: none; }
     font-style: italic;
     padding: 10px;
 }
+
+/* --- SCROLLBAR PARA LISTAS DE ENDEREÇO --- */
+
+/* Define uma altura máxima e ativa a rolagem */
+.lista-enderecos-scroll {
+    max-height: 250px; /* Altura máxima antes de rolar */
+    overflow-y: auto;  /* Ativa rolagem vertical */
+    padding-right: 5px; /* Espaço para não colar na barra */
+    margin-top: 10px;
+}
+
+/* Estilizando a barra de rolagem para ficar bonita (Webkit/Chrome/Edge) */
+.lista-enderecos-scroll::-webkit-scrollbar {
+    width: 6px;
+}
+
+.lista-enderecos-scroll::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 3px;
+}
+
+.lista-enderecos-scroll::-webkit-scrollbar-thumb {
+    background:whitesmoke; /* Dourado do tema */
+    border-radius: 3px;
+}
+
+.lista-enderecos-scroll::-webkit-scrollbar-thumb:hover {
+    background: #fff;
+}
