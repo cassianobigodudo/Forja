@@ -49,7 +49,30 @@ const listarPorUsuario = async (id_usuario) => {
     return rows;
 };
 
+const atualizar = async (id_endereco, dados) => {
+    const { cep, rua, numero, bairro, cidade, uf, complemento } = dados;
+    
+    const query = `
+        UPDATE enderecos 
+        SET cep=$1, rua=$2, numero=$3, bairro=$4, cidade=$5, estado=$6, complemento=$7
+        WHERE id_endereco = $8
+        RETURNING *
+    `;
+    const values = [cep, rua, numero, bairro, cidade, uf, complemento, id_endereco];
+    const { rows } = await db.query(query, values);
+    return rows[0];
+};
+
+// REMOVER
+const remover = async (id_endereco) => {
+    // Retorna rowCount para sabermos se deletou mesmo
+    const result = await db.query("DELETE FROM enderecos WHERE id_endereco = $1", [id_endereco]);
+    return result;
+};
+
 module.exports = {
     criar,
-    listarPorUsuario
+    listarPorUsuario,
+    atualizar, // <--- Exportar
+    remover    // <--- Exportar
 };

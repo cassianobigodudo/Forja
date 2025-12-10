@@ -33,7 +33,33 @@ const buscarPorUsuario = async (req, res) => {
     }
 };
 
+const editarEndereco = async (req, res) => {
+    const { id_endereco } = req.params;
+    try {
+        const atualizado = await EnderecoModel.atualizar(id_endereco, req.body);
+        if (!atualizado) return res.status(404).json({ message: "Endereço não encontrado." });
+        res.status(200).json({ message: "Endereço atualizado!", endereco: atualizado });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Erro ao atualizar." });
+    }
+};
+
+// DELETAR
+const deletarEndereco = async (req, res) => {
+    const { id_endereco } = req.params;
+    try {
+        await EnderecoModel.remover(id_endereco);
+        res.status(200).json({ message: "Endereço removido." });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Erro ao remover." });
+    }
+};
+
 module.exports = {
     adicionarEndereco,
-    buscarPorUsuario
+    buscarPorUsuario,
+    editarEndereco, // <--- Exportar
+    deletarEndereco // <--- Exportar
 };

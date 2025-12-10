@@ -10,4 +10,8 @@ router.post('/', enderecoController.adicionarEndereco);
 // URL: http://.../api/enderecos/usuario/5
 router.get('/usuario/:id_usuario', enderecoController.buscarPorUsuario);
 
+// NOVAS ROTAS
+router.put('/:id_endereco', enderecoController.editarEndereco);
+router.delete('/:id_endereco', enderecoController.deletarEndereco);
+
 module.exports = router;
