@@ -8,13 +8,16 @@ const usuarioRoutes = require('./usuarioRoutes');
 const personagemRoutes = require('./personagemRoutes');
 const carrinhoRoutes = require('./carrinhoRoutes'); // <-- Adicionado
 const pedidoRoutes = require('./pedidoRoutes');     // <-- Adicionado
+const estoqueRoutes = require('./estoqueRoutes'); // <-- Adicionado
+const enderecoRoutes = require('./enderecoRoutes'); // <-- Adicionado
 
 // 2. Define um "prefixo" para cada conjunto de rotas
 router.use('/usuarios', usuarioRoutes);
 router.use('/personagens', personagemRoutes);
 router.use('/carrinho', carrinhoRoutes);
 router.use('/pedidos', pedidoRoutes);
-router.use('/estoque', require('./estoqueRoutes')); // <-- Adicionado
+router.use('/estoque', estoqueRoutes);
+router.use('/enderecos', enderecoRoutes);
 
 // 3. Exporta o roteador para ser usado no app principal
 
