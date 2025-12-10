@@ -85,23 +85,44 @@ const criarAPartirDoCarrinho = async (req, res) => {
             try {
                 const response = await axios.post('http://52.72.137.244:3000/queue/items', payload);
                 
-                // --- AQUI ESTÁ A SUA LÓGICA DE CAPTURA ---
                 let producaoIdExterno = null;
                 
                 if (response.data && response.data.id) {
-                    producaoIdExterno = response.data.id; // O famoso "68b7..."
+                    producaoIdExterno = response.data.id; 
                     console.log(`✅ [SUCESSO] Máquina aceitou! ID Produção: ${producaoIdExterno}`);
                 } else {
                     console.warn("⚠️ Máquina aceitou mas não retornou ID padrão.", response.data);
                 }
 
-                // D. Atualiza o banco com TUDO: Status 'enviado' + ID Nosso + ID Deles
+                // =============================================================
+                // 🆕 BLOCO DE ALOCAÇÃO DE SLOT (PUXANDO DO MODEL)
+                // =============================================================
+                
+                let statusFinal = 'enviado'; // Começa com o padrão
+                
+                // 1. Chama o Model para buscar vaga
+                const slotLivre = await EstoqueModel.buscarSlotLivre();
+
+                if (slotLivre) {
+                    // 2. Se achou, manda o Model ocupar a vaga com este pedido
+                    await EstoqueModel.ocuparSlot(slotLivre, novoPedidoId);
+                    
+                    // 3. Muda o status para PRONTO (para o botão aparecer no front)
+                    statusFinal = 'PRONTO';
+                    console.log(`🎉 [ALOCADO] Pedido ${novoPedidoId} assumiu o Slot ${slotLivre}`);
+                } else {
+                    console.log(`⚠️ [FILA] Sem slots livres. Pedido ${novoPedidoId} ficará aguardando.`);
+                }
+                
+                // =============================================================
+
+                // D. Atualiza o banco com TUDO: Status decidido acima + IDs
                 await PedidoModel.atualizarStatus(
                     client, 
                     novoPedidoId, 
-                    'enviado', 
-                    payload.payload.orderId, // Nosso ID (pedido-forja-55)
-                    producaoIdExterno        // ID Deles (68b730ef...) <--- SALVANDO AGORA!
+                    statusFinal, // <--- Usamos a variável que definimos no bloco acima
+                    payload.payload.orderId, 
+                    producaoIdExterno
                 );
 
             } catch (err) {
