@@ -79,14 +79,36 @@ const listarLogs = async () => {
     return rows;
 };
 
-const ocuparSlot = async (slot, pedidoId) => {
-    // Atualiza a tabela de slots para dizer que está ocupado por aquele pedido
-    await db.query(
-        `UPDATE expedicao_slots 
-         SET status = 'ocupado', pedido_id = $2 
-         WHERE numero_slot = $1`,
-        [slot, pedidoId]
-    );
+const buscarSlotLivre = async () => {
+    // Pega o primeiro slot que estiver com status 'livre'
+    const query = `
+        SELECT numero_slot 
+        FROM expedicao_slots 
+        WHERE status = 'livre' 
+        ORDER BY numero_slot ASC 
+        LIMIT 1
+    `;
+    const { rows } = await db.query(query);
+    // Retorna o número do slot ou null se não achar nada
+    return rows[0] ? rows[0].numero_slot : null;
+};
+
+const ocuparSlot = async (numeroSlot, idInternoPedido) => {
+    // Atualiza o slot com o ID interno do pedido e muda status para ocupado
+    const query = `
+        UPDATE expedicao_slots 
+        SET status = 'ocupado', 
+            pedido_id = $2,
+            atualizado_em = NOW()
+        WHERE numero_slot = $1
+    `;
+    await db.query(query, [numeroSlot, idInternoPedido]);
+};
+
+const buscarSlotDoPedido = async (pedidoId) => {
+    const query = `SELECT numero_slot FROM expedicao_slots WHERE pedido_id = $1`;
+    const { rows } = await db.query(query, [pedidoId]);
+    return rows[0] ? rows[0].numero_slot : null;
 };
 
 module.exports = {
@@ -99,5 +121,7 @@ module.exports = {
     liberarSlot, 
     getPecasDoPedidoNoSlot, 
     listarLogs,
-    ocuparSlot // <--- IMPORTANTE: Adicione na exportação
+    ocuparSlot,
+    buscarSlotDoPedido,
+    buscarSlotLivre
 };

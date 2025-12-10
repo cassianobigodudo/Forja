@@ -33,6 +33,52 @@ const getExpedicao = async (req, res) => {
     }
 };
 
+const alocarPedidoNaExpedicao = async (req, res) => {
+    // Esperamos receber o ID INTERNO do pedido (aquele Integer do seu banco)
+    const { pedidoId } = req.body; 
+
+    console.log(`\n📥 Tentando alocar pedido ID ${pedidoId} na expedição...`);
+
+    try {
+        if (!pedidoId) {
+            return res.status(400).json({ error: "ID do pedido é obrigatório." });
+        }
+
+        // 1. Segurança: Verifica se o pedido JÁ tem um slot
+        const slotExistente = await EstoqueModel.buscarSlotDoPedido(pedidoId);
+        if (slotExistente) {
+            console.log(` ⚠️ Pedido já está no Slot ${slotExistente}.`);
+            return res.status(200).json({ 
+                message: "Pedido já alocado.", 
+                slot: slotExistente 
+            });
+        }
+
+        // 2. Busca um slot livre (A1, A2...)
+        const slotLivre = await EstoqueModel.buscarSlotLivre();
+
+        if (!slotLivre) {
+            console.error(" ❌ Fila cheia! Nenhum slot livre.");
+            return res.status(409).json({ error: "Expedição lotada. Aguarde retiradas." });
+        }
+
+        // 3. Ocupa o slot
+        await EstoqueModel.ocuparSlot(slotLivre, pedidoId);
+        
+        console.log(` ✅ Sucesso! Pedido ${pedidoId} estacionado no Slot ${slotLivre}.`);
+
+        res.status(200).json({ 
+            success: true, 
+            message: `Pedido alocado no slot ${slotLivre}`,
+            slot: slotLivre
+        });
+
+    } catch (error) {
+        console.error("Erro ao alocar expedição:", error);
+        res.status(500).json({ error: "Erro interno ao processar alocação." });
+    }
+};
+
 // =========================================================
 // ♻️ FUNÇÃO DE RECICLAGEM (DEBUGADA)
 // =========================================================
@@ -107,5 +153,6 @@ module.exports = {
     updatePeca,
     getExpedicao,
     liberarExpedicao,
-    getLogs
+    getLogs,
+    alocarPedidoNaExpedicao
 };

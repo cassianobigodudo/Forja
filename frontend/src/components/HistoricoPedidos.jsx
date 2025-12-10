@@ -15,8 +15,51 @@ function HistoricoPedidos() {
     if (!id) return;
 
     try {
+      // 1. Busca os dados LOCAIS (o que seu banco já sabe)
       const response = await axios.get(`${API_URL}/pedidos/por-sessao/${id}`);
-      setPedidos(response.data);
+      const pedidosLocais = response.data;
+      
+      // Atualiza a tela imediatamente com o que temos
+      setPedidos(pedidosLocais);
+
+      // =================================================================
+      // 🕵️ PARTE NOVA: O ESPIÃO (Sincronização com API do Professor)
+      // =================================================================
+      
+      // Vamos varrer os pedidos para ver se algum mudou lá fora
+      pedidosLocais.forEach(async (pedido) => {
+        
+        // Pula se não tiver ID externo ou se já tiver sido entregue/finalizado
+        if (!pedido.orderid_externo || pedido.status === 'ENTREGUE_AO_CLIENTE') return;
+
+        // Pula se JÁ TEM slot (não precisa alocar de novo)
+        if (pedido.slot) return;
+
+        try {
+          // 2. Consulta a API do Professor
+          // (Substitua pela URL real do professor)
+          const profResponse = await axios.get(`http://api-do-professor.com/orders/${pedido.orderid_externo}`);
+          const dadosExternos = profResponse.data;
+
+          // 3. O GATILHO: Se lá está PRONTO e aqui está SEM SLOT
+          if (dadosExternos.stage === 'EXPEDICAO') {
+            
+            console.log(`🚀 Pedido ${pedido.pedido_id} ficou pronto! Alocando vaga...`);
+            
+            // Chama sua NOVA rota do Backend para ocupar o slot
+            await axios.post(`${API_URL}/expedicao/alocar`, { 
+              pedidoId: pedido.pedido_id // Envia o ID Inteiro do seu banco
+            });
+
+            // Nota: Na próxima rodada do setInterval (5s), o fetchPedidos vai rodar
+            // e já vai trazer o slot preenchido do banco, atualizando a tela sozinho.
+          }
+
+        } catch (erroApi) {
+          console.warn(`Erro ao checar pedido ${pedido.orderid_externo} na API externa:`, erroApi);
+        }
+      });
+
     } catch (error) {
       console.error("Erro ao buscar histórico:", error);
     } finally {

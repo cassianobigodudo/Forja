@@ -8,6 +8,7 @@ router.put('/pecas/:id', estoqueController.updatePeca);
 
 // Expedição
 router.get('/expedicao', estoqueController.getExpedicao);
+router.post('/expedicao/alocar', estoqueController.alocarPedidoNaExpedicao);
 router.post('/expedicao/:slot/liberar', estoqueController.liberarExpedicao);
 
 // Logs
