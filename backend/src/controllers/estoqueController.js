@@ -75,24 +75,17 @@ const alocarPedidoNaExpedicao = async (req, res) => {
 const liberarExpedicao = async (req, res) => {
     const { slot } = req.params;
     
-    console.log(`\n=================================================`);
-    console.log(`♻️ [LIBERAÇÃO] Processando Slot ${slot}...`);
-
-    // 1. Pega um cliente da pool para abrir transação
-    const client = await db.connect(); 
+    console.log(`\n♻️ [LIBERAÇÃO] Processando Slot ${slot}...`);
 
     try {
-        await client.query('BEGIN'); // Inicia a transação
-
         // -----------------------------------------------------------
-        // A. DESCOBRIR O QUE TEM LÁ
+        // 1. DESCOBRIR O QUE TEM LÁ
         // -----------------------------------------------------------
-        // Pega as peças do pedido (usando o Model)
-        // Certifique-se que o Model retorna: id_cabeca, id_torso, id_chassi
+        // Busca as peças usando seu Model existente
         const pecas = await EstoqueModel.getPecasDoPedidoNoSlot(slot);
         
-        // Pega o ID do pedido direto da tabela de slots
-        const resSlot = await client.query(
+        // Busca o ID do pedido com query direta (sem client)
+        const resSlot = await db.query(
             "SELECT pedido_id FROM expedicao_slots WHERE numero_slot = $1", 
             [slot]
         );
@@ -100,11 +93,9 @@ const liberarExpedicao = async (req, res) => {
 
 
         // -----------------------------------------------------------
-        // B. DEVOLVER PEÇAS AO ESTOQUE (LOOP)
+        // 2. DEVOLVER PEÇAS AO ESTOQUE
         // -----------------------------------------------------------
         if (pecas) {
-            console.log(` 📦 Peças identificadas: Cabeça:${pecas.id_cabeca}, Torso:${pecas.id_torso}, Base:${pecas.id_chassi}`);
-            
             const devolucao = {};
             const somar = (id) => { 
                 if (!id) return;
@@ -116,45 +107,37 @@ const liberarExpedicao = async (req, res) => {
             somar(pecas.id_torso);
             somar(pecas.id_chassi);
 
-            // Chama o model para devolver (como seu model usa db.query direto,
-            // ele vai rodar fora dessa transação 'client', mas vai funcionar)
+            // Se tiver peças, devolve (chama seu Model direto)
             if (Object.keys(devolucao).length > 0) {
+                console.log(` 📦 Devolvendo peças:`, JSON.stringify(devolucao));
                 await EstoqueModel.devolverItens(devolucao);
-                console.log(" 🔄 Itens devolvidos ao estoque.");
             }
-        } else {
-            console.warn(" ⚠️ Nenhuma peça vinculada. Apenas liberando slot.");
         }
 
-
         // -----------------------------------------------------------
-        // C. LIBERAR O SLOT E FINALIZAR PEDIDO
+        // 3. LIBERAR O SLOT E FINALIZAR PEDIDO
         // -----------------------------------------------------------
         
         // Limpa o slot
-        await client.query(
+        await db.query(
             "UPDATE expedicao_slots SET status = 'livre', pedido_id = NULL, atualizado_em = NOW() WHERE numero_slot = $1",
             [slot]
         );
 
         // Marca pedido como CONCLUIDO
         if (pedidoId) {
-            await client.query(
+            await db.query(
                 "UPDATE pedidos SET status = 'CONCLUIDO' WHERE id = $1", 
                 [pedidoId]
             );
             console.log(` ✅ Pedido ${pedidoId} finalizado.`);
         }
 
-        await client.query('COMMIT'); // Confirma tudo
         res.status(200).json({ message: "Ciclo completo: Slot livre e itens devolvidos!" });
 
     } catch (error) {
-        await client.query('ROLLBACK'); // Desfaz se der erro
-        console.error("❌ Erro no controller:", error);
+        console.error("❌ Erro no controller:", error.message);
         res.status(500).json({ error: "Erro interno ao liberar slot." });
-    } finally {
-        client.release(); // Solta a conexão
     }
 };
 // --- LOGS ---
