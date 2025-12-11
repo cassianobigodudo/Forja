@@ -1,5 +1,6 @@
 const EstoqueModel = require('../models/estoqueModel');
 const PedidoModel = require('../models/pedidoModel');
+db = require('../config/database');
 
 // --- PEÇAS ---
 const getPecas = async (req, res) => {
@@ -73,22 +74,37 @@ const alocarPedidoNaExpedicao = async (req, res) => {
 // =========================================================
 const liberarExpedicao = async (req, res) => {
     const { slot } = req.params;
-    console.log(`\n♻️ [SLOT ${slot}] Iniciando liberação e devolução de itens...`);
+    
+    console.log(`\n=================================================`);
+    console.log(`♻️ [LIBERAÇÃO] Processando Slot ${slot}...`);
 
-    const client = await db.pool.connect();
+    // 1. Pega um cliente da pool para abrir transação
+    const client = await db.connect(); 
 
     try {
-        await client.query('BEGIN');
+        await client.query('BEGIN'); // Inicia a transação
 
-        // 1. Descobre quais peças estão lá e qual é o pedido
+        // -----------------------------------------------------------
+        // A. DESCOBRIR O QUE TEM LÁ
+        // -----------------------------------------------------------
+        // Pega as peças do pedido (usando o Model)
+        // Certifique-se que o Model retorna: id_cabeca, id_torso, id_chassi
         const pecas = await EstoqueModel.getPecasDoPedidoNoSlot(slot);
         
-        // Pega o ID do pedido antes de limpar o slot
-        const resSlot = await client.query("SELECT pedido_id FROM expedicao_slots WHERE numero_slot = $1", [slot]);
+        // Pega o ID do pedido direto da tabela de slots
+        const resSlot = await client.query(
+            "SELECT pedido_id FROM expedicao_slots WHERE numero_slot = $1", 
+            [slot]
+        );
         const pedidoId = resSlot.rows[0]?.pedido_id;
 
+
+        // -----------------------------------------------------------
+        // B. DEVOLVER PEÇAS AO ESTOQUE (LOOP)
+        // -----------------------------------------------------------
         if (pecas) {
-            // Monta o objeto de devolução
+            console.log(` 📦 Peças identificadas: Cabeça:${pecas.id_cabeca}, Torso:${pecas.id_torso}, Base:${pecas.id_chassi}`);
+            
             const devolucao = {};
             const somar = (id) => { 
                 if (!id) return;
@@ -96,37 +112,49 @@ const liberarExpedicao = async (req, res) => {
                 devolucao[chave] = (devolucao[chave] || 0) + 1; 
             };
 
-            somar(pecas.id_cabeca); // Usa os nomes que vem do seu Model (ajuste se for cor_cabeca)
+            somar(pecas.id_cabeca);
             somar(pecas.id_torso);
             somar(pecas.id_chassi);
 
-            console.log(` 📦 Devolvendo ao estoque:`, JSON.stringify(devolucao));
-            
-            // 2. Executa a devolução (Estoque sobe)
-            await EstoqueModel.devolverItens(devolucao);
+            // Chama o model para devolver (como seu model usa db.query direto,
+            // ele vai rodar fora dessa transação 'client', mas vai funcionar)
+            if (Object.keys(devolucao).length > 0) {
+                await EstoqueModel.devolverItens(devolucao);
+                console.log(" 🔄 Itens devolvidos ao estoque.");
+            }
+        } else {
+            console.warn(" ⚠️ Nenhuma peça vinculada. Apenas liberando slot.");
         }
 
-        // 3. Libera a gaveta
+
+        // -----------------------------------------------------------
+        // C. LIBERAR O SLOT E FINALIZAR PEDIDO
+        // -----------------------------------------------------------
+        
+        // Limpa o slot
         await client.query(
             "UPDATE expedicao_slots SET status = 'livre', pedido_id = NULL, atualizado_em = NOW() WHERE numero_slot = $1",
             [slot]
         );
 
-        // 4. Marca o pedido como CONCLUIDO (Finaliza o ciclo)
+        // Marca pedido como CONCLUIDO
         if (pedidoId) {
-            await client.query("UPDATE pedidos SET status = 'CONCLUIDO' WHERE id = $1", [pedidoId]);
+            await client.query(
+                "UPDATE pedidos SET status = 'CONCLUIDO' WHERE id = $1", 
+                [pedidoId]
+            );
             console.log(` ✅ Pedido ${pedidoId} finalizado.`);
         }
 
-        await client.query('COMMIT');
-        res.status(200).json({ message: "Slot liberado, itens devolvidos e pedido concluído!" });
+        await client.query('COMMIT'); // Confirma tudo
+        res.status(200).json({ message: "Ciclo completo: Slot livre e itens devolvidos!" });
 
     } catch (error) {
-        await client.query('ROLLBACK');
-        console.error("❌ Erro na liberação:", error);
-        res.status(500).json({ error: "Erro ao processar liberação." });
+        await client.query('ROLLBACK'); // Desfaz se der erro
+        console.error("❌ Erro no controller:", error);
+        res.status(500).json({ error: "Erro interno ao liberar slot." });
     } finally {
-        client.release();
+        client.release(); // Solta a conexão
     }
 };
 // --- LOGS ---

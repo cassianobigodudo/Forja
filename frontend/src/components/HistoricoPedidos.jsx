@@ -68,7 +68,7 @@ const HistoricoPedidos = ({ idUsuario }) => {
         </div>
       );
     }
-    return <span className="badge badge-processando">⚙️ Em Produção</span>;
+    return <span className="badge badge-processando">Concluído</span>;
   };
 
   return (
