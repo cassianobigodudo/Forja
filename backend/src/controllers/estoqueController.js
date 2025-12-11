@@ -73,56 +73,60 @@ const alocarPedidoNaExpedicao = async (req, res) => {
 // =========================================================
 const liberarExpedicao = async (req, res) => {
     const { slot } = req.params;
-    
-    console.log(`\n=================================================`);
-    console.log(`♻️ [RECICLAGEM] Iniciando liberação do BOX ${slot}...`);
-    console.log(`=================================================`);
+    console.log(`\n♻️ [SLOT ${slot}] Iniciando liberação e devolução de itens...`);
+
+    const client = await db.pool.connect();
 
     try {
-        // 1. Descobrir quais peças estão nesse slot para devolver
-        console.log(`   🔎 Buscando pedido no Slot ${slot}...`);
+        await client.query('BEGIN');
+
+        // 1. Descobre quais peças estão lá e qual é o pedido
         const pecas = await EstoqueModel.getPecasDoPedidoNoSlot(slot);
+        
+        // Pega o ID do pedido antes de limpar o slot
+        const resSlot = await client.query("SELECT pedido_id FROM expedicao_slots WHERE numero_slot = $1", [slot]);
+        const pedidoId = resSlot.rows[0]?.pedido_id;
 
         if (pecas) {
-            console.log(`   📦 Peças encontradas no boneco:`);
-            console.log(`      -> Cabeça (Cor ID): ${pecas.cor_cabeca}`);
-            console.log(`      -> Torso  (Cor ID): ${pecas.cor_torso}`);
-            console.log(`      -> Base   (Cor ID): ${pecas.cor_base}`);
-
-            // Monta o mapa de devolução
+            // Monta o objeto de devolução
             const devolucao = {};
-
-            const somar = (id) => {
+            const somar = (id) => { 
                 if (!id) return;
                 const chave = String(id);
-                devolucao[chave] = (devolucao[chave] || 0) + 1;
+                devolucao[chave] = (devolucao[chave] || 0) + 1; 
             };
 
-            somar(pecas.cor_cabeca);
-            somar(pecas.cor_torso);
-            somar(pecas.cor_base);
+            somar(pecas.id_cabeca); // Usa os nomes que vem do seu Model (ajuste se for cor_cabeca)
+            somar(pecas.id_torso);
+            somar(pecas.id_chassi);
 
-            console.log("   📊 Resumo da Devolução (ID: Qtd):", JSON.stringify(devolucao));
-
-            // 2. Devolve para o estoque (UPDATE +)
-            console.log("   🔄 Executando estorno no banco de dados...");
+            console.log(` 📦 Devolvendo ao estoque:`, JSON.stringify(devolucao));
+            
+            // 2. Executa a devolução (Estoque sobe)
             await EstoqueModel.devolverItens(devolucao);
-            console.log("   ✅ Estoque reabastecido com sucesso.");
-        
-        } else {
-            console.warn("   ⚠️ AVISO: Slot estava vazio ou pedido não tem peças vinculadas. Nada a devolver.");
         }
 
-        // 3. Libera a gaveta (UPDATE status='livre')
-        console.log("   🧹 Limpando a gaveta...");
-        await EstoqueModel.liberarSlot(slot);
-        
-        console.log(`🏁 [FIM] Slot ${slot} liberado e pronto para uso.`);
-        res.status(200).json({ message: `Slot ${slot} liberado e peças devolvidas ao estoque!` });
+        // 3. Libera a gaveta
+        await client.query(
+            "UPDATE expedicao_slots SET status = 'livre', pedido_id = NULL, atualizado_em = NOW() WHERE numero_slot = $1",
+            [slot]
+        );
+
+        // 4. Marca o pedido como CONCLUIDO (Finaliza o ciclo)
+        if (pedidoId) {
+            await client.query("UPDATE pedidos SET status = 'CONCLUIDO' WHERE id = $1", [pedidoId]);
+            console.log(` ✅ Pedido ${pedidoId} finalizado.`);
+        }
+
+        await client.query('COMMIT');
+        res.status(200).json({ message: "Slot liberado, itens devolvidos e pedido concluído!" });
 
     } catch (error) {
-        console.error("❌ [ERRO CRÍTICO] Falha na reciclagem:", error);
-        res.status(500).json({ error: "Erro interno ao processar devolução." });
+        await client.query('ROLLBACK');
+        console.error("❌ Erro na liberação:", error);
+        res.status(500).json({ error: "Erro ao processar liberação." });
+    } finally {
+        client.release();
     }
 };
 // --- LOGS ---

@@ -1,58 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './HistoricoPedidos.css'; // O CSS que vamos criar abaixo
+import './HistoricoPedidos.css';
 
 const API_URL = "https://forja-qvex.onrender.com/api";
-// URL da API do professor (Exemplo)
-const PROFESSOR_API = 'http://52.72.137.244:3000'; // Ajuste conforme necessário
 
 const HistoricoPedidos = ({ idUsuario }) => {
   const [pedidos, setPedidos] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // --- 1. BUSCA E SINCRONIZAÇÃO (O ESPIÃO) ---
+  // --- 1. BUSCA PEDIDOS ---
   const fetchPedidos = async () => {
     const id = idUsuario || localStorage.getItem('id_usuario');
     if (!id) return;
 
     try {
-      // A. Busca Local
       const response = await axios.get(`${API_URL}/pedidos/por-sessao/${id}`);
-      const pedidosLocais = response.data;
-      setPedidos(pedidosLocais);
-
-      // B. Verifica API Externa (Polling)
-      pedidosLocais.forEach(async (pedido) => {
-        // Ignora se já finalizou ou se não tem ID externo
-        if (pedido.status === 'CONCLUIDO' || !pedido.orderid_externo) return;
-        
-        // Ignora se JÁ TEM slot (já sabemos que está pronto)
-        if (pedido.slot) return;
-
-        try {
-          const { data: dadosExternos } = await axios.get(`${PROFESSOR_API}/queue/items/${pedido.orderid_externo}`);
-
-          // C. Gatilho: Se lá fora terminou e aqui ainda não tem slot
-          if ((dadosExternos.stage === 'EXPEDICAO' || dadosExternos.stage === 'ENTREGUE') && !pedido.slot) {
-            console.log(`🚀 Pedido ${pedido.pedido_id} pronto! Alocando vaga...`);
-            
-            await axios.post(`${API_URL}/expedicao/alocar`, { 
-              pedidoId: pedido.pedido_id,
-              orderIdExterno: pedido.orderid_externo
-            });
-            // O próximo setInterval vai atualizar a tela com o slot
-          }
-        } catch (error) {
-           // Silencia erros de fetch externo para não sujar o console
-        }
-      });
-
+      setPedidos(response.data);
     } catch (error) {
       console.error("Erro ao buscar histórico:", error);
     }
   };
 
-  // Roda a cada 5 segundos
   useEffect(() => {
     fetchPedidos();
     const intervalo = setInterval(fetchPedidos, 5000);
@@ -60,17 +28,17 @@ const HistoricoPedidos = ({ idUsuario }) => {
   }, [idUsuario]);
 
 
-  // --- 2. AÇÃO DE PEGAR O PEDIDO ---
+  // --- 2. AÇÃO DE PEGAR O PEDIDO (DEVOLVENDO AO ESTOQUE) ---
   const handleColetar = async (slot, pedidoId) => {
-    if (!window.confirm(`Confirmar retirada no BOX ${slot}?`)) return;
+    if (!window.confirm(`Retirar pedido do BOX ${slot}?`)) return;
 
     try {
       setLoading(true);
-      // Chama a rota que baixa estoque e libera slot
-      await axios.post(`${API_URL}/expedicao/${slot}/entrega`);
+      // Apontamos para a rota que faz DEVOLUÇÃO + CONCLUSÃO
+      await axios.post(`${API_URL}/estoque/expedicao/${slot}/liberar`);
       
       alert("Sucesso! Pedido retirado.");
-      fetchPedidos(); // Atualiza a tela imediatamente
+      fetchPedidos(); 
     } catch (error) {
       console.error(error);
       alert("Erro ao retirar pedido.");
@@ -79,15 +47,20 @@ const HistoricoPedidos = ({ idUsuario }) => {
     }
   };
 
+  // --- AUXILIAR: FORMATAR VALOR ---
+  const formatarValor = (valor) => {
+    if (!valor) return 'R$ 84,90';
+    // Converte string "50,00" para numero se necessário, ou usa direto se for numérico
+    const numero = typeof valor === 'string' ? parseFloat(valor.replace(',', '.')) : Number(valor);
+    if (isNaN(numero)) return 'R$ 84,90';
+    return numero.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  };
 
-  // --- 3. RENDERIZAÇÃO VISUAL DOS STATUS ---
+  // --- 3. RENDERIZAÇÃO ---
   const renderStatus = (pedido) => {
-    // Caso 1: Já foi entregue/concluido
     if (pedido.status === 'CONCLUIDO' || pedido.status === 'ENTREGUE_AO_CLIENTE') {
       return <span className="badge badge-concluido">✅ Concluído</span>;
     }
-
-    // Caso 2: Está no Slot (PRONTO)
     if (pedido.status === 'PRONTO' && pedido.slot) {
       return (
         <div className="badge-expedicao">
@@ -95,11 +68,8 @@ const HistoricoPedidos = ({ idUsuario }) => {
         </div>
       );
     }
-
-    // Caso 3: Processando
     return <span className="badge badge-processando">⚙️ Em Produção</span>;
   };
-
 
   return (
     <div className="container-historico-pedidos">
@@ -111,12 +81,10 @@ const HistoricoPedidos = ({ idUsuario }) => {
         {pedidos.map((pedido) => (
           <div key={pedido.pedido_id} className={`row-pedido status-${pedido.status.toLowerCase()}`}>
             
-            {/* 1. IMAGEM NA ESQUERDA */}
             <div className="img-lateral">
                 <img src={pedido.img || 'https://via.placeholder.com/100'} alt={pedido.nome_personagem} />
             </div>
 
-            {/* 2. INFORMAÇÕES NO CENTRO */}
             <div className="info-central">
                 <div className="topo-info">
                     <h3>{pedido.nome_personagem}</h3>
@@ -129,16 +97,15 @@ const HistoricoPedidos = ({ idUsuario }) => {
                     {new Date(pedido.data_pedido).toLocaleDateString()} às {new Date(pedido.data_pedido).toLocaleTimeString().slice(0,5)}
                 </p>
                 
+                {/* VALOR DINÂMICO AGORA */}
                 <p className="valor-item">
-                    {Number(pedido.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                    {formatarValor(pedido.valor)}
                 </p>
             </div>
 
-            {/* 3. STATUS E AÇÃO NA DIREITA */}
             <div className="status-direita">
                 {renderStatus(pedido)}
 
-                {/* LOGICA DO BOTAO: Só aparece se status for PRONTO e tiver SLOT */}
                 {pedido.status === 'PRONTO' && pedido.slot && (
                     <div className="box-action">
                         <span className="box-number">BOX {pedido.slot}</span>
@@ -147,7 +114,7 @@ const HistoricoPedidos = ({ idUsuario }) => {
                             onClick={() => handleColetar(pedido.slot, pedido.pedido_id)}
                             disabled={loading}
                         >
-                            PEGAR PEDIDO
+                            {loading ? '...' : 'PEGAR PEDIDO'}
                         </button>
                     </div>
                 )}
